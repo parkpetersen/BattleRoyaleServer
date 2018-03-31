@@ -137,7 +137,7 @@ MyGame.main = (function(graphics, renderer, input, components) {
         console.log('direction: ' ,playerSelf.model.direction/(2*Math.PI));
         let textureString = 'player-self-' + getTexture(playerSelf.model.direction);
         console.log(textureString);
-        //playerself.texture = MyGame.assets[textureString];
+        playerSelf.texture = MyGame.assets[textureString];
 
         //
         // Remove messages from the queue up through the last one identified
@@ -178,31 +178,38 @@ MyGame.main = (function(graphics, renderer, input, components) {
     }
 
     function getTexture(direction){
-        if(Math.abs(direction/(2*Math.PI)) > Math.PI/12 && Math.abs(direction/(2*Math.PI)) < 5*Math.PI/12){
+        let myDirection = direction;
+        if (myDirection > 2*Math.PI){
+            myDirection = myDirection % (2* Math.PI);
+        }
+        else if(myDirection < 0){
+            myDirection = (2 * Math.PI) - Math.abs(myDirection);
+        }
+        if(myDirection > Math.PI/12 && myDirection < 5*Math.PI/12){
             return 'south-east';
         }
-        else if(Math.abs(direction/(2*Math.PI)) >= 5*Math.PI/12 && Math.abs(direction/(2*Math.PI) <= 7*Math.PI/12)){
+        else if(myDirection >= 5*Math.PI/12 && myDirection<= 7*Math.PI/12){
             return 'south';
         }
-        else if(Math.abs(direction/(2*Math.PI)) > 7*Math.PI/12 && Math.abs(direction/(2*Math.PI)) < 11*Math.PI/12){
+        else if(myDirection > 7*Math.PI/12 && myDirection < 11*Math.PI/12){
             return 'south-west';
         }
-        else if(Math.abs(direction/(2*Math.PI)) >= 11*Math.PI/12 && Math.abs(direction/(2*Math.PI)) <= 13*Math.PI/12 ){
+        else if(myDirection >= 11*Math.PI/12 && myDirection <= 13*Math.PI/12 ){
             return 'west';
         }
-        else if (Math.abs(direction/(2*Math.PI)) > 13*Math.PI/12 && Math.abs(direction/(2*Math.PI)) < 17*Math.PI/12){
+        else if (myDirection > 13*Math.PI/12 && myDirection < 17*Math.PI/12){
             return 'north-west';
         }
-        else if (Math.abs(direction/(2*Math.PI)) >= 17*Math.PI/12 && Math.abs(direction/(2*Math.PI)) <= 19*Math.PI/12){
+        else if (myDirection >= 17*Math.PI/12 && myDirection <= 19*Math.PI/12){
             return 'north';
         }
-        else if (Math.abs(direction/(2*Math.PI)) > 19*Math.PI/12 && Math.abs(direction/(2*Math.PI)) < 23*Math.PI/12){
+        else if (myDirection > 19*Math.PI/12 && myDirection < 23*Math.PI/12){
             return 'north-east';
         }
-        else if (Math.abs(direction/(2*Math.PI)) <= Math.PI/12 && Math.abs(direction/(2*Math.PI)) >= 0){
+        else if (myDirection <= Math.PI/12 && myDirection >= 0){
             return 'east';
         }
-        else if (Math.abs(direction/(2*Math.PI)) >= 23*Math.PI/12 && Math.abs(direction/(2*Math.PI)) < 2*Math.PI){
+        else if (myDirection >= 23*Math.PI/12 && myDirection < 2*Math.PI){
             return 'east';
         }
     }

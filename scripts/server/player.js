@@ -9,9 +9,9 @@ function createPlayer(){
     };
 
     let size = {
-        width: 0.01,
-        height: 0.01,
-        radius: 0.02
+        width: 0.05,
+        height: 0.05,
+        radius: 0.06
         //may need to change values here
     };
 
