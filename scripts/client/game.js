@@ -134,6 +134,10 @@ MyGame.main = (function(graphics, renderer, input, components) {
         playerSelf.model.position.x = data.position.x;
         playerSelf.model.position.y = data.position.y;
         playerSelf.model.direction = data.direction;
+        console.log('direction: ' ,playerSelf.model.direction/(2*Math.PI));
+        let textureString = 'player-self-' + getTexture(playerSelf.model.direction);
+        console.log(textureString);
+        //playerself.texture = MyGame.assets[textureString];
 
         //
         // Remove messages from the queue up through the last one identified
@@ -170,6 +174,36 @@ MyGame.main = (function(graphics, renderer, input, components) {
             model.goal.position.x = data.position.x;
             model.goal.position.y = data.position.y
             model.goal.direction = data.direction;
+        }
+    }
+
+    function getTexture(direction){
+        if(Math.abs(direction/(2*Math.PI)) > Math.PI/12 && Math.abs(direction/(2*Math.PI)) < 5*Math.PI/12){
+            return 'south-east';
+        }
+        else if(Math.abs(direction/(2*Math.PI)) >= 5*Math.PI/12 && Math.abs(direction/(2*Math.PI) <= 7*Math.PI/12)){
+            return 'south';
+        }
+        else if(Math.abs(direction/(2*Math.PI)) > 7*Math.PI/12 && Math.abs(direction/(2*Math.PI)) < 11*Math.PI/12){
+            return 'south-west';
+        }
+        else if(Math.abs(direction/(2*Math.PI)) >= 11*Math.PI/12 && Math.abs(direction/(2*Math.PI)) <= 13*Math.PI/12 ){
+            return 'west';
+        }
+        else if (Math.abs(direction/(2*Math.PI)) > 13*Math.PI/12 && Math.abs(direction/(2*Math.PI)) < 17*Math.PI/12){
+            return 'north-west';
+        }
+        else if (Math.abs(direction/(2*Math.PI)) >= 17*Math.PI/12 && Math.abs(direction/(2*Math.PI)) <= 19*Math.PI/12){
+            return 'north';
+        }
+        else if (Math.abs(direction/(2*Math.PI)) > 19*Math.PI/12 && Math.abs(direction/(2*Math.PI)) < 23*Math.PI/12){
+            return 'north-east';
+        }
+        else if (Math.abs(direction/(2*Math.PI)) <= Math.PI/12 && Math.abs(direction/(2*Math.PI)) >= 0){
+            return 'east';
+        }
+        else if (Math.abs(direction/(2*Math.PI)) >= 23*Math.PI/12 && Math.abs(direction/(2*Math.PI)) < 2*Math.PI){
+            return 'east';
         }
     }
 

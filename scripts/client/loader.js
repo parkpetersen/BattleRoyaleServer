@@ -47,6 +47,30 @@ MyGame.loader = (function() {
             onComplete: null
         }],
         assetOrder = [{
+            key: 'player-self-north',
+            source: 'assets/BattleShip/North.png'
+        },{
+            key: 'player-self-north-east',
+            source: 'assets/BattleShip/NorthEast.png'
+        },{
+            key: 'player-self-east',
+            source: 'assets/BattleShip/East.png'
+        },{
+            key: 'player-self-south-east',
+            source: 'assets/BattleShip/SouthEast.png'
+        },{
+            key: 'player-self-south',
+            source: 'assets/BattleShip/South.png'
+        },{
+            key: 'player-self-south-west',
+            source: 'assets/BattleShip/SouthWest.png'
+        },{
+            key: 'player-self-west',
+            source: 'assets/BattleShip/West.png'
+        },{
+            key: 'player-self-north-west',
+            source: 'assets/BattleShip/NorthWest.png'
+        },{
             key: 'player-self',
             source: 'assets/playerShip1_blue.png'
         }, {
