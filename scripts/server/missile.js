@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 function createMissile(spec){
     let that = {};
@@ -52,6 +52,8 @@ function createMissile(spec){
             return true;
         }
     };
+
+    return that;
 }
 
 module.exports.create = (spec) => createMissile(spec);

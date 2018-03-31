@@ -4,7 +4,7 @@ function createPlayer(){
     let that = {};
 
     let position = {
-        y: random.neYtDouble(),
+        x: random.nextDouble(),
         y: random.nextDouble()
     };
 
@@ -69,7 +69,6 @@ function createPlayer(){
     };
 
     that.update = function(when){
-
     };
 
     return that;

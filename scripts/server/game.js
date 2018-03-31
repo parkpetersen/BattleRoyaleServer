@@ -1,10 +1,10 @@
 'use strict';
 
-const present = require('present.js');
-const Player = require('./player.js');
-const Missile = require('./missile.js');
-const NetworkIds = require('../shared/netwrok-ids.js');
-const Queue = require('..shared/queue.js');
+const present = require('present');
+const Player = require('./player');
+const Missile = require('./missile');
+const NetworkIds = require('../shared/network-ids');
+const Queue = require('../shared/queue.js');
 
 const SIMULATION_UPDATE_RATE_MS = 50;
 const STATE_UPDATE_RATE_MS = 100;
@@ -22,7 +22,7 @@ function createMissile(clientId, playerModel){
         id: nextMissileId++,
         clientId: clientId,
         position: {
-            x : playerModel.position.x,
+            x: playerModel.position.x,
             y: playerModel.position.y
         },
         direction: playerModel.direction,
@@ -94,8 +94,8 @@ function update(elapsedTime, currentTime){
                 if(collided(activeMissiles[missile], activeClients[clientId].player)){
                     hit = true;
                     hits.push({
-                        clientId : clientId,
-                        missileId : activeMissiles[missile].id,
+                        clientId: clientId,
+                        missileId: activeMissiles[missile].id,
                         position: activeClients[clientId].player.position
                     });
                 }
@@ -121,7 +121,7 @@ function updateClients(elapsedTime){
             id: missile.id,
             direction: missile.direction,
             position: {
-                x : missile.position.x,
+                x: missile.position.x,
                 y: missile.position.y
             },
             radius: missile.radius,
