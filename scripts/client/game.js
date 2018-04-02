@@ -338,6 +338,11 @@ MyGame.main = (function(graphics, renderer, input, components) {
         for (let id in playerOthers) {
             let player = playerOthers[id];
             renderer.PlayerRemote.render(player.model, player.texture);
+            //console.log(player.model.direction);
+            let textureKey = 'player-other-' + getTexture(player.model.state.direction);
+            console.log('Key: '+ textureKey);
+            renderer.PlayerRemote.render(player.model, textureKey);
+            //renderer.PlayerRemote.render(player.model, player.texture);
         }
 
         for (let missile in missiles) {

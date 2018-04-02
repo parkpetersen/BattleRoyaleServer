@@ -73,7 +73,31 @@ MyGame.loader = (function() {
         },{
             key: 'player-self',
             source: 'assets/playerShip1_blue.png'
-        }, {
+        },{
+            key: 'player-other-north',
+            source: 'assets/TrollShip/EnemyNorth.png'
+        },{
+            key: 'player-other-north-east',
+            source: 'assets/TrollShip/EnemyNorthEast.png'
+        },{
+            key: 'player-other-east',
+            source: 'assets/TrollShip/EnemyEast.png'
+        },{
+            key: 'player-other-south-east',
+            source: 'assets/TrollShip/EnemySouthEast.png'
+        },{
+            key: 'player-other-south',
+            source: 'assets/TrollShip/EnemySouth.png'
+        },{
+            key: 'player-other-south-west',
+            source: 'assets/TrollShip/EnemySouthWest.png'
+        },{
+            key: 'player-other-west',
+            source: 'assets/TrollShip/EnemyWest.png'
+        },{
+            key: 'player-other-north-west',
+            source: 'assets/TrollShip/EnemyNorthWest.png'
+        },{
             key: 'player-other',
             source: 'assets/playerShip1_red.png'
         }, {
