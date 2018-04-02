@@ -10,7 +10,7 @@ MyGame.main = (function(graphics, renderer, input, components) {
         myKeyboard = input.Keyboard(),
         playerSelf = {
             model: components.Player(),
-            texture: MyGame.assets['player-self']
+            texture: MyGame.assets['player-self-east']
         },
         playerOthers = {},
         missiles = {},
@@ -112,7 +112,7 @@ MyGame.main = (function(graphics, renderer, input, components) {
 
         playerOthers[data.clientId] = {
             model: model,
-            texture: MyGame.assets['player-other']
+            texture: MyGame.assets['player-other-east']
         };
     }
 
@@ -337,11 +337,11 @@ MyGame.main = (function(graphics, renderer, input, components) {
         renderer.Player.render(playerSelf.model, playerSelf.texture);
         for (let id in playerOthers) {
             let player = playerOthers[id];
-            renderer.PlayerRemote.render(player.model, player.texture);
+            //renderer.PlayerRemote.render(player.model, player.texture);
             //console.log(player.model.direction);
             let textureKey = 'player-other-' + getTexture(player.model.state.direction);
             console.log('Key: '+ textureKey);
-            renderer.PlayerRemote.render(player.model, textureKey);
+            renderer.PlayerRemote.render(player.model, MyGame.assets[textureKey]);
             //renderer.PlayerRemote.render(player.model, player.texture);
         }
 
