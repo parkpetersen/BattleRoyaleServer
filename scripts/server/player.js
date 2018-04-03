@@ -20,6 +20,9 @@ function createPlayer(){
     let speed = .0002;
     let reportUpdate = false;
 
+    let health = 100;
+    let playerDamage = 20;
+
     Object.defineProperty(that, 'direction', {
         get: () => direction
     });
@@ -49,6 +52,20 @@ function createPlayer(){
         get: () => size.radius
     });
 
+    Object.defineProperty(that, 'playerDamage',{
+        get: () => playerDamage,
+        set: (value) => {playerDamage = value},
+        increase: (value) => {playerDamage += value},
+        decrease: (value) => {playerDamage -= value}
+    });
+
+    Object.defineProperty(that, 'health', {
+        get: () => health,
+        set: (value) => health = value,
+        increase: (value) => {health += value},
+        decrease: (value) => {health -= value}
+    })
+
     that.move = function(elapsedTime) {
         reportUpdate = true;
         let vectorX = Math.cos(direction);
@@ -66,6 +83,10 @@ function createPlayer(){
     that.rotateLeft = function(elapsedTime){
         reportUpdate = true;
         direction -= (rotateRate * elapsedTime);
+    };
+
+    that.missileHit = function(damage){
+        health -= damage;
     };
 
     that.update = function(when){

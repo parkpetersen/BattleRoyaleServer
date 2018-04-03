@@ -118,6 +118,23 @@ MyGame.graphics = (function() {
         context.fill();
     }
 
+    function drawAimer(startPos, direction){
+        context.save();
+        context.beginPath();
+        let xVector = Math.cos(direction);
+        let yVector = Math.sin(direction);
+        context.moveTo(startPos.x * canvas.width, startPos.y * canvas.width);
+        context.lineTo((startPos.x * canvas.width) + (xVector * 100), (startPos.y * canvas.width) + (yVector * 100));
+        context.strokeStyle = 'red';
+        context.fillStyle = 'red';
+        context.setLineDash([5, 15]);
+        context.stroke();
+        context.fill();
+        context.closePath();
+        context.restore();
+
+    }
+
     return {
         clear: clear,
         saveContext: saveContext,
@@ -125,6 +142,7 @@ MyGame.graphics = (function() {
         rotateCanvas: rotateCanvas,
         drawImage: drawImage,
         drawImageSpriteSheet: drawImageSpriteSheet,
+        drawAimer: drawAimer,
         drawCircle: drawCircle
     };
 }());

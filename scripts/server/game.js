@@ -26,7 +26,8 @@ function createMissile(clientId, playerModel){
             y: playerModel.position.y
         },
         direction: playerModel.direction,
-        speed: playerModel.speed
+        speed: playerModel.speed,
+        missileDamage: playerModel.playerDamage
     });
 
     newMissiles.push(missile);
@@ -93,10 +94,12 @@ function update(elapsedTime, currentTime){
             if(clientId !== activeMissiles[missile].clientId){
                 if(collided(activeMissiles[missile], activeClients[clientId].player)){
                     hit = true;
+                    activeClients[clientId].player.missileHit(activeMissiles[missile].missileDamage);
                     hits.push({
                         clientId: clientId,
                         missileId: activeMissiles[missile].id,
-                        position: activeClients[clientId].player.position
+                        position: activeClients[clientId].player.position,
+                        damageDealt: activeMissiles[missile].missileDamage
                     });
                 }
             }
@@ -126,7 +129,8 @@ function updateClients(elapsedTime){
             },
             radius: missile.radius,
             speed: missile.speed,
-            timeRemaining: missile.timeRemaining
+            timeRemaining: missile.timeRemaining,
+            missileDamage: missile.missileDamage
         });
     }
 
@@ -142,7 +146,8 @@ function updateClients(elapsedTime){
             lastMessageId: client.lastMessageId,
             direction: client.player.direction,
             position: client.player.position,
-            updateWindow: lastUpdate
+            updateWindow: lastUpdate,
+            health: client.player.health
         };
         if(client.player.reportUpdate) {
             client.socket.emit(NetworkIds.UPDATE_SELF, update);

@@ -7,6 +7,7 @@ function createMissile(spec){
     let speed = spec.speed + 0.0002; //faster than players speed.
     let timeRemaining = 1500;
     //values may need to be changed
+    let missileDamage = spec.missileDamage;
 
     Object.defineProperty(that, 'clientId', {
         get: () => spec.clientId
@@ -34,6 +35,11 @@ function createMissile(spec){
 
     Object.defineProperty(that, 'timeRemaining', {
         get: () => timeRemaining
+    });
+
+    Object.defineProperty(that, 'missileDamage',{
+        get: () => missileDamage,
+        set: (value) => {missileDamage = value}
     });
 
     that.update = function(elapsedTime){

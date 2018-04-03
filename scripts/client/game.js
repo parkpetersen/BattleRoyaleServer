@@ -134,9 +134,8 @@ MyGame.main = (function(graphics, renderer, input, components) {
         playerSelf.model.position.x = data.position.x;
         playerSelf.model.position.y = data.position.y;
         playerSelf.model.direction = data.direction;
-        console.log('direction: ' ,playerSelf.model.direction/(2*Math.PI));
+        playerSelf.model.health = data.health;
         let textureString = 'player-self-' + getTexture(playerSelf.model.direction);
-        console.log(textureString);
         playerSelf.texture = MyGame.assets[textureString];
 
         //
@@ -174,6 +173,7 @@ MyGame.main = (function(graphics, renderer, input, components) {
             model.goal.position.x = data.position.x;
             model.goal.position.y = data.position.y
             model.goal.direction = data.direction;
+            model.state.health = data.health;
         }
     }
 
@@ -247,7 +247,7 @@ MyGame.main = (function(graphics, renderer, input, components) {
             spriteCount: 16,
             spriteTime: [ 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50]
         });
-
+        
         //
         // When we receive a hit notification, go ahead and remove the
         // associated missle from the client model.
@@ -337,12 +337,8 @@ MyGame.main = (function(graphics, renderer, input, components) {
         renderer.Player.render(playerSelf.model, playerSelf.texture);
         for (let id in playerOthers) {
             let player = playerOthers[id];
-            //renderer.PlayerRemote.render(player.model, player.texture);
-            //console.log(player.model.direction);
             let textureKey = 'player-other-' + getTexture(player.model.state.direction);
-            console.log('Key: '+ textureKey);
             renderer.PlayerRemote.render(player.model, MyGame.assets[textureKey]);
-            //renderer.PlayerRemote.render(player.model, player.texture);
         }
 
         for (let missile in missiles) {
