@@ -22,6 +22,7 @@ function createPlayer(){
 
     let health = 100;
     let playerDamage = 20;
+    let state = 'alive';
 
     Object.defineProperty(that, 'direction', {
         get: () => direction
@@ -64,6 +65,11 @@ function createPlayer(){
         set: (value) => health = value,
         increase: (value) => {health += value},
         decrease: (value) => {health -= value}
+    })
+
+    Object.defineProperty(that, 'state',{
+        get: () => state,
+        set: (value) => {state = value}
     })
 
     that.move = function(elapsedTime) {

@@ -71,6 +71,13 @@ MyGame.main = (function(graphics, renderer, input, components) {
         });
     });
 
+    socket.on(NetworkIds.DEAD, data => {
+        networkQueue.enqueue({
+            type: NetworkIds.DEAD,
+            data: data
+        });
+    });
+
     //------------------------------------------------------------------
     //
     // Handler for when the server ack's the socket connection.  We receive
@@ -254,6 +261,11 @@ MyGame.main = (function(graphics, renderer, input, components) {
         delete missiles[data.missileId];
     }
 
+    function killPlayer(data) {
+        alert(data.message);
+        myKeyboard
+    }
+
     //------------------------------------------------------------------
     //
     // Process the registered input handlers here.
@@ -293,6 +305,9 @@ MyGame.main = (function(graphics, renderer, input, components) {
                     break;
                 case NetworkIds.MISSILE_HIT:
                     missileHit(message.data);
+                    break;
+                case NetworkIds.DEAD:
+                    killPlayer(message.data);
                     break;
             }
         }

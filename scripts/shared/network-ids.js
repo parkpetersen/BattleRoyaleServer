@@ -49,6 +49,10 @@
         'MISSILE_HIT': {
             value: 'missile-hit',
             writable: false
+        },
+        'DEAD': {
+            value: 'dead',
+            writable: false
         }
     });
 

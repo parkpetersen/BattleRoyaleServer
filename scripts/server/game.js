@@ -166,6 +166,16 @@ function updateClients(elapsedTime){
         for (let hit = 0; hit < hits.length; hit++) {
             client.socket.emit(NetworkIds.MISSILE_HIT, hits[hit]);
         }
+
+        if(client.player.health <= 0 && client.player.state === 'alive'){
+            let update = {
+                clientId : clientId,
+                message: 'You are dead. Better luck next time matey.'
+            };
+            client.socket.emit(NetworkIds.DEAD, update);
+            client.player.state = 'dead';
+            //delete activeClients[clientId];
+        }
     }
 
     for (let clientId in activeClients) {
