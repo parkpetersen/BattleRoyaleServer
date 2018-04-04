@@ -19,7 +19,12 @@ MyGame.main = (function(graphics, renderer, input, components) {
         messageId = 1,
         nextExplosionId = 1,
         socket = io(),
-        networkQueue = Queue.create();
+        networkQueue = Queue.create(),
+        upIdKey = 0,
+        leftIdKey = 0,
+        rightIdKey = 0,
+        downIdKey = 0,
+        fireIdKey = 0;
 
     
     socket.on(NetworkIds.CONNECT_ACK, data => {
@@ -263,7 +268,11 @@ MyGame.main = (function(graphics, renderer, input, components) {
 
     function killPlayer(data) {
         alert(data.message);
-        myKeyboard
+        myKeyboard.unregisterHandler(MyGame.input.KeyEvent.DOM_VK_W, upIdKey);
+        myKeyboard.unregisterHandler(MyGame.input.KeyEvent.DOM_VK_D, rightIdKey);
+        myKeyboard.unregisterHandler(MyGame.input.KeyEvent.DOM_VK_A, leftIdKey);
+        myKeyboard.unregisterHandler(MyGame.input.KeyEvent.DOM_VK_SPACE, fireIdKey);
+
     }
 
     //------------------------------------------------------------------
@@ -391,7 +400,7 @@ MyGame.main = (function(graphics, renderer, input, components) {
         console.log('game initializing...');
         //
         // Create the keyboard input handler and register the keyboard commands
-        myKeyboard.registerHandler(elapsedTime => {
+        upIdKey = myKeyboard.registerHandler(elapsedTime => {
                 let message = {
                     id: messageId++,
                     elapsedTime: elapsedTime,
@@ -403,7 +412,7 @@ MyGame.main = (function(graphics, renderer, input, components) {
             },
             MyGame.input.KeyEvent.DOM_VK_W, true);
 
-        myKeyboard.registerHandler(elapsedTime => {
+        rightIdKey = myKeyboard.registerHandler(elapsedTime => {
                 let message = {
                     id: messageId++,
                     elapsedTime: elapsedTime,
@@ -415,7 +424,7 @@ MyGame.main = (function(graphics, renderer, input, components) {
             },
             MyGame.input.KeyEvent.DOM_VK_D, true);
 
-        myKeyboard.registerHandler(elapsedTime => {
+        leftIdKey = myKeyboard.registerHandler(elapsedTime => {
                 let message = {
                     id: messageId++,
                     elapsedTime: elapsedTime,
@@ -427,7 +436,7 @@ MyGame.main = (function(graphics, renderer, input, components) {
             },
             MyGame.input.KeyEvent.DOM_VK_A, true);
 
-        myKeyboard.registerHandler(elapsedTime => {
+        fireIdKey = myKeyboard.registerHandler(elapsedTime => {
                 let message = {
                     id: messageId++,
                     elapsedTime: elapsedTime,
