@@ -147,7 +147,8 @@ function updateClients(elapsedTime){
             direction: client.player.direction,
             position: client.player.position,
             updateWindow: lastUpdate,
-            health: client.player.health
+            health: client.player.health,
+            state: client.player.state
         };
         if(client.player.reportUpdate) {
             client.socket.emit(NetworkIds.UPDATE_SELF, update);
@@ -173,7 +174,8 @@ function updateClients(elapsedTime){
                 message: 'You are dead. Better luck next time matey.'
             };
             client.socket.emit(NetworkIds.DEAD, update);
-            client.player.state = 'dead';
+            client.player.state = 'sinking';
+            client.player.reportUpdate = true;
             //delete activeClients[clientId];
         }
     }

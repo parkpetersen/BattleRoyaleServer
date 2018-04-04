@@ -15,7 +15,8 @@ MyGame.components.PlayerRemote = function() {
         position: {
             x: 0,
             y: 0
-        }
+        },
+        state: 'alive'
     };
     let goal = {
         direction: 0,
@@ -23,6 +24,7 @@ MyGame.components.PlayerRemote = function() {
             x: 0,
             y: 0
         },
+        state: 'alive',
         updateWindow: 0      // Server reported time elapsed since last update
     };
 
@@ -56,6 +58,7 @@ MyGame.components.PlayerRemote = function() {
 
             state.position.x -= (state.position.x - goal.position.x) * updateFraction;
             state.position.y -= (state.position.y - goal.position.y) * updateFraction;
+            state.state = goal.state;
         }
     };
 

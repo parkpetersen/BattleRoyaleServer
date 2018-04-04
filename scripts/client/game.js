@@ -147,7 +147,9 @@ MyGame.main = (function(graphics, renderer, input, components) {
         playerSelf.model.position.y = data.position.y;
         playerSelf.model.direction = data.direction;
         playerSelf.model.health = data.health;
-        let textureString = 'player-self-' + getTexture(playerSelf.model.direction);
+        playerSelf.model.state = data.state;
+        let textureString = 'player-self-' + getTexture(playerSelf.model.direction, playerSelf.model.state);
+        console.log(textureString);
         playerSelf.texture = MyGame.assets[textureString];
 
         //
@@ -185,11 +187,18 @@ MyGame.main = (function(graphics, renderer, input, components) {
             model.goal.position.x = data.position.x;
             model.goal.position.y = data.position.y
             model.goal.direction = data.direction;
-            model.state.health = data.health;
+            model.goal.health = data.health;
+            model.goal.state = data.state;
         }
     }
 
-    function getTexture(direction){
+    function getTexture(direction, state){
+        let prefix = '';
+        let postfix = '';
+        if(state === 'sinking'){
+            prefix = 'sinking-';
+            postfix = '-1';
+        }
         let myDirection = direction;
         if (myDirection > 2*Math.PI){
             myDirection = myDirection % (2* Math.PI);
@@ -198,31 +207,31 @@ MyGame.main = (function(graphics, renderer, input, components) {
             myDirection = (2 * Math.PI) - Math.abs(myDirection);
         }
         if(myDirection > Math.PI/12 && myDirection < 5*Math.PI/12){
-            return 'south-east';
+            return prefix + 'south-east' + postfix;
         }
         else if(myDirection >= 5*Math.PI/12 && myDirection<= 7*Math.PI/12){
-            return 'south';
+            return prefix + 'south' + postfix;
         }
         else if(myDirection > 7*Math.PI/12 && myDirection < 11*Math.PI/12){
-            return 'south-west';
+            return prefix + 'south-west' + postfix;
         }
         else if(myDirection >= 11*Math.PI/12 && myDirection <= 13*Math.PI/12 ){
-            return 'west';
+            return prefix + 'west' + postfix;
         }
         else if (myDirection > 13*Math.PI/12 && myDirection < 17*Math.PI/12){
-            return 'north-west';
+            return prefix + 'north-west' + postfix;
         }
         else if (myDirection >= 17*Math.PI/12 && myDirection <= 19*Math.PI/12){
-            return 'north';
+            return prefix + 'north' + postfix;
         }
         else if (myDirection > 19*Math.PI/12 && myDirection < 23*Math.PI/12){
-            return 'north-east';
+            return prefix + 'north-east' + postfix;
         }
         else if (myDirection <= Math.PI/12 && myDirection >= 0){
-            return 'east';
+            return prefix + 'east' + postfix;
         }
-        else if (myDirection >= 23*Math.PI/12 && myDirection < 2*Math.PI){
-            return 'east';
+        else if (myDirection >= 23*Math.PI/12 && myDirection <= 2*Math.PI){
+            return prefix + 'east' + postfix;
         }
     }
 
@@ -272,7 +281,7 @@ MyGame.main = (function(graphics, renderer, input, components) {
         myKeyboard.unregisterHandler(MyGame.input.KeyEvent.DOM_VK_D, rightIdKey);
         myKeyboard.unregisterHandler(MyGame.input.KeyEvent.DOM_VK_A, leftIdKey);
         myKeyboard.unregisterHandler(MyGame.input.KeyEvent.DOM_VK_SPACE, fireIdKey);
-
+        playerSelf.model.state = 'sinking';
     }
 
     //------------------------------------------------------------------
@@ -328,6 +337,8 @@ MyGame.main = (function(graphics, renderer, input, components) {
     //
     //------------------------------------------------------------------
     function update(elapsedTime) {
+        console.log(playerSelf.model.state);
+
         playerSelf.model.update(elapsedTime);
         for (let id in playerOthers) {
             playerOthers[id].model.update(elapsedTime);

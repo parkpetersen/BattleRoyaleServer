@@ -100,6 +100,54 @@ MyGame.loader = (function() {
         },{
             key: 'player-other',
             source: 'assets/playerShip1_red.png'
+        },{
+            key: 'player-self-sinking-north-1',
+            source: 'assets/SinkingBattleShip/North1.png'
+        },{
+            key: 'player-self-sinking-north-2',
+            source: 'assets/SinkingBattleShip/North2.png'
+        },{
+            key: 'player-self-sinking-north-east-1',
+            source: 'assets/SinkingBattleShip/NorthEast1.png'
+        },{
+            key: 'player-self-sinking-north-east-2',
+            source: 'assets/SinkingBattleShip/NorthEast2.png'
+        },{
+            key: 'player-self-sinking-east-1',
+            source: 'assets/SinkingBattleShip/East1.png'
+        },{
+            key: 'player-self-sinking-east-2',
+            source: 'assets/SinkingBattleShip/East2.png'
+        },{
+            key: 'player-self-sinking-south-east-1',
+            source: 'assets/SinkingBattleShip/SouthEast1.png'
+        },{
+            key: 'player-self-sinking-south-east-2',
+            source: 'assets/SinkingBattleShip/SouthEast2.png'
+        },{
+            key: 'player-self-sinking-south-1',
+            source: 'assets/SinkingBattleShip/South1.png'
+        },{
+            key: 'player-self-sinking-south-2',
+            source: 'assets/SinkingBattleShip/South2.png'
+        },{
+            key: 'player-self-sinking-south-west-1',
+            source: 'assets/SinkingBattleShip/SouthWest1.png'
+        },{
+            key: 'player-self-sinking-south-west-2',
+            source: 'assets/SinkingBattleShip/SouthWest2.png'
+        },{
+            key: 'player-self-sinking-west-1',
+            source: 'assets/SinkingBattleShip/West1.png'
+        },{
+            key: 'player-self-sinking-west-2',
+            source: 'assets/SinkingBattleShip/West2.png'
+        },{
+            key: 'player-self-sinking-north-west-1',
+            source: 'assets/SinkingBattleShip/NorthWest1.png'
+        },{
+            key: 'player-self-sinking-north-west-2',
+            source: 'assets/SinkingBattleShip/NorthWest2.png'
         }, {
             key: 'explosion',
             source: 'assets/explosion.png'
