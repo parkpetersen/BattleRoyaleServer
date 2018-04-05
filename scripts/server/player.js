@@ -15,6 +15,20 @@ function createPlayer(){
         //may need to change values here
     };
 
+    let vision = [
+        {
+            x : position.x,
+            y : position.y
+        },
+        {
+            x : position.x-50,
+            y : position.y+100
+        },
+        {
+            x : position.x+50,
+            y : position.y+100
+        }];
+
     let direction = random.nextDouble() * 2 * Math.PI; //angle facing at start
     let rotateRate = Math.PI / 1000;
     let speed = .0002;
@@ -64,7 +78,12 @@ function createPlayer(){
         set: (value) => health = value,
         increase: (value) => {health += value},
         decrease: (value) => {health -= value}
-    })
+    });
+
+    Object.defineProperty(that, 'vision', {
+        get : () => vision,
+        set : (value) => vision = value
+    });
 
     that.move = function(elapsedTime) {
         reportUpdate = true;
@@ -73,6 +92,10 @@ function createPlayer(){
 
         position.x += (vectorX * elapsedTime * speed);
         position.y += (vectorY * elapsedTime * speed);
+
+        console.log(vision);
+        vision[0].x = position.x;
+        vision[0].y = position.y;
     };
 
     that.rotateRight = function(elapsedTime){

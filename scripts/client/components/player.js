@@ -14,6 +14,18 @@ MyGame.components.Player = function() {
         width: 0.1,
         height: 0.1
     };
+    let vision = [
+        {
+            x : 0,
+            y : 0
+        },
+        {
+            x : 0,
+            y : 0        },
+        {
+            x : 0,
+            y : 0
+        }];
     let direction = 0;
     let rotateRate = 0;
     let speed = 0;
@@ -45,6 +57,11 @@ MyGame.components.Player = function() {
     Object.defineProperty(that, 'health',{
         get: () => health,
         set: (value) => {health = value}
+    });
+
+    Object.defineProperty(that, 'vision', {
+        get: () => vision,
+        set : (value) => vision = value
     });
 
     //------------------------------------------------------------------

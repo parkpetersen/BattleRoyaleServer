@@ -147,7 +147,8 @@ function updateClients(elapsedTime){
             direction: client.player.direction,
             position: client.player.position,
             updateWindow: lastUpdate,
-            health: client.player.health
+            health: client.player.health,
+            vision : client.player.vision
         };
         if(client.player.reportUpdate) {
             client.socket.emit(NetworkIds.UPDATE_SELF, update);

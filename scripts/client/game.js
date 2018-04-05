@@ -13,6 +13,9 @@ MyGame.main = (function(graphics, renderer, input, components) {
             texture: MyGame.assets['player-self-east']
         },
         playerOthers = {},
+        clip = {
+            clipping : false
+        },
         missiles = {},
         explosions = {},
         messageHistory = Queue.create(),
@@ -135,6 +138,7 @@ MyGame.main = (function(graphics, renderer, input, components) {
         playerSelf.model.position.y = data.position.y;
         playerSelf.model.direction = data.direction;
         playerSelf.model.health = data.health;
+        playerSelf.model.vision = data.vision;
         let textureString = 'player-self-' + getTexture(playerSelf.model.direction);
         playerSelf.texture = MyGame.assets[textureString];
 
@@ -335,16 +339,17 @@ MyGame.main = (function(graphics, renderer, input, components) {
     function render() {
         graphics.clear();
         renderer.Player.render(playerSelf.model, playerSelf.texture);
+        graphics.enableClipping(playerSelf.model, clip);
         for (let id in playerOthers) {
             let player = playerOthers[id];
             let textureKey = 'player-other-' + getTexture(player.model.state.direction);
             renderer.PlayerRemote.render(player.model, MyGame.assets[textureKey]);
         }
-
+        graphics.disableClipping(clip);
         for (let missile in missiles) {
             renderer.Missile.render(missiles[missile]);
         }
-
+        graphics.disableClipping(clip);
         for (let id in explosions) {
             renderer.AnimatedSprite.render(explosions[id]);
         }

@@ -135,6 +135,42 @@ MyGame.graphics = (function() {
 
     }
 
+    //------------------------------------------------------------------
+    //
+    // Function for enabling clipping vision for the player
+    //
+    //------------------------------------------------------------------
+
+    function enableClipping(player, clip){
+        if(!clip.clipping){
+            context.save();
+            clip.clipping = true;
+
+            context.beginPath();
+            context.moveTo(player.vision[0].x*canvas.width, player.vision[0].y*canvas.height);
+            for (let point = 1; point < player.vision.length; point++){
+                context.lineTo(player.vision[point].x*canvas.width, player.vision[point].y*canvas.height);
+            }
+            context.closePath();
+            context.strokeStyle = "#FF0000";
+            context.stroke();
+            context.clip();
+        }
+    }
+
+    //------------------------------------------------------------------
+    //
+    // Function for enabling clipping vision for the player
+    //
+    //------------------------------------------------------------------
+
+    function disableClipping(clip){
+        if(clip.clipping){
+            context.restore();
+            clip.clipping = false;
+        }
+    }
+
     return {
         clear: clear,
         saveContext: saveContext,
@@ -143,6 +179,8 @@ MyGame.graphics = (function() {
         drawImage: drawImage,
         drawImageSpriteSheet: drawImageSpriteSheet,
         drawAimer: drawAimer,
-        drawCircle: drawCircle
+        drawCircle: drawCircle,
+        enableClipping : enableClipping,
+        disableClipping : disableClipping
     };
 }());
