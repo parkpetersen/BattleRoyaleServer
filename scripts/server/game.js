@@ -54,6 +54,10 @@ function processInput(elapsedTime){
             case NetworkIds.INPUT_FIRE:
                 createMissile(input.clientId, client.player);
                 break;
+            case NetworkIds.ACKNOWLEDGE_DEATH:
+                client.player.pushUpdate();
+                break;
+
         }
     }
 }
@@ -176,7 +180,6 @@ function updateClients(elapsedTime){
             client.socket.emit(NetworkIds.DEAD, update);
             client.player.state = 'sinking';
             client.player.reportUpdate = true;
-            //delete activeClients[clientId];
         }
     }
 
@@ -266,6 +269,13 @@ function initializeSocketIO(httpServer) {
                 message: data
             });
         });
+
+        // socket.on(NetworkIds.ACKNOWLEDGE_DEATH, data => {
+        //     inputQueue.enqueue({
+        //         clientId: socket.id,
+        //         message: data
+        //     });
+        // });
 
         socket.on('disconnect', function() {
             delete activeClients[socket.id];

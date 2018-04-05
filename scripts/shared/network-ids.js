@@ -53,6 +53,10 @@
         'DEAD': {
             value: 'dead',
             writable: false
+        },
+        'ACKNOWLEDGE_DEATH':{
+            value: 'aknowledge-death',
+            writable: false
         }
     });
 

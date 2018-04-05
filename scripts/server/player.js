@@ -62,9 +62,7 @@ function createPlayer(){
 
     Object.defineProperty(that, 'health', {
         get: () => health,
-        set: (value) => health = value,
-        increase: (value) => {health += value},
-        decrease: (value) => {health -= value}
+        set: (value) => health = value
     })
 
     Object.defineProperty(that, 'state',{
@@ -97,6 +95,10 @@ function createPlayer(){
 
     that.update = function(when){
     };
+
+    that.pushUpdate = function(){
+        reportUpdate = true;
+    }
 
     return that;
 }
