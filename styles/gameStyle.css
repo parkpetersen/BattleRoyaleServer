@@ -1,0 +1,75 @@
+#main {
+  background-image: url('/assets/sea_battle_by_lobzov.jpg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: auto 100%;
+  overflow: auto;
+  margin: auto;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+}
+
+#main h1 {
+  text-align: center;
+  color: white;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
+
+#canvas-main {
+  width: 600;
+  height: 600;
+  margin: auto;
+  background-color: rgb(126, 180, 182);
+  display: none;
+}
+
+.button {
+  display: block;
+  width: 150px;
+  margin: 0 auto;
+  height: 30px;
+  line-height: 30px;
+  border: 1px solid rgb(146, 130, 41);
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+  background-color: rgb(245, 217, 60);
+  background-image: -webkit-linear-gradient(bottom, rgb(245, 217, 60) 0%, rgb(146, 130, 41) 100%);
+  background-image:         linear-gradient(to bottom, rgb(245, 217, 60) 0%, rgb(146, 130, 41) 100%);
+  border-radius: 5px;
+}
+
+.button:hover {
+  background-color: rgb(245, 217, 60);
+  background-image: -webkit-linear-gradient(bottom, rgb(146, 130, 41) 0%, rgb(245, 217, 60) 100%);
+  background-image:         linear-gradient(to bottom, rgb(146, 130, 41) 0%, rgb(245, 217, 60) 100%);
+}
+
+.button-disabled{
+  pointer-events: none;
+  cursor: not-allowed;
+  display: block;
+  width: 150px;
+  margin: 0 auto;
+  height: 30px;
+  line-height: 30px;
+  opacity: 0.5;
+  border: 1px solid rgb(133, 129, 112);
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+  background-color: rgb(245, 217, 60);
+  background-image: -webkit-linear-gradient(bottom, rgb(245, 217, 60) 0%, rgb(146, 130, 41) 100%);
+  background-image:         linear-gradient(to bottom, rgb(245, 217, 60) 0%, rgb(146, 130, 41) 100%);
+  border-radius: 5px;
+}
+
+ul {
+  list-style-type: none;
+}
+
+li {
+  margin: 5px 0;
+}

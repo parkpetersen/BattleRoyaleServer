@@ -2,11 +2,28 @@
 <html lang = "en-US">
 <head>
 	<meta charset = "UTF-8">
-	<title>Multiplayer - Complete</title>
+	<title>Tales of Boats n' Booty</title>
+	<link rel="stylesheet" href="styles/gameStyle.css" type="text/css" media="screen">
 	<script src = "/node_modules/socket.io-client/dist/socket.io.slim.js"></script>
 </head>
 <body>
-	<canvas id = "canvas-main" width = "600" height = "600" style = "background-color: rgb(0, 0, 0)"></canvas>
+	<div> 
+		<div id="menu" class="main">
+			<div id="main">
+				<h1>Tales of <br> Boats n' Booty</h1>
+				<ul>
+					<li><a href="javascript:void(0)" class="button play">Start Game</a></li>
+					<li><a href="javascript:void(0)" class="button-disabled">Join Game Lobby</a></li>					
+					<li><a href="javascript:void(0)" class="button-disabled">Create New User</a></li>
+					<li><a href="javascript:void(0)" class="button-disabled">Options</a></li>
+					<li><a href="javascript:void(0)" class="button-disabled">Leaderboard</a></li>
+					<li><a href="javascript:void(0)" class="button-disabled">Credits</a></li>
+				</ul>
+			</div>
+		</div>
+		<canvas id = "canvas-main" height = "600" width = "600">
+		</canvas>
+	</div>
 
 	<script data-main = "scripts/client/loader" src = "scripts/client/require.js"></script>
 </body>
