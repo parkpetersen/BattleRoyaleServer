@@ -124,15 +124,27 @@ MyGame.graphics = (function() {
         let xVector = Math.cos(direction);
         let yVector = Math.sin(direction);
         context.moveTo(startPos.x * canvas.width, startPos.y * canvas.width);
-        context.lineTo((startPos.x * canvas.width) + (xVector * 100), (startPos.y * canvas.width) + (yVector * 100));
-        context.strokeStyle = 'red';
-        context.fillStyle = 'red';
-        context.setLineDash([5, 15]);
+        context.lineTo((startPos.x * canvas.width) + (xVector * 200), (startPos.y * canvas.width) + (yVector * 200));
+        context.strokeStyle = 'black';
+        context.fillStyle = 'black';
+        context.setLineDash([10, 15]);
         context.stroke();
         context.fill();
         context.closePath();
         context.restore();
 
+    }
+
+    function drawVision(vision){
+        context.save();
+        context.beginPath();
+        context.arc(vision.x*canvas.width, vision.y*canvas.width, vision.radius*canvas.width, vision.start, vision.end);
+        context.strokeStyle = "#FFFFFF";
+        context.fillStyle = "#808080";
+        context.stroke();
+        context.fill();
+        context.closePath();
+        context.restore();
     }
 
     //------------------------------------------------------------------
@@ -147,13 +159,8 @@ MyGame.graphics = (function() {
             clip.clipping = true;
 
             context.beginPath();
-            context.moveTo(player.vision[0].x*canvas.width, player.vision[0].y*canvas.height);
-            for (let point = 1; point < player.vision.length; point++){
-                context.lineTo(player.vision[point].x*canvas.width, player.vision[point].y*canvas.height);
-            }
+            context.arc(player.vision.x*canvas.width, player.vision.y*canvas.width, player.vision.radius*canvas.width, player.vision.start, player.vision.end);
             context.closePath();
-            context.strokeStyle = "#FF0000";
-            context.stroke();
             context.clip();
         }
     }
@@ -180,6 +187,7 @@ MyGame.graphics = (function() {
         drawImageSpriteSheet: drawImageSpriteSheet,
         drawAimer: drawAimer,
         drawCircle: drawCircle,
+        drawVision: drawVision,
         enableClipping : enableClipping,
         disableClipping : disableClipping
     };

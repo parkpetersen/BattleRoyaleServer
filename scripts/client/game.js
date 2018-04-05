@@ -338,18 +338,23 @@ MyGame.main = (function(graphics, renderer, input, components) {
     //------------------------------------------------------------------
     function render() {
         graphics.clear();
+        
         renderer.Player.render(playerSelf.model, playerSelf.texture);
+        
         graphics.enableClipping(playerSelf.model, clip);
+
         for (let id in playerOthers) {
             let player = playerOthers[id];
             let textureKey = 'player-other-' + getTexture(player.model.state.direction);
             renderer.PlayerRemote.render(player.model, MyGame.assets[textureKey]);
         }
-        graphics.disableClipping(clip);
+        
         for (let missile in missiles) {
             renderer.Missile.render(missiles[missile]);
         }
+        
         graphics.disableClipping(clip);
+        
         for (let id in explosions) {
             renderer.AnimatedSprite.render(explosions[id]);
         }

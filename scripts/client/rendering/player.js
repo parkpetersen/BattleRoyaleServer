@@ -15,6 +15,7 @@ MyGame.renderer.Player = (function(graphics) {
     that.render = function(model, texture) {
         graphics.saveContext();
         //graphics.rotateCanvas(model.position, model.direction);
+        graphics.drawVision(model.vision);
         graphics.drawAimer(model.position, model.direction);
         graphics.drawImage(texture, model.position, model.size);
         graphics.restoreContext();

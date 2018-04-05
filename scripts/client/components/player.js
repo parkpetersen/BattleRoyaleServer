@@ -14,23 +14,18 @@ MyGame.components.Player = function() {
         width: 0.1,
         height: 0.1
     };
-    let vision = [
-        {
-            x : 0,
-            y : 0
-        },
-        {
-            x : 0,
-            y : 0        },
-        {
-            x : 0,
-            y : 0
-        }];
+
     let direction = 0;
     let rotateRate = 0;
     let speed = 0;
     let health = 100;
-
+    let vision = {
+        x : position.x,
+        y : position.y,
+        radius : .3,
+        start : direction + Math.PI,
+        end : direction - Math.PI
+    };
     Object.defineProperty(that, 'direction', {
         get: () => direction,
         set: (value) => { direction = value }
@@ -75,6 +70,9 @@ MyGame.components.Player = function() {
 
         position.x += (vectorX * elapsedTime * speed);
         position.y += (vectorY * elapsedTime * speed);
+        
+        vision.x = position.x;
+        vision.y = position.y;
     };
 
     //------------------------------------------------------------------
@@ -84,6 +82,8 @@ MyGame.components.Player = function() {
     //------------------------------------------------------------------
     that.rotateRight = function(elapsedTime) {
         direction += (rotateRate * elapsedTime);
+        vision.start = direction - Math.PI/2;
+        vision.end = direction + Math.PI/2;
     };
 
     //------------------------------------------------------------------
@@ -93,6 +93,8 @@ MyGame.components.Player = function() {
     //------------------------------------------------------------------
     that.rotateLeft = function(elapsedTime) {
         direction -= (rotateRate * elapsedTime);
+        vision.start = direction - Math.PI/2;
+        vision.end = direction + Math.PI/2;
     };
 
     that.update = function(elapsedTime) {

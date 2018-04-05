@@ -15,21 +15,16 @@ function createPlayer(){
         //may need to change values here
     };
 
-    let vision = [
-        {
-            x : position.x,
-            y : position.y
-        },
-        {
-            x : position.x-50,
-            y : position.y+100
-        },
-        {
-            x : position.x+50,
-            y : position.y+100
-        }];
-
     let direction = random.nextDouble() * 2 * Math.PI; //angle facing at start
+
+    let vision = {
+        x : position.x,
+        y : position.y,
+        radius : .3,
+        start : direction - Math.PI,
+        end : direction + Math.PI
+    };
+
     let rotateRate = Math.PI / 1000;
     let speed = .0002;
     let reportUpdate = false;
@@ -92,20 +87,23 @@ function createPlayer(){
 
         position.x += (vectorX * elapsedTime * speed);
         position.y += (vectorY * elapsedTime * speed);
-
-        console.log(vision);
-        vision[0].x = position.x;
-        vision[0].y = position.y;
+        
+        vision.x = position.x;
+        vision.y = position.y;     
     };
 
     that.rotateRight = function(elapsedTime){
         reportUpdate = true;
         direction += (rotateRate * elapsedTime);
+        vision.start = direction - Math.PI/2;
+        vision.end = direction + Math.PI/2;
     };
 
     that.rotateLeft = function(elapsedTime){
         reportUpdate = true;
         direction -= (rotateRate * elapsedTime);
+        vision.start = direction - Math.PI/2;
+        vision.end = direction + Math.PI/2;
     };
 
     that.missileHit = function(damage){
