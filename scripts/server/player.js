@@ -21,13 +21,13 @@ function createPlayer(){
         x : position.x,
         y : position.y,
         radius : .3,
-        start : direction - Math.PI,
-        end : direction + Math.PI
+        start : direction - Math.PI/2,
+        end : direction + Math.PI/2
     };
 
     let rotateRate = Math.PI / 1000;
     let speed = .0002;
-    let reportUpdate = false;
+    let reportUpdate = true;
 
     let health = 100;
     let playerDamage = 20;
@@ -89,7 +89,7 @@ function createPlayer(){
         position.y += (vectorY * elapsedTime * speed);
         
         vision.x = position.x;
-        vision.y = position.y;     
+        vision.y = position.y;
     };
 
     that.rotateRight = function(elapsedTime){

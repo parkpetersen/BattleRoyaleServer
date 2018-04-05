@@ -7,8 +7,8 @@ MyGame.components.Player = function() {
     'use strict';
     let that = {};
     let position = {
-        x: 0,
-        y: 0
+        x: -1,
+        y: -1
     };
     let size = {
         width: 0.1,
@@ -73,6 +73,11 @@ MyGame.components.Player = function() {
         
         vision.x = position.x;
         vision.y = position.y;
+        
+        vision.start = direction - Math.PI/2;
+        vision.end = direction + Math.PI/2;
+
+        console.log(direction);
     };
 
     //------------------------------------------------------------------
@@ -84,6 +89,7 @@ MyGame.components.Player = function() {
         direction += (rotateRate * elapsedTime);
         vision.start = direction - Math.PI/2;
         vision.end = direction + Math.PI/2;
+        console.log(direction);
     };
 
     //------------------------------------------------------------------
@@ -95,6 +101,7 @@ MyGame.components.Player = function() {
         direction -= (rotateRate * elapsedTime);
         vision.start = direction - Math.PI/2;
         vision.end = direction + Math.PI/2;
+        console.log(direction);
     };
 
     that.update = function(elapsedTime) {
