@@ -18,6 +18,7 @@ MyGame.main = (function(graphics, renderer, input, components) {
         },
         missiles = {},
         explosions = {},
+        pickups = {},
         messageHistory = Queue.create(),
         messageId = 1,
         nextExplosionId = 1,

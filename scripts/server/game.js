@@ -6,13 +6,14 @@ const Missile = require('./missile');
 const NetworkIds = require('../shared/network-ids');
 const Queue = require('../shared/queue.js');
 
-const SIMULATION_UPDATE_RATE_MS = 50;
-const STATE_UPDATE_RATE_MS = 100;
+const SIMULATION_UPDATE_RATE_MS = 10;
+const STATE_UPDATE_RATE_MS = 50;
 let lastUpdate = 0;
 let quit = false;
 let activeClients = {};
 let newMissiles = [];
 let activeMissiles = [];
+let pickups = [];
 let hits = [];
 let inputQueue = Queue.create();
 let nextMissileId = 1;
