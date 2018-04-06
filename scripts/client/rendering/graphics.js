@@ -141,7 +141,30 @@ MyGame.graphics = (function() {
         context.arc(vision.x*canvas.width, vision.y*canvas.width, vision.radius*canvas.width, vision.start, vision.end);
         context.strokeStyle = "#FFFFFF";
         context.fillStyle = "#808080";
+        context.fill();
         context.stroke();
+    }
+    
+    function drawHealthBar(position, size, health){
+        let localPosition = {
+            x: position.x * canvas.width,
+            y: position.y * canvas.width
+        };
+        let localSize = {
+            width: size.width * canvas.width,
+            height: size.height * canvas.height
+        };
+
+        context.save();
+        context.beginPath();
+        //context.moveTo(localPosition.x - (localSize.width/2), localPosition.y + (localSize.height/2));
+        let healthFraction = health/100;
+        let missingFraction = 1 - healthFraction;
+        // context.rect(localPosition.x - (localSize.width/2) + (localSize.width*healthFraction), localPosition.y + (localSize.height/2), localSize.width * missingFraction, localSize.height/8);
+        // context.fillStyle = 'red';
+        // context.fill();
+        context.rect(localPosition.x - (localSize.width/2), localPosition.y + (localSize.height/2), localSize.width*healthFraction, localSize.height/8);
+        context.fillStyle = 'green';
         context.fill();
         context.closePath();
         context.restore();
@@ -189,6 +212,8 @@ MyGame.graphics = (function() {
         drawCircle: drawCircle,
         drawVision: drawVision,
         enableClipping : enableClipping,
-        disableClipping : disableClipping
+        disableClipping : disableClipping,
+        drawHealthBar: drawHealthBar,
+        drawCircle: drawCircle
     };
 }());

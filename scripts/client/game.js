@@ -22,7 +22,12 @@ MyGame.main = (function(graphics, renderer, input, components) {
         messageId = 1,
         nextExplosionId = 1,
         socket = io(),
-        networkQueue = Queue.create();
+        networkQueue = Queue.create(),
+        upIdKey = 0,
+        leftIdKey = 0,
+        rightIdKey = 0,
+        downIdKey = 0,
+        fireIdKey = 0;
 
     
     socket.on(NetworkIds.CONNECT_ACK, data => {
@@ -74,6 +79,13 @@ MyGame.main = (function(graphics, renderer, input, components) {
         });
     });
 
+    socket.on(NetworkIds.DEAD, data => {
+        networkQueue.enqueue({
+            type: NetworkIds.DEAD,
+            data: data
+        });
+    });
+
     //------------------------------------------------------------------
     //
     // Handler for when the server ack's the socket connection.  We receive
@@ -104,11 +116,13 @@ MyGame.main = (function(graphics, renderer, input, components) {
         model.state.position.y = data.position.y;
         model.state.direction = data.direction;
         model.state.lastUpdate = performance.now();
+        model.state.state = 'alive';
 
         model.goal.position.x = data.position.x;
         model.goal.position.y = data.position.y;
         model.goal.direction = data.direction;
         model.goal.updateWindow = 0;
+        model.goal.state = 'alive';
 
         model.size.x = data.size.x;
         model.size.y = data.size.y;
@@ -141,6 +155,8 @@ MyGame.main = (function(graphics, renderer, input, components) {
         playerSelf.model.vision = data.vision;
         let textureString = 'player-self-' + getTexture(playerSelf.model.direction);
         playerSelf.texture = MyGame.assets[textureString];
+        playerSelf.model.state = data.state;
+        
 
         //
         // Remove messages from the queue up through the last one identified
@@ -177,44 +193,57 @@ MyGame.main = (function(graphics, renderer, input, components) {
             model.goal.position.x = data.position.x;
             model.goal.position.y = data.position.y
             model.goal.direction = data.direction;
-            model.state.health = data.health;
+            model.goal.health = data.health;
+            model.goal.state = data.state;
         }
     }
 
-    function getTexture(direction){
-        let myDirection = direction;
-        if (myDirection > 2*Math.PI){
+    function getTexture(direction, state){
+        let prefix = '';
+        let postfix = '';
+        if(state === 'sinking'){
+            prefix = 'sinking-';
+            postfix = '-2';
+        }
+        let myDirection = direction % (2* Math.PI);
+        if (myDirection === 0 || Math.abs(myDirection) === 2* Math.PI){
+            return prefix + 'east' + postfix;
+        }
+        if (myDirection >= 2*Math.PI){
             myDirection = myDirection % (2* Math.PI);
         }
-        else if(myDirection < 0){
-            myDirection = (2 * Math.PI) - Math.abs(myDirection);
+        else if(myDirection < 0 && myDirection > -2*Math.PI){
+            myDirection = (2 * Math.PI) - (Math.abs(myDirection));
+        }
+        else if(myDirection <= -2 * Math.PI){
+            myDirection = -((2*Math.PI) - (Math.abs(myDirection) % (2*Math.PI)))
         }
         if(myDirection > Math.PI/12 && myDirection < 5*Math.PI/12){
-            return 'south-east';
+            return prefix + 'south-east' + postfix;
         }
         else if(myDirection >= 5*Math.PI/12 && myDirection<= 7*Math.PI/12){
-            return 'south';
+            return prefix + 'south' + postfix;
         }
         else if(myDirection > 7*Math.PI/12 && myDirection < 11*Math.PI/12){
-            return 'south-west';
+            return prefix + 'south-west' + postfix;
         }
         else if(myDirection >= 11*Math.PI/12 && myDirection <= 13*Math.PI/12 ){
-            return 'west';
+            return prefix + 'west' + postfix;
         }
         else if (myDirection > 13*Math.PI/12 && myDirection < 17*Math.PI/12){
-            return 'north-west';
+            return prefix + 'north-west' + postfix;
         }
         else if (myDirection >= 17*Math.PI/12 && myDirection <= 19*Math.PI/12){
-            return 'north';
+            return prefix + 'north' + postfix;
         }
         else if (myDirection > 19*Math.PI/12 && myDirection < 23*Math.PI/12){
-            return 'north-east';
+            return prefix + 'north-east' + postfix;
         }
         else if (myDirection <= Math.PI/12 && myDirection >= 0){
-            return 'east';
+            return prefix + 'east' + postfix;
         }
-        else if (myDirection >= 23*Math.PI/12 && myDirection < 2*Math.PI){
-            return 'east';
+        else if (myDirection >= 23*Math.PI/12 && myDirection <= 2*Math.PI){
+            return prefix + 'east' + postfix;
         }
     }
 
@@ -258,6 +287,22 @@ MyGame.main = (function(graphics, renderer, input, components) {
         delete missiles[data.missileId];
     }
 
+    function killPlayer(data) {
+        myKeyboard.unregisterHandler(MyGame.input.KeyEvent.DOM_VK_UP, upIdKey);
+        myKeyboard.unregisterHandler(MyGame.input.KeyEvent.DOM_VK_RIGHT, rightIdKey);
+        myKeyboard.unregisterHandler(MyGame.input.KeyEvent.DOM_VK_LEFT, leftIdKey);
+        myKeyboard.unregisterHandler(MyGame.input.KeyEvent.DOM_VK_SPACE, fireIdKey);
+        playerSelf.model.state = 'sinking';
+        let message = {
+            id: messageId++,
+            elapsedTime: 10,
+            type: NetworkIds.INPUT_ROTATE_LEFT
+        };
+        socket.emit(NetworkIds.INPUT, message);
+        messageHistory.enqueue(message);
+        alert(data.message);
+    }
+
     //------------------------------------------------------------------
     //
     // Process the registered input handlers here.
@@ -298,6 +343,9 @@ MyGame.main = (function(graphics, renderer, input, components) {
                 case NetworkIds.MISSILE_HIT:
                     missileHit(message.data);
                     break;
+                case NetworkIds.DEAD:
+                    killPlayer(message.data);
+                    break;
             }
         }
     }
@@ -308,6 +356,7 @@ MyGame.main = (function(graphics, renderer, input, components) {
     //
     //------------------------------------------------------------------
     function update(elapsedTime) {
+
         playerSelf.model.update(elapsedTime);
         for (let id in playerOthers) {
             playerOthers[id].model.update(elapsedTime);
@@ -338,17 +387,22 @@ MyGame.main = (function(graphics, renderer, input, components) {
     //------------------------------------------------------------------
     function render() {
         graphics.clear();
-        
+
+        let textureString = 'player-self-' + getTexture(playerSelf.model.direction, playerSelf.model.state);
+        playerSelf.texture = MyGame.assets[textureString];
         renderer.Player.render(playerSelf.model, playerSelf.texture);
         
         graphics.enableClipping(playerSelf.model, clip);
 
         for (let id in playerOthers) {
             let player = playerOthers[id];
-            let textureKey = 'player-other-' + getTexture(player.model.state.direction);
+            let textureKey = 'player-other-' + getTexture(player.model.state.direction, player.model.state.state);
             renderer.PlayerRemote.render(player.model, MyGame.assets[textureKey]);
         }
         
+       
+        //renderer.Player.render(playerSelf.model, playerSelf.texture);
+
         for (let missile in missiles) {
             renderer.Missile.render(missiles[missile]);
         }
@@ -386,7 +440,7 @@ MyGame.main = (function(graphics, renderer, input, components) {
         console.log('game initializing...');
         //
         // Create the keyboard input handler and register the keyboard commands
-        myKeyboard.registerHandler(elapsedTime => {
+        upIdKey = myKeyboard.registerHandler(elapsedTime => {
                 let message = {
                     id: messageId++,
                     elapsedTime: elapsedTime,
@@ -396,9 +450,9 @@ MyGame.main = (function(graphics, renderer, input, components) {
                 messageHistory.enqueue(message);
                 playerSelf.model.move(elapsedTime);
             },
-            MyGame.input.KeyEvent.DOM_VK_W, true);
+            MyGame.input.KeyEvent.DOM_VK_UP, true);
 
-        myKeyboard.registerHandler(elapsedTime => {
+        rightIdKey = myKeyboard.registerHandler(elapsedTime => {
                 let message = {
                     id: messageId++,
                     elapsedTime: elapsedTime,
@@ -408,9 +462,9 @@ MyGame.main = (function(graphics, renderer, input, components) {
                 messageHistory.enqueue(message);
                 playerSelf.model.rotateRight(elapsedTime);
             },
-            MyGame.input.KeyEvent.DOM_VK_D, true);
+            MyGame.input.KeyEvent.DOM_VK_RIGHT, true);
 
-        myKeyboard.registerHandler(elapsedTime => {
+        leftIdKey = myKeyboard.registerHandler(elapsedTime => {
                 let message = {
                     id: messageId++,
                     elapsedTime: elapsedTime,
@@ -420,9 +474,9 @@ MyGame.main = (function(graphics, renderer, input, components) {
                 messageHistory.enqueue(message);
                 playerSelf.model.rotateLeft(elapsedTime);
             },
-            MyGame.input.KeyEvent.DOM_VK_A, true);
+            MyGame.input.KeyEvent.DOM_VK_LEFT, true);
 
-        myKeyboard.registerHandler(elapsedTime => {
+        fireIdKey = myKeyboard.registerHandler(elapsedTime => {
                 let message = {
                     id: messageId++,
                     elapsedTime: elapsedTime,

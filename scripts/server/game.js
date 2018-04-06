@@ -54,6 +54,10 @@ function processInput(elapsedTime){
             case NetworkIds.INPUT_FIRE:
                 createMissile(input.clientId, client.player);
                 break;
+            case NetworkIds.ACKNOWLEDGE_DEATH:
+                client.player.pushUpdate();
+                break;
+
         }
     }
 }
@@ -148,7 +152,8 @@ function updateClients(elapsedTime){
             position: client.player.position,
             updateWindow: lastUpdate,
             health: client.player.health,
-            vision : client.player.vision
+            vision : client.player.vision,
+            state: client.player.state
         };
         if(client.player.reportUpdate) {
             client.socket.emit(NetworkIds.UPDATE_SELF, update);
@@ -166,6 +171,16 @@ function updateClients(elapsedTime){
         
         for (let hit = 0; hit < hits.length; hit++) {
             client.socket.emit(NetworkIds.MISSILE_HIT, hits[hit]);
+        }
+
+        if(client.player.health <= 0 && client.player.state === 'alive'){
+            let update = {
+                clientId : clientId,
+                message: 'You are dead. Better luck next time matey.'
+            };
+            client.socket.emit(NetworkIds.DEAD, update);
+            client.player.state = 'sinking';
+            client.player.reportUpdate = true;
         }
     }
 
@@ -255,6 +270,13 @@ function initializeSocketIO(httpServer) {
                 message: data
             });
         });
+
+        // socket.on(NetworkIds.ACKNOWLEDGE_DEATH, data => {
+        //     inputQueue.enqueue({
+        //         clientId: socket.id,
+        //         message: data
+        //     });
+        // });
 
         socket.on('disconnect', function() {
             delete activeClients[socket.id];

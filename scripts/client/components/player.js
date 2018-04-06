@@ -26,6 +26,8 @@ MyGame.components.Player = function() {
         start : direction + Math.PI/2,
         end : direction - Math.PI/2
     };
+    let state = 'alive';
+
     Object.defineProperty(that, 'direction', {
         get: () => direction,
         set: (value) => { direction = value }
@@ -57,6 +59,11 @@ MyGame.components.Player = function() {
     Object.defineProperty(that, 'vision', {
         get: () => vision,
         set : (value) => vision = value
+    });
+    
+    Object.defineProperty(that, 'state',{
+        get: () => state,
+        set: (value) => {state = value}
     });
 
     //------------------------------------------------------------------
