@@ -1,0 +1,23 @@
+MyGame.renderer.Pickup = (function(graphics) {
+    'use strict';
+    let that = {};
+
+    // ------------------------------------------------------------------
+    //
+    // Renders a Player model.
+    //
+    // ------------------------------------------------------------------
+    that.render = function(model, texture) {
+        graphics.saveContext();
+
+        //graphics.rotateCanvas(model.position, model.direction);
+        // graphics.drawVision(model.vision);
+        // graphics.drawAimer(model.position, model.direction);
+        // graphics.drawImage(texture, model.position, model.size);
+        // graphics.drawHealthBar(model.position, model.size, model.health);
+        graphics.restoreContext();
+    };
+
+    return that;
+
+}(MyGame.graphics)); 

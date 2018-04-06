@@ -3,6 +3,7 @@
 const present = require('present');
 const Player = require('./player');
 const Missile = require('./missile');
+const Pickup = require('./pickup.js');
 const NetworkIds = require('../shared/network-ids');
 const Queue = require('../shared/queue.js');
 
