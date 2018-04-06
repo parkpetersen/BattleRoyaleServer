@@ -18,6 +18,7 @@ MyGame.renderer.Player = (function(graphics) {
         graphics.drawVision(model.vision);
         graphics.drawAimer(model.position, model.direction);
         graphics.drawImage(texture, model.position, model.size);
+        graphics.drawHealthBar(model.position, model.size, model.health);
         graphics.restoreContext();
     };
 
