@@ -18,6 +18,7 @@ MyGame.components.Player = function() {
     let rotateRate = 0;
     let speed = 0;
     let health = 100;
+    let state = 'alive';
 
     Object.defineProperty(that, 'direction', {
         get: () => direction,
@@ -45,6 +46,11 @@ MyGame.components.Player = function() {
     Object.defineProperty(that, 'health',{
         get: () => health,
         set: (value) => {health = value}
+    });
+
+    Object.defineProperty(that, 'state',{
+        get: () => state,
+        set: (value) => {state = value}
     });
 
     //------------------------------------------------------------------
