@@ -45,6 +45,10 @@ MyGame.loader = (function() {
             scripts: ['game'],
             message: 'Gameplay model loaded',
             onComplete: null
+        }, {
+            scripts: ['mainmenu'],
+            message: 'Menu loaded',
+            onComplete: null
         }],
         assetOrder = [{
             key: 'player-self-north',
@@ -151,6 +155,9 @@ MyGame.loader = (function() {
         }, {
             key: 'explosion',
             source: 'assets/explosion.png'
+        }, {
+            key: 'menu-background',
+            source: 'assets/sea_battle_by_lobzov.jpg'
         }];
 
     //------------------------------------------------------------------
@@ -267,7 +274,7 @@ MyGame.loader = (function() {
     //------------------------------------------------------------------
     function mainComplete() {
         console.log('it is all loaded up');
-        MyGame.main.initialize();
+        MyGame.menu;
     }
 
     //
