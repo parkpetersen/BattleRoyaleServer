@@ -110,6 +110,9 @@ MyGame.loader = (function() {
         }, {
             key: 'menu-background',
             source: 'assets/sea_battle_by_lobzov.jpg'
+        }, {
+            key: 'back-button',
+            source: 'assets/back-button.png'
         }];
 
     //------------------------------------------------------------------
