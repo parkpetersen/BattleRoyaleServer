@@ -95,6 +95,7 @@ function createPlayer(){
     that.rotateRight = function(elapsedTime){
         reportUpdate = true;
         direction += (rotateRate * elapsedTime);
+        if(direction >= 2*Math.PI) direction -= 2*Math.PI;
         vision.start = direction - Math.PI/2;
         vision.end = direction + Math.PI/2;
     };
@@ -102,6 +103,7 @@ function createPlayer(){
     that.rotateLeft = function(elapsedTime){
         reportUpdate = true;
         direction -= (rotateRate * elapsedTime);
+        if(direction < 0) direction += 2*Math.PI;
         vision.start = direction - Math.PI/2;
         vision.end = direction + Math.PI/2;
     };

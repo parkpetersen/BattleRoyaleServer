@@ -23,8 +23,8 @@ MyGame.components.Player = function() {
         x : position.x,
         y : position.y,
         radius : .3,
-        start : direction + Math.PI,
-        end : direction - Math.PI
+        start : direction + Math.PI/2,
+        end : direction - Math.PI/2
     };
     Object.defineProperty(that, 'direction', {
         get: () => direction,
@@ -89,6 +89,7 @@ MyGame.components.Player = function() {
         direction += (rotateRate * elapsedTime);
         vision.start = direction - Math.PI/2;
         vision.end = direction + Math.PI/2;
+        if(direction >= 2*Math.PI) direction -= 2*Math.PI;
         console.log(direction);
     };
 
@@ -101,6 +102,7 @@ MyGame.components.Player = function() {
         direction -= (rotateRate * elapsedTime);
         vision.start = direction - Math.PI/2;
         vision.end = direction + Math.PI/2;
+        if(direction < 0) direction += 2*Math.PI;
         console.log(direction);
     };
 
