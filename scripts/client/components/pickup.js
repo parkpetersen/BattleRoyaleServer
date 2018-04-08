@@ -1,8 +1,8 @@
-'use strict';
+MyGame.components.Pickup = function(){
+    'use strict';
 
-function createPickup(spec){
     let that = {};
-    
+
     let radius = 15;
 
     Object.defineProperty(that, 'id', {
@@ -23,5 +23,3 @@ function createPickup(spec){
 
     return that;
 }
-
-module.exports.create = (spec) => createPickUp(spec);

@@ -15,6 +15,15 @@ let activeClients = {};
 let newMissiles = [];
 let activeMissiles = [];
 let pickups = [];
+pickups.push({
+    id : 1,
+    position : {
+        x : .5,
+        y : .5
+    },
+    type : 'scope',
+    radius : .01
+});
 let hits = [];
 let inputQueue = Queue.create();
 let nextMissileId = 1;
@@ -166,6 +175,8 @@ function updateClients(elapsedTime){
                 }
             }
         }
+
+        client.socket.emit(NetworkIds.PICKUPS, pickups);
 
         for (let missile = 0; missile < missileMessages.length; missile++) {
             client.socket.emit(NetworkIds.MISSILE_NEW, missileMessages[missile]);

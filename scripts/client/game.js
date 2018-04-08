@@ -18,7 +18,7 @@ MyGame.main = (function(graphics, renderer, input, components) {
         },
         missiles = {},
         explosions = {},
-        pickups = {},
+        pickups = [],
         messageHistory = Queue.create(),
         messageId = 1,
         nextExplosionId = 1,
@@ -83,6 +83,12 @@ MyGame.main = (function(graphics, renderer, input, components) {
     socket.on(NetworkIds.DEAD, data => {
         networkQueue.enqueue({
             type: NetworkIds.DEAD,
+            data: data
+        });
+    });
+    socket.on(NetworkIds.PICKUPS, data => {
+        networkQueue.enqueue({
+            type: NetworkIds.PICKUPS,
             data: data
         });
     });
@@ -304,6 +310,10 @@ MyGame.main = (function(graphics, renderer, input, components) {
         alert(data.message);
     }
 
+    function updatePickups(data){
+        pickups = data;
+    }
+
     //------------------------------------------------------------------
     //
     // Process the registered input handlers here.
@@ -347,6 +357,8 @@ MyGame.main = (function(graphics, renderer, input, components) {
                 case NetworkIds.DEAD:
                     killPlayer(message.data);
                     break;
+                case NetworkIds.PICKUPS:
+                    updatePickups(message.data);
             }
         }
     }
@@ -393,7 +405,7 @@ MyGame.main = (function(graphics, renderer, input, components) {
         playerSelf.texture = MyGame.assets[textureString];
         renderer.Player.render(playerSelf.model, playerSelf.texture);
         
-        graphics.enableClipping(playerSelf.model, clip);
+        // graphics.enableClipping(playerSelf.model, clip);
 
         for (let id in playerOthers) {
             let player = playerOthers[id];
@@ -407,8 +419,12 @@ MyGame.main = (function(graphics, renderer, input, components) {
         for (let missile in missiles) {
             renderer.Missile.render(missiles[missile]);
         }
+
+        for(let pickup in pickups){
+            renderer.Pickup.render(pickups[pickup]);
+        }
         
-        graphics.disableClipping(clip);
+        // graphics.disableClipping(clip);
         
         for (let id in explosions) {
             renderer.AnimatedSprite.render(explosions[id]);

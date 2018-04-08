@@ -83,8 +83,6 @@ MyGame.components.Player = function() {
         
         vision.start = direction - Math.PI/2;
         vision.end = direction + Math.PI/2;
-
-        console.log(direction);
     };
 
     //------------------------------------------------------------------
@@ -96,8 +94,7 @@ MyGame.components.Player = function() {
         direction += (rotateRate * elapsedTime);
         vision.start = direction - Math.PI/2;
         vision.end = direction + Math.PI/2;
-        if(direction >= 2*Math.PI) direction -= 2*Math.PI;
-        console.log(direction);
+        if(direction >= 2*Math.PI) direction -= 2*Math.PI
     };
 
     //------------------------------------------------------------------
@@ -109,8 +106,7 @@ MyGame.components.Player = function() {
         direction -= (rotateRate * elapsedTime);
         vision.start = direction - Math.PI/2;
         vision.end = direction + Math.PI/2;
-        if(direction < 0) direction += 2*Math.PI;
-        console.log(direction);
+        if(direction < 0) direction += 2*Math.PI
     };
 
     that.update = function(elapsedTime) {
