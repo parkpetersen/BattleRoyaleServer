@@ -10,7 +10,6 @@ MyGame.renderer.Pickup = (function(graphics) {
     that.render = function(model) {
         graphics.saveContext();
 
-        console.log(model)
         graphics.drawCircle(model.position, model.radius, '#FF0000');
         graphics.restoreContext();
     };

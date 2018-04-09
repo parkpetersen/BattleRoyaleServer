@@ -15,18 +15,23 @@ let activeClients = {};
 let newMissiles = [];
 let activeMissiles = [];
 let pickups = [];
-pickups.push({
-    id : 1,
-    position : {
-        x : .5,
-        y : .5
-    },
-    type : 'scope',
-    radius : .01
-});
 let hits = [];
 let inputQueue = Queue.create();
 let nextMissileId = 1;
+
+function createPickups(){
+    for(var i = 0; i < 3; i++){
+        pickups.push({
+            id : 1,
+            position : {
+                x : Math.random(),
+                y : Math.random()
+            },
+            type : 'scope',
+            radius : .01
+        });
+    }
+}
 
 function createMissile(clientId, playerModel){
     let missile = Missile.create({
@@ -124,6 +129,19 @@ function update(elapsedTime, currentTime){
         }
     }
     activeMissiles = keepMissiles;
+
+    for (let pickup = 0; pickup < pickups.length; pickup++){
+        for(let clientId in activeClients){
+            if(collided(pickups[pickup], activeClients[clientId].player)){
+                activeClients[clientId].player.vision.radius *= 1.5;
+                //remove pickup from list
+                pickups = pickups.filter(function(item) { 
+                    return item !== pickups[pickup];
+                });
+                break;
+            }
+        }
+    }
 }
 
 function updateClients(elapsedTime){
@@ -302,6 +320,7 @@ function initializeSocketIO(httpServer) {
 
 function initialize(httpServer) {
     initializeSocketIO(httpServer);
+    createPickups();
     gameLoop(present(), 0);
 }
 

@@ -405,7 +405,7 @@ MyGame.main = (function(graphics, renderer, input, components) {
         playerSelf.texture = MyGame.assets[textureString];
         renderer.Player.render(playerSelf.model, playerSelf.texture);
         
-        // graphics.enableClipping(playerSelf.model, clip);
+        graphics.enableClipping(playerSelf.model, clip);
 
         for (let id in playerOthers) {
             let player = playerOthers[id];
@@ -424,7 +424,7 @@ MyGame.main = (function(graphics, renderer, input, components) {
             renderer.Pickup.render(pickups[pickup]);
         }
         
-        // graphics.disableClipping(clip);
+        graphics.disableClipping(clip);
         
         for (let id in explosions) {
             renderer.AnimatedSprite.render(explosions[id]);
