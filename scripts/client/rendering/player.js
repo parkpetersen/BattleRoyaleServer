@@ -12,13 +12,13 @@ MyGame.renderer.Player = (function(graphics) {
     // Renders a Player model.
     //
     // ------------------------------------------------------------------
-    that.render = function(model, texture) {
+    that.render = function(model, texture, xViewport, yViewport) {
         graphics.saveContext();
         //graphics.rotateCanvas(model.position, model.direction);
-        graphics.drawVision(model.vision);
-        graphics.drawAimer(model.position, model.direction);
-        graphics.drawImage(texture, model.position, model.size);
-        graphics.drawHealthBar(model.position, model.size, model.health);
+        graphics.drawVision(model.vision, xViewport, yViewport);
+        graphics.drawAimer(model.position, model.direction, xViewport, yViewport);
+        graphics.drawImage(texture, model.position, model.size, xViewport, yViewport);
+        graphics.drawHealthBar(model.position, model.size, model.health, xViewport, yViewport);
         graphics.restoreContext();
     };
 

@@ -30,7 +30,7 @@ MyGame.loader = (function() {
             message: 'Input loaded',
             onComplete: null
         }, {
-            scripts: ['components/player', 'components/player-remote', 'components/missile', 'components/animated-sprite'],
+            scripts: ['components/player', 'components/player-remote', 'components/missile', 'components/animated-sprite', 'components/camera'],
             message: 'Player models loaded',
             onComplete: null
         }, {

@@ -29,6 +29,17 @@ MyGame.main = (function(graphics, renderer, input, components) {
         rightIdKey = 0,
         downIdKey = 0,
         fireIdKey = 0;
+    var room = {
+        width: 5000,
+        height: 5000
+    };
+    var camera = components.Camera({
+        xViewport: 0,
+        yViewport: 0,
+        viewPortHeight: 600/5000,
+        viewPortWidth: 600/5000,
+    });
+    camera.follow(playerSelf.model, 300/5000, 300/5000);
 
     
     socket.on(NetworkIds.CONNECT_ACK, data => {
@@ -379,6 +390,7 @@ MyGame.main = (function(graphics, renderer, input, components) {
                 delete explosions[id];
             }
         }
+        camera.update();
     }
 
     //------------------------------------------------------------------
@@ -388,17 +400,18 @@ MyGame.main = (function(graphics, renderer, input, components) {
     //------------------------------------------------------------------
     function render() {
         graphics.clear();
-
+        console.log('Player position: ' + playerSelf.model.position.x, ',' + playerSelf.model.position.y);
+        console.log('Camera position: ' + camera.getXViewport() + ',' + camera.getYViewport());
         let textureString = 'player-self-' + getTexture(playerSelf.model.direction, playerSelf.model.state);
         playerSelf.texture = MyGame.assets[textureString];
-        renderer.Player.render(playerSelf.model, playerSelf.texture);
+        renderer.Player.render(playerSelf.model, playerSelf.texture, camera.getXViewport()*5000, camera.getYViewport()*5000);
         
-        graphics.enableClipping(playerSelf.model, clip);
+        //graphics.enableClipping(playerSelf.model, clip);
 
         for (let id in playerOthers) {
             let player = playerOthers[id];
             let textureKey = 'player-other-' + getTexture(player.model.state.direction, player.model.state.state);
-            renderer.PlayerRemote.render(player.model, MyGame.assets[textureKey]);
+            renderer.PlayerRemote.render(player.model, MyGame.assets[textureKey], camera.getXViewport()*5000, camera.getYViewport()*5000);
         }
         
        
@@ -408,7 +421,7 @@ MyGame.main = (function(graphics, renderer, input, components) {
             renderer.Missile.render(missiles[missile]);
         }
         
-        graphics.disableClipping(clip);
+        //graphics.disableClipping(clip);
         
         for (let id in explosions) {
             renderer.AnimatedSprite.render(explosions[id]);

@@ -66,6 +66,14 @@ MyGame.components.Camera = function(spec) {
         height: worldHeight
     });
 
+    that.getXViewport = function(){
+        return xViewport;
+    };
+
+    that.getYViewport = function(){
+        return yViewport;
+    }
+
     that.follow = function(playerObject, deadZoneX, deadZoneY){
         followedPlayer = playerObject;
         xDeadZone = deadZoneX;
@@ -73,19 +81,19 @@ MyGame.components.Camera = function(spec) {
     };
 
     that.update = function(){
-        if(followed != null){
-            if(followed.position.x - xViewport + xDeadZone > viewPortWidth){
-                xViewport = followed.position.x - (viewPortWidth - xDeadZone);
+        if(followedPlayer != null){
+            if(followedPlayer.position.x - xViewport + xDeadZone > viewPortWidth){
+                xViewport = followedPlayer.position.x - (viewPortWidth - xDeadZone);
             }
-            else if(followed.position.x - xDeadZone < xViewport){
-                xViewport = followed.position.x - xDeadZone;
+            else if(followedPlayer.position.x - xDeadZone < xViewport){
+                xViewport = followedPlayer.position.x - xDeadZone;
             }
 
-            if(followed.position.y - yViewport + yDeadZone > viewPortHeight){
-                yViewport = followed.position.y - (viewPortHeight - yDeadZone);
+            if(followedPlayer.position.y - yViewport + yDeadZone > viewPortHeight){
+                yViewport = followedPlayer.position.y - (viewPortHeight - yDeadZone);
             }
-            else if(followed.position.y - yDeadZone < yViewport){
-                yViewport = this.followed.y - yDeadZone;
+            else if(followedPlayer.position.y - yDeadZone < yViewport){
+                yViewport = followedPlayer.position.y - yDeadZone;
             }
         }
 

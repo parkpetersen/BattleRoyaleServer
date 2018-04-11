@@ -65,10 +65,27 @@ MyGame.graphics = (function() {
     // Draw an image into the local canvas coordinate system.
     //
     //------------------------------------------------------------------
-    function drawImage(texture, center, size) {
+    function drawImage(texture, center, size, xViewport, yViewport) {
         let localCenter = {
-            x: center.x * canvas.width,
-            y: center.y * canvas.width
+            x: center.x * 5000 - xViewport,
+            y: center.y * 5000 - yViewport
+        };
+        let localSize = {
+            width: size.width * canvas.width,
+            height: size.height * canvas.height
+        };
+
+        context.drawImage(texture,
+            localCenter.x - localSize.width / 2,
+            localCenter.y - localSize.height / 2,
+            localSize.width,
+            localSize.height);
+    }
+
+    function drawImageOtherPlayer(texture, center, size, xViewport, yViewport){
+        let localCenter = {
+            x: center.x * 5000,
+            y: center.y * 5000
         };
         let localSize = {
             width: size.width * canvas.width,
@@ -89,8 +106,8 @@ MyGame.graphics = (function() {
     //------------------------------------------------------------------
     function drawImageSpriteSheet(spriteSheet, spriteSize, sprite, center, size) {
         let localCenter = {
-            x: center.x * canvas.width,
-            y: center.y * canvas.width
+            x: center.x,
+            y: center.y
         };
         let localSize = {
             width: size.width * canvas.width,
@@ -112,19 +129,19 @@ MyGame.graphics = (function() {
     //------------------------------------------------------------------
     function drawCircle(center, radius, color) {
         context.beginPath();
-        context.arc(center.x * canvas.width, center.y * canvas.width, 2 * radius * canvas.width, 2 * Math.PI, false);
+        context.arc(center.x, center.y, 2 * radius * canvas.width, 2 * Math.PI, false);
         context.closePath();
         context.fillStyle = color;
         context.fill();
     }
 
-    function drawAimer(startPos, direction){
+    function drawAimer(startPos, direction, xViewport, yViewport){
         context.save();
         context.beginPath();
         let xVector = Math.cos(direction);
         let yVector = Math.sin(direction);
-        context.moveTo(startPos.x * canvas.width, startPos.y * canvas.width);
-        context.lineTo((startPos.x * canvas.width) + (xVector * 200), (startPos.y * canvas.width) + (yVector * 200));
+        context.moveTo(startPos.x* 5000 - xViewport, startPos.y* 5000 - yViewport);
+        context.lineTo((startPos.x* 5000 - xViewport) + (xVector * 200), (startPos.y * 5000- yViewport) + (yVector * 200));
         context.strokeStyle = 'black';
         context.fillStyle = 'black';
         context.setLineDash([10, 15]);
@@ -135,20 +152,20 @@ MyGame.graphics = (function() {
 
     }
 
-    function drawVision(vision){
+    function drawVision(vision, xViewport, yViewport){
         context.save();
         context.beginPath();
-        context.arc(vision.x*canvas.width, vision.y*canvas.width, vision.radius*canvas.width, vision.start, vision.end);
+        context.arc(vision.x* 5000 - xViewport, vision.y* 5000 - yViewport, vision.radius*canvas.width, vision.start, vision.end);
         context.strokeStyle = "#FFFFFF";
         context.fillStyle = "#808080";
         context.fill();
         context.stroke();
     }
     
-    function drawHealthBar(position, size, health){
+    function drawHealthBar(position, size, health, xViewport, yViewport){
         let localPosition = {
-            x: position.x * canvas.width,
-            y: position.y * canvas.width
+            x: position.x* 5000 - xViewport,
+            y: position.y * 5000- yViewport
         };
         let localSize = {
             width: size.width * canvas.width,
@@ -163,7 +180,7 @@ MyGame.graphics = (function() {
         // context.rect(localPosition.x - (localSize.width/2) + (localSize.width*healthFraction), localPosition.y + (localSize.height/2), localSize.width * missingFraction, localSize.height/8);
         // context.fillStyle = 'red';
         // context.fill();
-        context.rect(localPosition.x - (localSize.width/2), localPosition.y + (localSize.height/2), localSize.width*healthFraction, localSize.height/8);
+        context.rect(localPosition.x* 5000 - (localSize.width/2), localPosition.y* 5000 + (localSize.height/2), localSize.width*healthFraction, localSize.height/8);
         context.fillStyle = 'green';
         context.fill();
         context.closePath();
@@ -176,13 +193,13 @@ MyGame.graphics = (function() {
     //
     //------------------------------------------------------------------
 
-    function enableClipping(player, clip){
+    function enableClipping(player, clip, xViewport, yViewport){
         if(!clip.clipping){
             context.save();
             clip.clipping = true;
 
             context.beginPath();
-            context.arc(player.vision.x*canvas.width, player.vision.y*canvas.width, player.vision.radius*canvas.width, player.vision.start, player.vision.end);
+            context.arc(player.vision.x* 5000 - xViewport, player.vision.y* 5000 - yViewport, player.vision.radius*canvas.width, player.vision.start, player.vision.end);
             context.closePath();
             context.clip();
         }
@@ -214,6 +231,7 @@ MyGame.graphics = (function() {
         enableClipping : enableClipping,
         disableClipping : disableClipping,
         drawHealthBar: drawHealthBar,
-        drawCircle: drawCircle
+        drawCircle: drawCircle,
+        drawImageOtherPlayer: drawImageOtherPlayer
     };
 }());
