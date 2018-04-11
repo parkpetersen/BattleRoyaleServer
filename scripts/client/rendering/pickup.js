@@ -11,8 +11,8 @@ MyGame.renderer.Pickup = (function(graphics) {
         graphics.saveContext();
         var size = 
         graphics.drawImage(texture, model.position, {
-            width : model.radius,
-            height : model.radius,
+            width : model.radius*2,
+            height : model.radius*2,
             radius : model.radius
         });
         graphics.restoreContext();

@@ -28,7 +28,7 @@ function createPickups(){
                 y : Math.random()
             },
             type : 'scope',
-            radius : .04
+            radius : .03
         });
     }
 }
@@ -130,10 +130,14 @@ function update(elapsedTime, currentTime){
     }
     activeMissiles = keepMissiles;
 
+    //
+    // Pickup collision detection
     for (let pickup = 0; pickup < pickups.length; pickup++){
         for(let clientId in activeClients){
             if(collided(pickups[pickup], activeClients[clientId].player)){
-                activeClients[clientId].player.vision.radius *= 1.5;
+                if(pickups[pickup].type = 'scope'){
+                    activeClients[clientId].player.vision.radius *= 1.5;
+                }
                 //remove pickup from list
                 pickups = pickups.filter(function(item) { 
                     return item !== pickups[pickup];
