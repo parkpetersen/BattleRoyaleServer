@@ -28,7 +28,7 @@ function createPickups(){
                 y : Math.random()
             },
             type : 'scope',
-            radius : .01
+            radius : .04
         });
     }
 }

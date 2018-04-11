@@ -421,7 +421,7 @@ MyGame.main = (function(graphics, renderer, input, components) {
         }
 
         for(let pickup in pickups){
-            renderer.Pickup.render(pickups[pickup]);
+            renderer.Pickup.render(pickups[pickup], MyGame.assets['chest']);
         }
         
         graphics.disableClipping(clip);

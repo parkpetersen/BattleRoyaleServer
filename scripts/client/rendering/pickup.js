@@ -7,10 +7,14 @@ MyGame.renderer.Pickup = (function(graphics) {
     // Renders a Player model.
     //
     // ------------------------------------------------------------------
-    that.render = function(model) {
+    that.render = function(model, texture) {
         graphics.saveContext();
-
-        graphics.drawCircle(model.position, model.radius, '#FF0000');
+        var size = 
+        graphics.drawImage(texture, model.position, {
+            width : model.radius,
+            height : model.radius,
+            radius : model.radius
+        });
         graphics.restoreContext();
     };
 
