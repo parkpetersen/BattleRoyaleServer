@@ -359,6 +359,7 @@ MyGame.main = (function(graphics, renderer, input, components) {
     function update(elapsedTime) {
 
         playerSelf.model.update(elapsedTime);
+        console.log(playerSelf.model.position.x + ',' + playerSelf.model.position.y);
         for (let id in playerOthers) {
             playerOthers[id].model.update(elapsedTime);
         }
@@ -391,9 +392,12 @@ MyGame.main = (function(graphics, renderer, input, components) {
 
         let textureString = 'player-self-' + getTexture(playerSelf.model.direction, playerSelf.model.state);
         playerSelf.texture = MyGame.assets[textureString];
+        graphics.drawWorldBoundary(1, 1);
+        graphics.setCamera(playerSelf.model, 0, 5000, 0, 5000);
+        graphics.drawBackground();
         renderer.Player.render(playerSelf.model, playerSelf.texture);
         
-        graphics.enableClipping(playerSelf.model, clip);
+       // graphics.enableClipping(playerSelf.model, clip);
 
         for (let id in playerOthers) {
             let player = playerOthers[id];
@@ -408,7 +412,7 @@ MyGame.main = (function(graphics, renderer, input, components) {
             renderer.Missile.render(missiles[missile]);
         }
         
-        graphics.disableClipping(clip);
+       // graphics.disableClipping(clip);
         
         for (let id in explosions) {
             renderer.AnimatedSprite.render(explosions[id]);

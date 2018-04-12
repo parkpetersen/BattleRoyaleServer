@@ -151,6 +151,9 @@ MyGame.loader = (function() {
         }, {
             key: 'explosion',
             source: 'assets/explosion.png'
+        }, {
+            key: 'background',
+            source: 'assets/background/cropped.jpg'
         }];
 
     //------------------------------------------------------------------

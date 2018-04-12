@@ -8,6 +8,8 @@ MyGame.graphics = (function() {
 
     let canvas = document.getElementById('canvas-main');
     let context = canvas.getContext('2d')
+    let image = new Image();
+    image.src = '../../../assets/background/cropped.jpg';
 
     //------------------------------------------------------------------
     //
@@ -144,6 +146,14 @@ MyGame.graphics = (function() {
         context.fill();
         context.stroke();
     }
+
+    function drawWorldBoundary(width, height){
+        context.beginPath();
+        context.rect(0, 0, width, height);
+        context.strokeStyle = 'red';
+        context.stroke();
+        context.closePath();
+    }
     
     function drawHealthBar(position, size, health){
         let localPosition = {
@@ -201,6 +211,27 @@ MyGame.graphics = (function() {
         }
     }
 
+    // reference: https://stackoverflow.com/questions/16919601/html5-canvas-camera-viewport-how-to-actally-do-it
+    function setCamera(player, minX, maxX, minY, maxY){
+        context.setTransform(1,0,0,1,0,0);
+        context.clear();
+        let camX = clamp(-player.position.x * canvas.width + canvas.width/2, minX, maxX - canvas.width);
+        let camY = clamp(-player.position.y * canvas.width + canvas.height/2, minY, maxY - canvas.height);
+
+        context.translate(camX, camY);
+
+    }
+
+    function clamp(value, min, max){
+        if(value < min) return min;
+        else if(value > max) return max;
+        return value;
+    }
+
+    function drawBackground(){
+        context.drawImage(MyGame.assets['background'], 0, 0, 4800, 4800);
+    }
+
     return {
         clear: clear,
         saveContext: saveContext,
@@ -214,6 +245,9 @@ MyGame.graphics = (function() {
         enableClipping : enableClipping,
         disableClipping : disableClipping,
         drawHealthBar: drawHealthBar,
-        drawCircle: drawCircle
+        drawCircle: drawCircle,
+        setCamera: setCamera,
+        drawWorldBoundary: drawWorldBoundary,
+        drawBackground: drawBackground
     };
 }());
