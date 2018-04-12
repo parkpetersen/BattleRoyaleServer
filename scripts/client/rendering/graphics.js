@@ -60,6 +60,12 @@ MyGame.graphics = (function() {
         context.translate(-center.x * canvas.width, -center.y * canvas.width);
     }
 
+    function drawText(message){
+        context.fillStyle = 'red';
+        context.font = '24px serif';
+        context.fillText(message.message, message.position.x*canvas.width, message.position.y*canvas.width);
+    }
+
     //------------------------------------------------------------------
     //
     // Draw an image into the local canvas coordinate system.
@@ -214,6 +220,7 @@ MyGame.graphics = (function() {
         enableClipping : enableClipping,
         disableClipping : disableClipping,
         drawHealthBar: drawHealthBar,
-        drawCircle: drawCircle
+        drawCircle: drawCircle,
+        drawText: drawText
     };
 }());

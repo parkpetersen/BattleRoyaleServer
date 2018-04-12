@@ -59,8 +59,12 @@
             writable: false
         },
         'PICKUPS' : {
-            value : 'pickups',
-            writable : false
+            value: 'pickups',
+            writable: false
+        },
+        'DRAW_TEXT' : {
+            value: 'draw-text',
+            writable: false
         }
     });
 

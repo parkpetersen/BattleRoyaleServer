@@ -19,6 +19,7 @@ MyGame.main = (function(graphics, renderer, input, components) {
         missiles = {},
         explosions = {},
         pickups = [],
+        textMessages = [],
         messageHistory = Queue.create(),
         messageId = 1,
         nextExplosionId = 1,
@@ -89,6 +90,12 @@ MyGame.main = (function(graphics, renderer, input, components) {
     socket.on(NetworkIds.PICKUPS, data => {
         networkQueue.enqueue({
             type: NetworkIds.PICKUPS,
+            data: data
+        });
+    });
+    socket.on(NetworkIds.DRAW_TEXT, data => {
+        networkQueue.enqueue({
+            type: NetworkIds.DRAW_TEXT,
             data: data
         });
     });
@@ -314,6 +321,10 @@ MyGame.main = (function(graphics, renderer, input, components) {
         pickups = data;
     }
 
+    function updateTextMessages(data){
+        textMessages.push(data);
+    }
+
     //------------------------------------------------------------------
     //
     // Process the registered input handlers here.
@@ -359,6 +370,10 @@ MyGame.main = (function(graphics, renderer, input, components) {
                     break;
                 case NetworkIds.PICKUPS:
                     updatePickups(message.data);
+                    break;
+                case NetworkIds.DRAW_TEXT:
+                    updateTextMessages(message.data);
+                    break;
             }
         }
     }
@@ -369,7 +384,6 @@ MyGame.main = (function(graphics, renderer, input, components) {
     //
     //------------------------------------------------------------------
     function update(elapsedTime) {
-
         playerSelf.model.update(elapsedTime);
         for (let id in playerOthers) {
             playerOthers[id].model.update(elapsedTime);
@@ -391,6 +405,18 @@ MyGame.main = (function(graphics, renderer, input, components) {
                 delete explosions[id];
             }
         }
+        for(let message in textMessages){
+            textMessages[message].duration -= elapsedTime;
+            textMessages[message].position.y -= .00002 * elapsedTime;
+            
+            if(textMessages[message].duration < 0){
+                textMessages = textMessages.filter(function(item) { 
+                    return item !== textMessages[message];
+                });
+                break;
+            }
+        }
+
     }
 
     //------------------------------------------------------------------
@@ -405,6 +431,10 @@ MyGame.main = (function(graphics, renderer, input, components) {
         playerSelf.texture = MyGame.assets[textureString];
         renderer.Player.render(playerSelf.model, playerSelf.texture);
         
+        for(let message in textMessages){
+            graphics.drawText(textMessages[message]);
+        }
+
         graphics.enableClipping(playerSelf.model, clip);
 
         for (let id in playerOthers) {
@@ -412,9 +442,6 @@ MyGame.main = (function(graphics, renderer, input, components) {
             let textureKey = 'player-other-' + getTexture(player.model.state.direction, player.model.state.state);
             renderer.PlayerRemote.render(player.model, MyGame.assets[textureKey]);
         }
-        
-       
-        //renderer.Player.render(playerSelf.model, playerSelf.texture);
 
         for (let missile in missiles) {
             renderer.Missile.render(missiles[missile]);
