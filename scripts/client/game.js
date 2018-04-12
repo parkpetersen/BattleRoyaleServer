@@ -3,6 +3,10 @@
 // This function provides the "game" code.
 //
 //------------------------------------------------------------------
+let cannonFire = new Howl({ src: ['assets/audio/cannon_fire.mp3']});
+let cannonHit  = new Howl({ src: ['assets/audio/hit.mp3']});
+let sinkSound  = new Howl({ src: ['assets/audio/ship-sinking.wav']});
+
 MyGame.main = (function(graphics, renderer, input, components) {
     'use strict';
 
@@ -359,14 +363,17 @@ MyGame.main = (function(graphics, renderer, input, components) {
                 case NetworkIds.UPDATE_OTHER:
                     updatePlayerOther(message.data);
                     break;
-                case NetworkIds.MISSILE_NEW:
+				case NetworkIds.MISSILE_NEW:
                     missileNew(message.data);
+                    cannonFire.play();
                     break;
                 case NetworkIds.MISSILE_HIT:
                     missileHit(message.data);
+                    cannonHit.play();
                     break;
                 case NetworkIds.DEAD:
                     killPlayer(message.data);
+                    sinkSound.play();
                     break;
                 case NetworkIds.PICKUPS:
                     updatePickups(message.data);
@@ -385,6 +392,7 @@ MyGame.main = (function(graphics, renderer, input, components) {
     //------------------------------------------------------------------
     function update(elapsedTime) {
         playerSelf.model.update(elapsedTime);
+        console.log(playerSelf.model.position.x + ',' + playerSelf.model.position.y);
         for (let id in playerOthers) {
             playerOthers[id].model.update(elapsedTime);
         }
@@ -429,6 +437,9 @@ MyGame.main = (function(graphics, renderer, input, components) {
 
         let textureString = 'player-self-' + getTexture(playerSelf.model.direction, playerSelf.model.state);
         playerSelf.texture = MyGame.assets[textureString];
+        //graphics.drawWorldBoundary(1, 1);
+        graphics.setCamera(playerSelf.model, 0, 4800, 0, 4800);
+        graphics.drawBackground();
         renderer.Player.render(playerSelf.model, playerSelf.texture);
         
         for(let message in textMessages){
@@ -451,7 +462,7 @@ MyGame.main = (function(graphics, renderer, input, components) {
             renderer.Pickup.render(pickups[pickup], MyGame.assets['chest']);
         }
         
-        graphics.disableClipping(clip);
+       graphics.disableClipping(clip);
         
         for (let id in explosions) {
             renderer.AnimatedSprite.render(explosions[id]);

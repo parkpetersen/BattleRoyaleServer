@@ -154,6 +154,9 @@ MyGame.loader = (function() {
         },{
             key: 'chest',
             source: 'assets/chest.png'
+        }, {
+            key: 'background',
+            source: 'assets/background/cropped.jpg'
         }];
 
     //------------------------------------------------------------------
