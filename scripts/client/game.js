@@ -3,6 +3,10 @@
 // This function provides the "game" code.
 //
 //------------------------------------------------------------------
+let cannonFire = new Howl({ src: ['assets/audio/cannon_fire.mp3']});
+let cannonHit  = new Howl({ src: ['assets/audio/hit.mp3']});
+let sinkSound  = new Howl({ src: ['assets/audio/ship-sinking.wav']});
+
 MyGame.main = (function(graphics, renderer, input, components) {
     'use strict';
 
@@ -338,14 +342,17 @@ MyGame.main = (function(graphics, renderer, input, components) {
                 case NetworkIds.UPDATE_OTHER:
                     updatePlayerOther(message.data);
                     break;
-                case NetworkIds.MISSILE_NEW:
+				case NetworkIds.MISSILE_NEW:
                     missileNew(message.data);
+                    cannonFire.play();
                     break;
                 case NetworkIds.MISSILE_HIT:
                     missileHit(message.data);
+                    cannonHit.play();
                     break;
                 case NetworkIds.DEAD:
                     killPlayer(message.data);
+                    sinkSound.play();
                     break;
             }
         }
