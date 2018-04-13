@@ -120,7 +120,7 @@ MyGame.graphics = (function() {
     //------------------------------------------------------------------
     function drawCircle(center, radius, color) {
         context.beginPath();
-        context.arc(center.x * 4800, center.y * 4800, 2 * radius * canvas.width, 2 * Math.PI, false);
+        context.arc(center.x * 4800, center.y * 4800, 2 * .0025 * canvas.width, 2 * Math.PI, false);
         context.closePath();
         context.fillStyle = color;
         context.fill();
