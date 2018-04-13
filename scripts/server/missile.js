@@ -4,7 +4,7 @@ function createMissile(spec){
     let that = {};
 
     let radius = 0.0025;
-    let speed = spec.speed + 0.0002; //faster than players speed.
+    let speed = spec.speed*2; //faster than players speed.
     let timeRemaining = 1500;
     //values may need to be changed
     let missileDamage = spec.missileDamage;

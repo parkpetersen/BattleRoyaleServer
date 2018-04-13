@@ -26,7 +26,7 @@ function createPlayer(){
     };
 
     let rotateRate = Math.PI / 1000;
-    let speed = .0002;
+    let speed = .000025;
     let reportUpdate = true;
 
     let health = 100;

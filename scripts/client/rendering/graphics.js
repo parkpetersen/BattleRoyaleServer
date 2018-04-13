@@ -65,7 +65,7 @@ MyGame.graphics = (function() {
     function drawText(message){
         context.fillStyle = 'red';
         context.font = '24px serif';
-        context.fillText(message.message, message.position.x*canvas.width, message.position.y*canvas.width);
+        context.fillText(message.message, message.position.x*4800, message.position.y*4800);
     }
 
     //------------------------------------------------------------------
@@ -75,8 +75,8 @@ MyGame.graphics = (function() {
     //------------------------------------------------------------------
     function drawImage(texture, center, size) {
         let localCenter = {
-            x: center.x * canvas.width,
-            y: center.y * canvas.width
+            x: center.x * 4800,
+            y: center.y * 4800
         };
         let localSize = {
             width: size.width * canvas.width,
@@ -97,8 +97,8 @@ MyGame.graphics = (function() {
     //------------------------------------------------------------------
     function drawImageSpriteSheet(spriteSheet, spriteSize, sprite, center, size) {
         let localCenter = {
-            x: center.x * canvas.width,
-            y: center.y * canvas.width
+            x: center.x * 4800,
+            y: center.y * 4800
         };
         let localSize = {
             width: size.width * canvas.width,
@@ -120,7 +120,7 @@ MyGame.graphics = (function() {
     //------------------------------------------------------------------
     function drawCircle(center, radius, color) {
         context.beginPath();
-        context.arc(center.x * canvas.width, center.y * canvas.width, 2 * radius * canvas.width, 2 * Math.PI, false);
+        context.arc(center.x * 4800, center.y * 4800, 2 * radius * canvas.width, 2 * Math.PI, false);
         context.closePath();
         context.fillStyle = color;
         context.fill();
@@ -131,8 +131,8 @@ MyGame.graphics = (function() {
         context.beginPath();
         let xVector = Math.cos(direction);
         let yVector = Math.sin(direction);
-        context.moveTo(startPos.x * canvas.width, startPos.y * canvas.width);
-        context.lineTo((startPos.x * canvas.width) + (xVector * 200), (startPos.y * canvas.width) + (yVector * 200));
+        context.moveTo(startPos.x * 4800, startPos.y * 4800);
+        context.lineTo((startPos.x * 4800) + (xVector * 200), (startPos.y * 4800) + (yVector * 200));
         context.strokeStyle = 'black';
         context.fillStyle = 'black';
         context.setLineDash([10, 15]);
@@ -146,7 +146,7 @@ MyGame.graphics = (function() {
     function drawVision(vision){
         context.save();
         context.beginPath();
-        context.arc(vision.x*canvas.width, vision.y*canvas.width, vision.radius*canvas.width, vision.start, vision.end);
+        context.arc(vision.x*4800, vision.y*4800, vision.radius*canvas.width, vision.start, vision.end);
         context.strokeStyle = "#FFFFFF";
         context.fillStyle = "#808080";
         context.fill();
@@ -163,8 +163,8 @@ MyGame.graphics = (function() {
     
     function drawHealthBar(position, size, health){
         let localPosition = {
-            x: position.x * canvas.width,
-            y: position.y * canvas.width
+            x: position.x * 4800,
+            y: position.y * 4800
         };
         let localSize = {
             width: size.width * canvas.width,
@@ -195,7 +195,7 @@ MyGame.graphics = (function() {
             clip.clipping = true;
 
             context.beginPath();
-            context.arc(player.vision.x*canvas.width, player.vision.y*canvas.width, player.vision.radius*canvas.width, player.vision.start, player.vision.end);
+            context.arc(player.vision.x*4800, player.vision.y*4800, player.vision.radius*canvas.width, player.vision.start, player.vision.end);
             context.closePath();
             context.clip();
         }
@@ -218,21 +218,21 @@ MyGame.graphics = (function() {
     function setCamera(player, minX, maxX, minY, maxY){
         context.setTransform(1,0,0,1,0,0);
         context.clear();
-        let camX = clamp(-player.position.x * canvas.width + canvas.width/2, minX, maxX - canvas.width);
-        let camY = clamp(-player.position.y * canvas.width + canvas.height/2, minY, maxY - canvas.height);
-
+        let camX = clamp((-player.position.x * 4800) + (canvas.width/2), minX, maxX - (canvas.width));
+        let camY = clamp((-player.position.y * 4800) + (canvas.height/2), minY, maxY - (canvas.height));
+        console.log('camera:', camX , ' ', camY);
         context.translate(camX, camY);
 
     }
 
     function clamp(value, min, max){
-        if(value < min) return min;
-        else if(value > max) return max;
+        if(-value < min) return min;
+        else if(-value > max) return -max;
         return value;
     }
 
     function drawBackground(){
-        context.drawImage(MyGame.assets['background'], -2400, -2400, 4800, 4800); //should be 0,0,4800,4800?
+        context.drawImage(MyGame.assets['background'], 0, 0, 4800, 4800); //should be 0,0,4800,4800?
     }
 
     return {
