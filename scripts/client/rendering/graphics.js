@@ -173,12 +173,9 @@ MyGame.graphics = (function() {
 
         context.save();
         context.beginPath();
-        //context.moveTo(localPosition.x - (localSize.width/2), localPosition.y + (localSize.height/2));
         let healthFraction = health/100;
         let missingFraction = 1 - healthFraction;
-        // context.rect(localPosition.x - (localSize.width/2) + (localSize.width*healthFraction), localPosition.y + (localSize.height/2), localSize.width * missingFraction, localSize.height/8);
-        // context.fillStyle = 'red';
-        // context.fill();
+        context.fill();
         context.rect(localPosition.x - (localSize.width/2), localPosition.y + (localSize.height/2), localSize.width*healthFraction, localSize.height/8);
         context.fillStyle = 'green';
         context.fill();
@@ -235,7 +232,7 @@ MyGame.graphics = (function() {
     }
 
     function drawBackground(){
-        context.drawImage(MyGame.assets['background'], 0, 0, 4800, 4800);
+        context.drawImage(MyGame.assets['background'], -2400, -2400, 4800, 4800); //should be 0,0,4800,4800?
     }
 
     return {

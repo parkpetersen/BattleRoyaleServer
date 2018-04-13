@@ -41,3 +41,8 @@ server.listen(3000, function() {
     game.initialize(server);
     console.log('Server is listening on port 3000');
 });
+
+process.on('uncaughtException', function (err) {
+    console.error(err);
+    console.log("Node NOT Exiting...");
+  });
