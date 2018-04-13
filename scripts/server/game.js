@@ -3,19 +3,36 @@
 const present = require('present');
 const Player = require('./player');
 const Missile = require('./missile');
+const Pickup = require('./pickup.js');
 const NetworkIds = require('../shared/network-ids');
 const Queue = require('../shared/queue.js');
 
-const SIMULATION_UPDATE_RATE_MS = 50;
-const STATE_UPDATE_RATE_MS = 100;
+const SIMULATION_UPDATE_RATE_MS = 10;
+const STATE_UPDATE_RATE_MS = 50;
 let lastUpdate = 0;
 let quit = false;
 let activeClients = {};
 let newMissiles = [];
 let activeMissiles = [];
+let pickups = [];
 let hits = [];
 let inputQueue = Queue.create();
 let nextMissileId = 1;
+
+function createPickups(){
+    let variety = ['scope', 'health', 'damage']
+    for(var i = 0; i < 3; i++){
+        pickups.push({
+            id : 1,
+            position : {
+                x : Math.random(),
+                y : Math.random()
+            },
+            type : variety[Math.floor(Math.random()*variety.length)],
+            radius : .03
+        });
+    }
+}
 
 function createMissile(clientId, playerModel){
     let missile = Missile.create({
@@ -113,6 +130,39 @@ function update(elapsedTime, currentTime){
         }
     }
     activeMissiles = keepMissiles;
+
+    //
+    // Pickup collision detection
+    for (let pickup = 0; pickup < pickups.length; pickup++){
+        for(let clientId in activeClients){
+            if(collided(pickups[pickup], activeClients[clientId].player)){
+                let message = 'default';
+                if(pickups[pickup].type === 'scope'){
+                    activeClients[clientId].player.vision.radius *= 1.15;
+                    message = '+vision';
+                }
+                else if(pickups[pickup].type === 'damage'){
+                    activeClients[clientId].player.playerDamage = 30;
+                    message = '+damage';
+                }
+                else if(pickups[pickup].type === 'health'){
+                    activeClients[clientId].player.health = 100;
+                    message = '+health';
+                }
+
+                activeClients[clientId].socket.emit(NetworkIds.DRAW_TEXT, {
+                    message: message,
+                    position: activeClients[clientId].player.position,
+                    duration : 2000 //milliseconds
+                });
+                //remove pickup from list
+                pickups = pickups.filter(function(item) { 
+                    return item !== pickups[pickup];
+                });
+                break;
+            }
+        }
+    }
 }
 
 function updateClients(elapsedTime){
@@ -152,6 +202,7 @@ function updateClients(elapsedTime){
             position: client.player.position,
             updateWindow: lastUpdate,
             health: client.player.health,
+            vision : client.player.vision,
             state: client.player.state
         };
         if(client.player.reportUpdate) {
@@ -163,6 +214,8 @@ function updateClients(elapsedTime){
                 }
             }
         }
+
+        client.socket.emit(NetworkIds.PICKUPS, pickups);
 
         for (let missile = 0; missile < missileMessages.length; missile++) {
             client.socket.emit(NetworkIds.MISSILE_NEW, missileMessages[missile]);
@@ -288,6 +341,7 @@ function initializeSocketIO(httpServer) {
 
 function initialize(httpServer) {
     initializeSocketIO(httpServer);
+    createPickups();
     gameLoop(present(), 0);
 }
 

@@ -30,7 +30,7 @@ MyGame.loader = (function() {
             message: 'Input loaded',
             onComplete: null
         }, {
-            scripts: ['components/player', 'components/player-remote', 'components/missile', 'components/animated-sprite'],
+            scripts: ['components/player', 'components/player-remote', 'components/missile', 'components/animated-sprite', 'components/pickup'],
             message: 'Player models loaded',
             onComplete: null
         }, {
@@ -38,7 +38,7 @@ MyGame.loader = (function() {
             message: 'Graphics loaded',
             onComplete: null
         }, {
-            scripts: ['rendering/player', 'rendering/player-remote', 'rendering/missile', 'rendering/animated-sprite'],
+            scripts: ['rendering/player', 'rendering/player-remote', 'rendering/missile', 'rendering/animated-sprite', 'rendering/pickup', 'rendering/howler'],
             message: 'Renderers loaded',
             onComplete: null
         }, {
@@ -161,6 +161,12 @@ MyGame.loader = (function() {
         }, {
             key: 'back-button',
             source: 'assets/back-button.png'
+        }, {
+            key: 'chest',
+            source: 'assets/chest.png'
+        }, {
+            key: 'background',
+            source: 'assets/background/cropped.jpg'
         }];
 
     //------------------------------------------------------------------

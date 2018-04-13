@@ -8,6 +8,8 @@ MyGame.graphics = (function() {
 
     let canvas = document.getElementById('canvas-main');
     let context = canvas.getContext('2d')
+    let image = new Image();
+    image.src = '../../../assets/background/cropped.jpg';
 
     //------------------------------------------------------------------
     //
@@ -58,6 +60,12 @@ MyGame.graphics = (function() {
         context.translate(center.x * canvas.width, center.y * canvas.width);
         context.rotate(rotation);
         context.translate(-center.x * canvas.width, -center.y * canvas.width);
+    }
+
+    function drawText(message){
+        context.fillStyle = 'red';
+        context.font = '24px serif';
+        context.fillText(message.message, message.position.x*canvas.width, message.position.y*canvas.width);
     }
 
     //------------------------------------------------------------------
@@ -124,10 +132,10 @@ MyGame.graphics = (function() {
         let xVector = Math.cos(direction);
         let yVector = Math.sin(direction);
         context.moveTo(startPos.x * canvas.width, startPos.y * canvas.width);
-        context.lineTo((startPos.x * canvas.width) + (xVector * 100), (startPos.y * canvas.width) + (yVector * 100));
-        context.strokeStyle = 'red';
-        context.fillStyle = 'red';
-        context.setLineDash([5, 15]);
+        context.lineTo((startPos.x * canvas.width) + (xVector * 200), (startPos.y * canvas.width) + (yVector * 200));
+        context.strokeStyle = 'black';
+        context.fillStyle = 'black';
+        context.setLineDash([10, 15]);
         context.stroke();
         context.fill();
         context.closePath();
@@ -135,6 +143,24 @@ MyGame.graphics = (function() {
 
     }
 
+    function drawVision(vision){
+        context.save();
+        context.beginPath();
+        context.arc(vision.x*canvas.width, vision.y*canvas.width, vision.radius*canvas.width, vision.start, vision.end);
+        context.strokeStyle = "#FFFFFF";
+        context.fillStyle = "#808080";
+        context.fill();
+        context.stroke();
+    }
+
+    function drawWorldBoundary(width, height){
+        context.beginPath();
+        context.rect(0, 0, width, height);
+        context.strokeStyle = 'red';
+        context.stroke();
+        context.closePath();
+    }
+    
     function drawHealthBar(position, size, health){
         let localPosition = {
             x: position.x * canvas.width,
@@ -160,6 +186,58 @@ MyGame.graphics = (function() {
         context.restore();
     }
 
+    //------------------------------------------------------------------
+    //
+    // Function for enabling clipping vision for the player
+    //
+    //------------------------------------------------------------------
+
+    function enableClipping(player, clip){
+        if(!clip.clipping){
+            context.save();
+            clip.clipping = true;
+
+            context.beginPath();
+            context.arc(player.vision.x*canvas.width, player.vision.y*canvas.width, player.vision.radius*canvas.width, player.vision.start, player.vision.end);
+            context.closePath();
+            context.clip();
+        }
+    }
+
+    //------------------------------------------------------------------
+    //
+    // Function for enabling clipping vision for the player
+    //
+    //------------------------------------------------------------------
+
+    function disableClipping(clip){
+        if(clip.clipping){
+            context.restore();
+            clip.clipping = false;
+        }
+    }
+
+    // reference: https://stackoverflow.com/questions/16919601/html5-canvas-camera-viewport-how-to-actally-do-it
+    function setCamera(player, minX, maxX, minY, maxY){
+        context.setTransform(1,0,0,1,0,0);
+        context.clear();
+        let camX = clamp(-player.position.x * canvas.width + canvas.width/2, minX, maxX - canvas.width);
+        let camY = clamp(-player.position.y * canvas.width + canvas.height/2, minY, maxY - canvas.height);
+
+        context.translate(camX, camY);
+
+    }
+
+    function clamp(value, min, max){
+        if(value < min) return min;
+        else if(value > max) return max;
+        return value;
+    }
+
+    function drawBackground(){
+        context.drawImage(MyGame.assets['background'], 0, 0, 4800, 4800);
+    }
+
     return {
         clear: clear,
         saveContext: saveContext,
@@ -168,7 +246,15 @@ MyGame.graphics = (function() {
         drawImage: drawImage,
         drawImageSpriteSheet: drawImageSpriteSheet,
         drawAimer: drawAimer,
+        drawCircle: drawCircle,
+        drawVision: drawVision,
+        enableClipping : enableClipping,
+        disableClipping : disableClipping,
         drawHealthBar: drawHealthBar,
-        drawCircle: drawCircle
+        drawCircle: drawCircle,
+        drawText: drawText,
+        setCamera: setCamera,
+        drawWorldBoundary: drawWorldBoundary,
+        drawBackground: drawBackground
     };
 }());

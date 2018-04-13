@@ -57,6 +57,14 @@
         'ACKNOWLEDGE_DEATH':{
             value: 'aknowledge-death',
             writable: false
+        },
+        'PICKUPS' : {
+            value: 'pickups',
+            writable: false
+        },
+        'DRAW_TEXT' : {
+            value: 'draw-text',
+            writable: false
         }
     });
 

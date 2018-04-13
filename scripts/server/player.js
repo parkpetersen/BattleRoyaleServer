@@ -16,9 +16,18 @@ function createPlayer(){
     };
 
     let direction = random.nextDouble() * 2 * Math.PI; //angle facing at start
+
+    let vision = {
+        x : position.x,
+        y : position.y,
+        radius : .3,
+        start : direction - Math.PI/2,
+        end : direction + Math.PI/2
+    };
+
     let rotateRate = Math.PI / 1000;
     let speed = .0002;
-    let reportUpdate = false;
+    let reportUpdate = true;
 
     let health = 100;
     let playerDamage = 20;
@@ -62,8 +71,15 @@ function createPlayer(){
 
     Object.defineProperty(that, 'health', {
         get: () => health,
-        set: (value) => health = value
-    })
+        set: (value) => health = value,
+        increase: (value) => {health += value},
+        decrease: (value) => {health -= value}
+    });
+
+    Object.defineProperty(that, 'vision', {
+        get : () => vision,
+        set : (value) => vision = value
+    });
 
     Object.defineProperty(that, 'state',{
         get: () => state,
@@ -77,16 +93,25 @@ function createPlayer(){
 
         position.x += (vectorX * elapsedTime * speed);
         position.y += (vectorY * elapsedTime * speed);
+        
+        vision.x = position.x;
+        vision.y = position.y;
     };
 
     that.rotateRight = function(elapsedTime){
         reportUpdate = true;
         direction += (rotateRate * elapsedTime);
+        if(direction >= 2*Math.PI) direction -= 2*Math.PI;
+        vision.start = direction - Math.PI/2;
+        vision.end = direction + Math.PI/2;
     };
 
     that.rotateLeft = function(elapsedTime){
         reportUpdate = true;
         direction -= (rotateRate * elapsedTime);
+        if(direction < 0) direction += 2*Math.PI;
+        vision.start = direction - Math.PI/2;
+        vision.end = direction + Math.PI/2;
     };
 
     that.missileHit = function(damage){

@@ -7,17 +7,25 @@ MyGame.components.Player = function() {
     'use strict';
     let that = {};
     let position = {
-        x: 0,
-        y: 0
+        x: -1,
+        y: -1
     };
     let size = {
         width: 0.1,
         height: 0.1
     };
+
     let direction = 0;
     let rotateRate = 0;
     let speed = 0;
     let health = 100;
+    let vision = {
+        x : position.x,
+        y : position.y,
+        radius : .3,
+        start : direction + Math.PI/2,
+        end : direction - Math.PI/2
+    };
     let state = 'alive';
 
     Object.defineProperty(that, 'direction', {
@@ -48,6 +56,11 @@ MyGame.components.Player = function() {
         set: (value) => {health = value}
     });
 
+    Object.defineProperty(that, 'vision', {
+        get: () => vision,
+        set : (value) => vision = value
+    });
+    
     Object.defineProperty(that, 'state',{
         get: () => state,
         set: (value) => {state = value}
@@ -64,6 +77,12 @@ MyGame.components.Player = function() {
 
         position.x += (vectorX * elapsedTime * speed);
         position.y += (vectorY * elapsedTime * speed);
+        
+        vision.x = position.x;
+        vision.y = position.y;
+        
+        vision.start = direction - Math.PI/2;
+        vision.end = direction + Math.PI/2;
     };
 
     //------------------------------------------------------------------
@@ -73,6 +92,9 @@ MyGame.components.Player = function() {
     //------------------------------------------------------------------
     that.rotateRight = function(elapsedTime) {
         direction += (rotateRate * elapsedTime);
+        vision.start = direction - Math.PI/2;
+        vision.end = direction + Math.PI/2;
+        if(direction >= 2*Math.PI) direction -= 2*Math.PI
     };
 
     //------------------------------------------------------------------
@@ -82,6 +104,9 @@ MyGame.components.Player = function() {
     //------------------------------------------------------------------
     that.rotateLeft = function(elapsedTime) {
         direction -= (rotateRate * elapsedTime);
+        vision.start = direction - Math.PI/2;
+        vision.end = direction + Math.PI/2;
+        if(direction < 0) direction += 2*Math.PI
     };
 
     that.update = function(elapsedTime) {

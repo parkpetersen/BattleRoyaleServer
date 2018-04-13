@@ -3,6 +3,10 @@
 // This function provides the "game" code.
 //
 //------------------------------------------------------------------
+let cannonFire = new Howl({ src: ['assets/audio/cannon_fire.mp3']});
+let cannonHit  = new Howl({ src: ['assets/audio/hit.mp3']});
+let sinkSound  = new Howl({ src: ['assets/audio/ship-sinking.wav']});
+
 MyGame.main = (function(graphics, renderer, input, components) {
     'use strict';
 
@@ -13,8 +17,13 @@ MyGame.main = (function(graphics, renderer, input, components) {
             texture: MyGame.assets['player-self-east']
         },
         playerOthers = {},
+        clip = {
+            clipping : false
+        },
         missiles = {},
         explosions = {},
+        pickups = [],
+        textMessages = [],
         messageHistory = Queue.create(),
         messageId = 1,
         nextExplosionId = 1,
@@ -79,6 +88,18 @@ MyGame.main = (function(graphics, renderer, input, components) {
     socket.on(NetworkIds.DEAD, data => {
         networkQueue.enqueue({
             type: NetworkIds.DEAD,
+            data: data
+        });
+    });
+    socket.on(NetworkIds.PICKUPS, data => {
+        networkQueue.enqueue({
+            type: NetworkIds.PICKUPS,
+            data: data
+        });
+    });
+    socket.on(NetworkIds.DRAW_TEXT, data => {
+        networkQueue.enqueue({
+            type: NetworkIds.DRAW_TEXT,
             data: data
         });
     });
@@ -149,6 +170,9 @@ MyGame.main = (function(graphics, renderer, input, components) {
         playerSelf.model.position.y = data.position.y;
         playerSelf.model.direction = data.direction;
         playerSelf.model.health = data.health;
+        playerSelf.model.vision = data.vision;
+        let textureString = 'player-self-' + getTexture(playerSelf.model.direction);
+        playerSelf.texture = MyGame.assets[textureString];
         playerSelf.model.state = data.state;
         
 
@@ -297,6 +321,14 @@ MyGame.main = (function(graphics, renderer, input, components) {
         alert(data.message);
     }
 
+    function updatePickups(data){
+        pickups = data;
+    }
+
+    function updateTextMessages(data){
+        textMessages.push(data);
+    }
+
     //------------------------------------------------------------------
     //
     // Process the registered input handlers here.
@@ -331,14 +363,23 @@ MyGame.main = (function(graphics, renderer, input, components) {
                 case NetworkIds.UPDATE_OTHER:
                     updatePlayerOther(message.data);
                     break;
-                case NetworkIds.MISSILE_NEW:
+				case NetworkIds.MISSILE_NEW:
                     missileNew(message.data);
+                    cannonFire.play();
                     break;
                 case NetworkIds.MISSILE_HIT:
                     missileHit(message.data);
+                    cannonHit.play();
                     break;
                 case NetworkIds.DEAD:
                     killPlayer(message.data);
+                    sinkSound.play();
+                    break;
+                case NetworkIds.PICKUPS:
+                    updatePickups(message.data);
+                    break;
+                case NetworkIds.DRAW_TEXT:
+                    updateTextMessages(message.data);
                     break;
             }
         }
@@ -350,8 +391,8 @@ MyGame.main = (function(graphics, renderer, input, components) {
     //
     //------------------------------------------------------------------
     function update(elapsedTime) {
-
         playerSelf.model.update(elapsedTime);
+        console.log(playerSelf.model.position.x + ',' + playerSelf.model.position.y);
         for (let id in playerOthers) {
             playerOthers[id].model.update(elapsedTime);
         }
@@ -372,6 +413,18 @@ MyGame.main = (function(graphics, renderer, input, components) {
                 delete explosions[id];
             }
         }
+        for(let message in textMessages){
+            textMessages[message].duration -= elapsedTime;
+            textMessages[message].position.y -= .00002 * elapsedTime;
+            
+            if(textMessages[message].duration < 0){
+                textMessages = textMessages.filter(function(item) { 
+                    return item !== textMessages[message];
+                });
+                break;
+            }
+        }
+
     }
 
     //------------------------------------------------------------------
@@ -381,19 +434,36 @@ MyGame.main = (function(graphics, renderer, input, components) {
     //------------------------------------------------------------------
     function render() {
         graphics.clear();
+
+        let textureString = 'player-self-' + getTexture(playerSelf.model.direction, playerSelf.model.state);
+        playerSelf.texture = MyGame.assets[textureString];
+        //graphics.drawWorldBoundary(1, 1);
+        graphics.setCamera(playerSelf.model, 0, 4800, 0, 4800);
+        graphics.drawBackground();
+        renderer.Player.render(playerSelf.model, playerSelf.texture);
+        
+        for(let message in textMessages){
+            graphics.drawText(textMessages[message]);
+        }
+
+        graphics.enableClipping(playerSelf.model, clip);
+
         for (let id in playerOthers) {
             let player = playerOthers[id];
             let textureKey = 'player-other-' + getTexture(player.model.state.direction, player.model.state.state);
             renderer.PlayerRemote.render(player.model, MyGame.assets[textureKey]);
         }
-        let textureString = 'player-self-' + getTexture(playerSelf.model.direction, playerSelf.model.state);
-        playerSelf.texture = MyGame.assets[textureString];
-        renderer.Player.render(playerSelf.model, playerSelf.texture);
 
         for (let missile in missiles) {
             renderer.Missile.render(missiles[missile]);
         }
 
+        for(let pickup in pickups){
+            renderer.Pickup.render(pickups[pickup], MyGame.assets['chest']);
+        }
+        
+       graphics.disableClipping(clip);
+        
         for (let id in explosions) {
             renderer.AnimatedSprite.render(explosions[id]);
         }
