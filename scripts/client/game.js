@@ -439,7 +439,7 @@ MyGame.main = (function(graphics, renderer, input, components) {
         playerSelf.texture = MyGame.assets[textureString];
         //graphics.drawWorldBoundary(1, 1);
         graphics.setCamera(playerSelf.model, 0, 4800, 0, 4800);
-        //graphics.drawBackground();
+        graphics.drawBackground();
         renderer.Player.render(playerSelf.model, playerSelf.texture);
         
         for(let message in textMessages){
