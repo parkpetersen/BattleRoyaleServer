@@ -3,7 +3,7 @@ MyGame.components.Pickup = function(){
 
     let that = {};
 
-    let radius = 15;
+    let radius = 1.875;  //was 15
 
     Object.defineProperty(that, 'id', {
         get: () => spec.id

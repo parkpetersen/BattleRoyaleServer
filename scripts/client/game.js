@@ -33,7 +33,13 @@ MyGame.main = (function(graphics, renderer, input, components) {
         leftIdKey = 0,
         rightIdKey = 0,
         downIdKey = 0,
-        fireIdKey = 0;
+        upIdKey2 = 0,
+        leftIdKey2 = 0,
+        rightIdKey2 = 0,
+        downIdKey2 = 0,
+        fireIdKey = 0,
+        shieldCircle = components.Circle();
+        
 
     
     socket.on(NetworkIds.CONNECT_ACK, data => {
@@ -100,6 +106,12 @@ MyGame.main = (function(graphics, renderer, input, components) {
     socket.on(NetworkIds.DRAW_TEXT, data => {
         networkQueue.enqueue({
             type: NetworkIds.DRAW_TEXT,
+            data: data
+        });
+    });
+    socket.on(NetworkIds.UPDATE_CIRCLE, data => {
+        networkQueue.enqueue({
+            type: NetworkIds.UPDATE_CIRCLE,
             data: data
         });
     });
@@ -187,12 +199,23 @@ MyGame.main = (function(graphics, renderer, input, components) {
             messageHistory.dequeue();
         }
 
-        //
+         //
         // Update the client simulation since this last server update, by
         // replaying the remaining inputs.
         let memory = Queue.create();
         while (!messageHistory.empty) {
             let message = messageHistory.dequeue();
+            switch (message.type) {
+                case 'move':
+                    playerSelf.model.move(message.elapsedTime);
+                    break;
+                case 'rotate-right':
+                    playerSelf.model.rotateRight(message.elapsedTime);
+                    break;
+                case 'rotate-left':
+                    playerSelf.model.rotateLeft(message.elapsedTime);
+                    break;
+            }
             memory.enqueue(message);
         }
         messageHistory = memory;
@@ -311,10 +334,9 @@ MyGame.main = (function(graphics, renderer, input, components) {
         myKeyboard.unregisterHandler(MyGame.input.KeyEvent.DOM_VK_LEFT, leftIdKey);
         myKeyboard.unregisterHandler(MyGame.input.KeyEvent.DOM_VK_SPACE, fireIdKey);
 
-        myKeyboard.unregisterHandler(MyGame.input.KeyEvent.DOM_VK_W, upIdKey);
-        myKeyboard.unregisterHandler(MyGame.input.KeyEvent.DOM_VK_D, rightIdKey);
-        myKeyboard.unregisterHandler(MyGame.input.KeyEvent.DOM_VK_A, leftIdKey);
-        myKeyboard.unregisterHandler(MyGame.input.KeyEvent.DOM_VK_SPACE, fireIdKey);
+        myKeyboard.unregisterHandler(MyGame.input.KeyEvent.DOM_VK_W, upIdKey2);
+        myKeyboard.unregisterHandler(MyGame.input.KeyEvent.DOM_VK_D, rightIdKey2);
+        myKeyboard.unregisterHandler(MyGame.input.KeyEvent.DOM_VK_A, leftIdKey2);
 
         playerSelf.model.state = 'sinking';
         let message = {
@@ -333,6 +355,12 @@ MyGame.main = (function(graphics, renderer, input, components) {
 
     function updateTextMessages(data){
         textMessages.push(data);
+    }
+
+    function updateCircle(data){
+        shieldCircle.radius = data.radius;
+        shieldCircle.position = data.position;
+        shieldCircle.shrinkingSpeed = data.shrinkingSpeed;
     }
 
     //------------------------------------------------------------------
@@ -387,6 +415,9 @@ MyGame.main = (function(graphics, renderer, input, components) {
                 case NetworkIds.DRAW_TEXT:
                     updateTextMessages(message.data);
                     break;
+                case NetworkIds.UPDATE_CIRCLE:
+                    updateCircle(message.data);
+                    break;
             }
         }
     }
@@ -398,7 +429,6 @@ MyGame.main = (function(graphics, renderer, input, components) {
     //------------------------------------------------------------------
     function update(elapsedTime) {
         playerSelf.model.update(elapsedTime);
-        console.log("Player X = " + playerSelf.model.position.x + ' Player Y = ' + playerSelf.model.position.y); //Player Position
         for (let id in playerOthers) {
             playerOthers[id].model.update(elapsedTime);
         }
@@ -445,8 +475,9 @@ MyGame.main = (function(graphics, renderer, input, components) {
         playerSelf.texture = MyGame.assets[textureString];
         //graphics.drawWorldBoundary(1, 1);
         graphics.setCamera(playerSelf.model, 0, 4800, 0, 4800);
-        graphics.drawMiniMap(playerSelf.model);
+        graphics.drawMiniMap(playerSelf.model, shieldCircle);
         graphics.drawBackground();
+        renderer.Circle.render(shieldCircle);
         renderer.Player.render(playerSelf.model, playerSelf.texture);
         
         for(let message in textMessages){
@@ -514,7 +545,7 @@ MyGame.main = (function(graphics, renderer, input, components) {
             },
             MyGame.input.KeyEvent.DOM_VK_UP, true);
             
-        upIdKey = myKeyboard.registerHandler(elapsedTime => {
+        upIdKey2 = myKeyboard.registerHandler(elapsedTime => {
                 let message = {
                     id: messageId++,
                     elapsedTime: elapsedTime,
@@ -538,7 +569,7 @@ MyGame.main = (function(graphics, renderer, input, components) {
             },
             MyGame.input.KeyEvent.DOM_VK_RIGHT, true);
 
-        rightIdKey = myKeyboard.registerHandler(elapsedTime => {
+        rightIdKey2 = myKeyboard.registerHandler(elapsedTime => {
                 let message = {
                     id: messageId++,
                     elapsedTime: elapsedTime,
@@ -562,7 +593,7 @@ MyGame.main = (function(graphics, renderer, input, components) {
             },
             MyGame.input.KeyEvent.DOM_VK_LEFT, true);
         
-        leftIdKey = myKeyboard.registerHandler(elapsedTime => {
+        leftIdKey2 = myKeyboard.registerHandler(elapsedTime => {
             let message = {
                 id: messageId++,
                 elapsedTime: elapsedTime,

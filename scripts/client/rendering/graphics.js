@@ -220,7 +220,6 @@ MyGame.graphics = (function() {
         context.clear();
         let camX = clamp((-player.position.x * 4800) + (canvas.width/2), minX, maxX - (canvas.width));
         let camY = clamp((-player.position.y * 4800) + (canvas.height/2), minY, maxY - (canvas.height));
-        //console.log('camera:', camX , ' ', camY); //Camera position
         context.translate(camX, camY);
 
     }
@@ -235,16 +234,37 @@ MyGame.graphics = (function() {
         context.drawImage(MyGame.assets['background'], 0, 0, 4800, 4800); //should be 0,0,4800,4800?
     }
 
-    function drawMiniMap(player){
+    function drawMiniMap(player, circle){
         let smallCanvas = document.getElementById('mini-map');
         let ctx = smallCanvas.getContext('2d')
         ctx.clear();
+        ctx.save();
+        ctx.beginPath();
         ctx.fillStyle="#FFFF00";
         ctx.fillRect(player.position.x * 200, player.position.y * 200, 5,5);
+        let circleRadius = (circle.radius > 0)? circle.radius : 0; 
+        ctx.arc(circle.position.x * 200, circle.position.y * 200, circleRadius * 200, 0, 2*Math.PI);
+        ctx.strokeStyle = 'red';
+        ctx.lineWidth = .5;
+        ctx.stroke();
+        ctx.closePath();
+        ctx.restore();
 
         //let smallImage = new Image();
         //smallImage.src = '../../../assets/background/mini_map.jpg';
 
+    }
+
+    function drawShieldCircle(circle){
+        context.save();
+        context.beginPath();
+        let circleRadius = (circle.radius > 0)? circle.radius : 0; 
+        context.arc(circle.position.x * 4800, circle.position.y * 4800, circleRadius * 4800, 0,  2 * Math.PI);
+        context.strokeStyle = 'red';
+        context.lineWidth = 10;
+        context.stroke();
+        context.closePath();
+        context.restore();
     }
 
 
@@ -266,6 +286,7 @@ MyGame.graphics = (function() {
         setCamera: setCamera,
         drawWorldBoundary: drawWorldBoundary,
         drawBackground: drawBackground,
-        drawMiniMap: drawMiniMap
+        drawMiniMap: drawMiniMap,
+        drawShieldCircle: drawShieldCircle
     };
 }());

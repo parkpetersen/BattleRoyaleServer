@@ -6,6 +6,7 @@ const Missile = require('./missile');
 const Pickup = require('./pickup.js');
 const NetworkIds = require('../shared/network-ids');
 const Queue = require('../shared/queue.js');
+const Circle = require('./circle.js');
 
 const SIMULATION_UPDATE_RATE_MS = 10;
 const STATE_UPDATE_RATE_MS = 50;
@@ -18,23 +19,30 @@ let pickups = [];
 let hits = [];
 let inputQueue = Queue.create();
 let nextMissileId = 1;
+let shieldCircle = null;
+let gameTimer = 0;
+let shieldWarningSent = false;
 
-function createPickups(){
+function createCircle() {
+    shieldCircle = Circle.create();
+}
+
+function createPickups() {
     let variety = ['scope', 'health', 'damage']
-    for(var i = 0; i < 3; i++){
+    for (var i = 0; i < 3; i++) {
         pickups.push({
-            id : 1,
-            position : {
-                x : Math.random(),
-                y : Math.random()
+            id: 1,
+            position: {
+                x: Math.random(),
+                y: Math.random()
             },
-            type : variety[Math.floor(Math.random()*variety.length)],
-            radius : .03
+            type: variety[Math.floor(Math.random() * variety.length)],
+            radius: .03
         });
     }
 }
 
-function createMissile(clientId, playerModel){
+function createMissile(clientId, playerModel) {
     let missile = Missile.create({
         id: nextMissileId++,
         clientId: clientId,
@@ -50,15 +58,15 @@ function createMissile(clientId, playerModel){
     newMissiles.push(missile);
 }
 
-function processInput(elapsedTime){
+function processInput(elapsedTime) {
     let processMe = inputQueue;
     inputQueue = Queue.create();
 
-    while(!processMe.empty){
+    while (!processMe.empty) {
         let input = processMe.dequeue();
         let client = activeClients[input.clientId];
         client.lastMessageId = input.message.id;
-        switch(input.message.type){
+        switch (input.message.type) {
             case NetworkIds.INPUT_MOVE:
                 client.player.move(input.message.elapsedTime);
                 break;
@@ -79,27 +87,44 @@ function processInput(elapsedTime){
     }
 }
 
-function collided(obj1, obj2){
+function collided(obj1, obj2) {
     let distance = Math.sqrt(Math.pow(obj1.position.x - obj2.position.x, 2) + Math.pow(obj1.position.y - obj2.position.y, 2));
     let radii = obj1.radius + obj2.radius;
 
     return distance <= radii;
 }
 
-function update(elapsedTime, currentTime){
-    for(let clientId in activeClients) {
-        activeClients[clientId].player.update(currentTime);
+function update(elapsedTime, currentTime) {
+    gameTimer += elapsedTime;
+    if (!shieldWarningSent && gameTimer >= 5000) {
+        let message = "Circle Starting in 10 seconds!"
+        for (let clientId in activeClients) {
+            activeClients[clientId].socket.emit(NetworkIds.DRAW_TEXT, {
+                message: message,
+                position: activeClients[clientId].player.position,
+                duration: 5000 //milliseconds
+            })
+        }
+        shieldWarningSent = true;
+    }
+    shieldCircle.update(elapsedTime);
+    for (let clientId in activeClients) {
+        let player = activeClients[clientId].player;
+        player.update(currentTime);
+        if (!shieldCircle.within(player)) {
+            player.health -= (20 / 1000) * elapsedTime;
+        }
     }
 
-    for(let missile=0; missile < newMissiles.length; missile++){
+    for (let missile = 0; missile < newMissiles.length; missile++) {
         newMissiles[missile].update(elapsedTime);
     }
 
     let keepMissiles = [];
-    for(let missile = 0; missile < activeMissiles.length; missile++){
+    for (let missile = 0; missile < activeMissiles.length; missile++) {
         //update returns false if the object has disappeared, meaning
         //we don't want to keep it.
-        if(activeMissiles[missile].update(elapsedTime)){
+        if (activeMissiles[missile].update(elapsedTime)) {
             keepMissiles.push(activeMissiles[missile]);
         }
     }
@@ -108,12 +133,12 @@ function update(elapsedTime, currentTime){
 
     keepMissiles = [];
 
-    for(let missile = 0; missile < activeMissiles.length; missile++) {
+    for (let missile = 0; missile < activeMissiles.length; missile++) {
         let hit = false;
-        for(let clientId in activeClients) {
+        for (let clientId in activeClients) {
             //Don't allow a missile to hit the player it was fired from.
-            if(clientId !== activeMissiles[missile].clientId){
-                if(collided(activeMissiles[missile], activeClients[clientId].player)){
+            if (clientId !== activeMissiles[missile].clientId) {
+                if (collided(activeMissiles[missile], activeClients[clientId].player)) {
                     hit = true;
                     activeClients[clientId].player.missileHit(activeMissiles[missile].missileDamage);
                     hits.push({
@@ -125,7 +150,7 @@ function update(elapsedTime, currentTime){
                 }
             }
         }
-        if(!hit){
+        if (!hit) {
             keepMissiles.push(activeMissiles[missile]);
         }
     }
@@ -133,19 +158,19 @@ function update(elapsedTime, currentTime){
 
     //
     // Pickup collision detection
-    for (let pickup = 0; pickup < pickups.length; pickup++){
-        for(let clientId in activeClients){
-            if(collided(pickups[pickup], activeClients[clientId].player)){
+    for (let pickup = 0; pickup < pickups.length; pickup++) {
+        for (let clientId in activeClients) {
+            if (collided(pickups[pickup], activeClients[clientId].player)) {
                 let message = 'default';
-                if(pickups[pickup].type === 'scope'){
+                if (pickups[pickup].type === 'scope') {
                     activeClients[clientId].player.vision.radius *= 1.15;
                     message = '+vision';
                 }
-                else if(pickups[pickup].type === 'damage'){
+                else if (pickups[pickup].type === 'damage') {
                     activeClients[clientId].player.playerDamage = 30;
                     message = '+damage';
                 }
-                else if(pickups[pickup].type === 'health'){
+                else if (pickups[pickup].type === 'health') {
                     activeClients[clientId].player.health = 100;
                     message = '+health';
                 }
@@ -153,10 +178,10 @@ function update(elapsedTime, currentTime){
                 activeClients[clientId].socket.emit(NetworkIds.DRAW_TEXT, {
                     message: message,
                     position: activeClients[clientId].player.position,
-                    duration : 2000 //milliseconds
+                    duration: 2000 //milliseconds
                 });
                 //remove pickup from list
-                pickups = pickups.filter(function(item) { 
+                pickups = pickups.filter(function (item) {
                     return item !== pickups[pickup];
                 });
                 break;
@@ -165,14 +190,14 @@ function update(elapsedTime, currentTime){
     }
 }
 
-function updateClients(elapsedTime){
+function updateClients(elapsedTime) {
     lastUpdate += elapsedTime;
-    if(lastUpdate < STATE_UPDATE_RATE_MS){
+    if (lastUpdate < STATE_UPDATE_RATE_MS) {
         return;
     }
 
     let missileMessages = [];
-    for(let item = 0; item < newMissiles.length; item++){
+    for (let item = 0; item < newMissiles.length; item++) {
         let missile = newMissiles[item];
         missileMessages.push({
             id: missile.id,
@@ -188,12 +213,11 @@ function updateClients(elapsedTime){
         });
     }
 
-    for(let missile = 0; missile < newMissiles.length; missile++){
+    for (let missile = 0; missile < newMissiles.length; missile++) {
         activeMissiles.push(newMissiles[missile]);
     }
     newMissiles.length = 0;
-
-    for(let clientId in activeClients) {
+    for (let clientId in activeClients) {
         let client = activeClients[clientId];
         let update = {
             clientId: clientId,
@@ -202,32 +226,41 @@ function updateClients(elapsedTime){
             position: client.player.position,
             updateWindow: lastUpdate,
             health: client.player.health,
-            vision : client.player.vision,
+            vision: client.player.vision,
             state: client.player.state
         };
-        if(client.player.reportUpdate) {
+        if (client.player.reportUpdate) {
             client.socket.emit(NetworkIds.UPDATE_SELF, update);
 
-            for(let otherId in activeClients) {
-                if(otherId !== clientId){
+            for (let otherId in activeClients) {
+                if (otherId !== clientId) {
                     activeClients[otherId].socket.emit(NetworkIds.UPDATE_OTHER, update);
                 }
             }
         }
-
         client.socket.emit(NetworkIds.PICKUPS, pickups);
+        let messageCircle = {
+            position: {
+                x: shieldCircle.position.x,
+                y: shieldCircle.position.y
+            },
+            radius: shieldCircle.radius,
+            shrinkingSpeed: shieldCircle.shrinkingSpeed
+        };
+
+        client.socket.emit(NetworkIds.UPDATE_CIRCLE, messageCircle);
 
         for (let missile = 0; missile < missileMessages.length; missile++) {
             client.socket.emit(NetworkIds.MISSILE_NEW, missileMessages[missile]);
         }
-        
+
         for (let hit = 0; hit < hits.length; hit++) {
             client.socket.emit(NetworkIds.MISSILE_HIT, hits[hit]);
         }
 
-        if(client.player.health <= 0 && client.player.state === 'alive'){
+        if (client.player.health <= 0 && client.player.state === 'alive') {
             let update = {
-                clientId : clientId,
+                clientId: clientId,
                 message: 'You are dead. Better luck next time matey.'
             };
             client.socket.emit(NetworkIds.DEAD, update);
@@ -299,8 +332,8 @@ function initializeSocketIO(httpServer) {
             }
         }
     }
-    
-    io.on('connection', function(socket) {
+
+    io.on('connection', function (socket) {
         console.log('Connection established: ', socket.id);
         let newPlayer = Player.create()
         newPlayer.clientId = socket.id;
@@ -330,7 +363,7 @@ function initializeSocketIO(httpServer) {
         //     });
         // });
 
-        socket.on('disconnect', function() {
+        socket.on('disconnect', function () {
             delete activeClients[socket.id];
             notifyDisconnect(socket.id);
         });
@@ -342,6 +375,7 @@ function initializeSocketIO(httpServer) {
 function initialize(httpServer) {
     initializeSocketIO(httpServer);
     createPickups();
+    createCircle();
     gameLoop(present(), 0);
 }
 

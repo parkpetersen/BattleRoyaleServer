@@ -65,6 +65,10 @@
         'DRAW_TEXT' : {
             value: 'draw-text',
             writable: false
+        },
+        'UPDATE_CIRCLE' : {
+            value: 'update-circle',
+            writable: false
         }
     });
 
