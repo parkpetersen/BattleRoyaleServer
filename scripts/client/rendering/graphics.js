@@ -147,8 +147,8 @@ MyGame.graphics = (function() {
         context.save();
         context.beginPath();
         context.arc(vision.x*4800, vision.y*4800, vision.radius*canvas.width, vision.start, vision.end);
-        context.strokeStyle = "#FFFFFF";
-        context.fillStyle = "#808080";
+        context.strokeStyle = "rgba(50,250,250, 0.1"; //This allows for a bit opacity so we can see what's under the FOV
+        context.fillStyle = "rgba(50,250,250, 0.1";
         context.fill();
         context.stroke();
     }
@@ -220,7 +220,7 @@ MyGame.graphics = (function() {
         context.clear();
         let camX = clamp((-player.position.x * 4800) + (canvas.width/2), minX, maxX - (canvas.width));
         let camY = clamp((-player.position.y * 4800) + (canvas.height/2), minY, maxY - (canvas.height));
-        console.log('camera:', camX , ' ', camY);
+        //console.log('camera:', camX , ' ', camY); //Camera position
         context.translate(camX, camY);
 
     }
@@ -234,6 +234,19 @@ MyGame.graphics = (function() {
     function drawBackground(){
         context.drawImage(MyGame.assets['background'], 0, 0, 4800, 4800); //should be 0,0,4800,4800?
     }
+
+    function drawMiniMap(player){
+        let smallCanvas = document.getElementById('mini-map');
+        let ctx = smallCanvas.getContext('2d')
+        ctx.clear();
+        ctx.fillStyle="#FFFF00";
+        ctx.fillRect(player.position.x * 200, player.position.y * 200, 5,5);
+
+        //let smallImage = new Image();
+        //smallImage.src = '../../../assets/background/mini_map.jpg';
+
+    }
+
 
     return {
         clear: clear,
@@ -252,6 +265,7 @@ MyGame.graphics = (function() {
         drawText: drawText,
         setCamera: setCamera,
         drawWorldBoundary: drawWorldBoundary,
-        drawBackground: drawBackground
+        drawBackground: drawBackground,
+        drawMiniMap: drawMiniMap
     };
 }());

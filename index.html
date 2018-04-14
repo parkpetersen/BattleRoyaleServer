@@ -6,8 +6,12 @@
 	<script src = "/node_modules/socket.io-client/dist/socket.io.slim.js"></script>
 </head>
 <body>
+	<div id="miniMap" title="Mini Map" class="miniMap">
+		<canvas id = "mini-map" width = "200" height = "200" align = "left" style = "float: left;  background-image: url('./assets/background/mini-map.jpg');"></canvas>
+	</div>
+
 	<div align="center">
-	<canvas id = "canvas-main" width = "600" height = "600" align = "center" style = "background-color: rgb(0, 0, 0); overflow: auto"></canvas>
+		<canvas id = "canvas-main" width = "600" height = "600" align = "center" style = "background-color: rgb(0, 0, 0); overflow: auto"></canvas>
 	</div>
 
 	<script data-main = "scripts/client/loader" src = "scripts/client/require.js"></script>

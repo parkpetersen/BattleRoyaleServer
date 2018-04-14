@@ -310,6 +310,12 @@ MyGame.main = (function(graphics, renderer, input, components) {
         myKeyboard.unregisterHandler(MyGame.input.KeyEvent.DOM_VK_RIGHT, rightIdKey);
         myKeyboard.unregisterHandler(MyGame.input.KeyEvent.DOM_VK_LEFT, leftIdKey);
         myKeyboard.unregisterHandler(MyGame.input.KeyEvent.DOM_VK_SPACE, fireIdKey);
+
+        myKeyboard.unregisterHandler(MyGame.input.KeyEvent.DOM_VK_W, upIdKey);
+        myKeyboard.unregisterHandler(MyGame.input.KeyEvent.DOM_VK_D, rightIdKey);
+        myKeyboard.unregisterHandler(MyGame.input.KeyEvent.DOM_VK_A, leftIdKey);
+        myKeyboard.unregisterHandler(MyGame.input.KeyEvent.DOM_VK_SPACE, fireIdKey);
+
         playerSelf.model.state = 'sinking';
         let message = {
             id: messageId++,
@@ -392,7 +398,7 @@ MyGame.main = (function(graphics, renderer, input, components) {
     //------------------------------------------------------------------
     function update(elapsedTime) {
         playerSelf.model.update(elapsedTime);
-        console.log(playerSelf.model.position.x + ',' + playerSelf.model.position.y);
+        console.log("Player X = " + playerSelf.model.position.x + ' Player Y = ' + playerSelf.model.position.y); //Player Position
         for (let id in playerOthers) {
             playerOthers[id].model.update(elapsedTime);
         }
@@ -439,6 +445,7 @@ MyGame.main = (function(graphics, renderer, input, components) {
         playerSelf.texture = MyGame.assets[textureString];
         //graphics.drawWorldBoundary(1, 1);
         graphics.setCamera(playerSelf.model, 0, 4800, 0, 4800);
+        graphics.drawMiniMap(playerSelf.model);
         graphics.drawBackground();
         renderer.Player.render(playerSelf.model, playerSelf.texture);
         
@@ -506,6 +513,18 @@ MyGame.main = (function(graphics, renderer, input, components) {
                 playerSelf.model.move(elapsedTime);
             },
             MyGame.input.KeyEvent.DOM_VK_UP, true);
+            
+        upIdKey = myKeyboard.registerHandler(elapsedTime => {
+                let message = {
+                    id: messageId++,
+                    elapsedTime: elapsedTime,
+                    type: NetworkIds.INPUT_MOVE
+                };
+                socket.emit(NetworkIds.INPUT, message);
+                messageHistory.enqueue(message);
+                playerSelf.model.move(elapsedTime);
+            },
+            MyGame.input.KeyEvent.DOM_VK_W, true);
 
         rightIdKey = myKeyboard.registerHandler(elapsedTime => {
                 let message = {
@@ -519,6 +538,18 @@ MyGame.main = (function(graphics, renderer, input, components) {
             },
             MyGame.input.KeyEvent.DOM_VK_RIGHT, true);
 
+        rightIdKey = myKeyboard.registerHandler(elapsedTime => {
+                let message = {
+                    id: messageId++,
+                    elapsedTime: elapsedTime,
+                    type: NetworkIds.INPUT_ROTATE_RIGHT
+                };
+                socket.emit(NetworkIds.INPUT, message);
+                messageHistory.enqueue(message);
+                playerSelf.model.rotateRight(elapsedTime);
+            },
+            MyGame.input.KeyEvent.DOM_VK_D, true);    
+
         leftIdKey = myKeyboard.registerHandler(elapsedTime => {
                 let message = {
                     id: messageId++,
@@ -530,6 +561,18 @@ MyGame.main = (function(graphics, renderer, input, components) {
                 playerSelf.model.rotateLeft(elapsedTime);
             },
             MyGame.input.KeyEvent.DOM_VK_LEFT, true);
+        
+        leftIdKey = myKeyboard.registerHandler(elapsedTime => {
+            let message = {
+                id: messageId++,
+                elapsedTime: elapsedTime,
+                type: NetworkIds.INPUT_ROTATE_LEFT
+            };
+            socket.emit(NetworkIds.INPUT, message);
+            messageHistory.enqueue(message);
+            playerSelf.model.rotateLeft(elapsedTime);
+            },
+            MyGame.input.KeyEvent.DOM_VK_A, true);
 
         fireIdKey = myKeyboard.registerHandler(elapsedTime => {
                 let message = {
