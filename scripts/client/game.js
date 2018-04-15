@@ -3,13 +3,12 @@
 // This function provides the "game" code.
 //
 //------------------------------------------------------------------
-let cannonFire = new Howl({ src: ['assets/audio/cannon_fire.mp3']});
-let cannonHit  = new Howl({ src: ['assets/audio/hit.mp3']});
-let sinkSound  = new Howl({ src: ['assets/audio/ship-sinking.wav']});
-let music  = new Howl({ src: ['assets/audio/song.mp3'],
-loop: true,
-volume: 0.10});
-let play = false;
+let cannonFire = new Howl({ src: ['assets/audio/cannon_fire.mp3'], volume: 0.20});
+let cannonHit  = new Howl({ src: ['assets/audio/hit.mp3'], volume: 0.20});
+let sinkSound  = new Howl({ src: ['assets/audio/ship-sinking.wav'], volume: 0.20});
+let music  = new Howl({ src: ['assets/audio/song.mp3'], loop: true, volume: 0.20});
+let Mplay = false; //music
+let Splay = false; //sound
 
 MyGame.main = (function(graphics, renderer, input, components) {
     'use strict';
@@ -411,7 +410,7 @@ MyGame.main = (function(graphics, renderer, input, components) {
                     break;
                 case NetworkIds.DEAD:
                     killPlayer(message.data);
-                    sinkSound.play();
+                    //sinkSound.play();
                     break;
                 case NetworkIds.PICKUPS:
                     updatePickups(message.data);
@@ -464,7 +463,6 @@ MyGame.main = (function(graphics, renderer, input, components) {
                 break;
             }
         }
-        getMusicValue();
     }
 
     //------------------------------------------------------------------
@@ -517,17 +515,34 @@ MyGame.main = (function(graphics, renderer, input, components) {
     //
     //---------------------------------------------------------------
     function getMusicValue(){
-        myCheck.addEventListener('change', function(){
-            if(this.checked && play == false){
-                music.volume = .10;
-                music.play();
-                play = true;
-            }else{
-                music.stop();
-                play = false;
-                music.volume = .10;
-            }
-        });
+        var checked = document.getElementById('checkMusic').checked;
+
+        if(checked == true && Mplay == false){
+            music.play();
+            Mplay = true;
+        }
+        if(checked == false){
+            music.pause();
+            Mplay = false;
+        }
+    }
+
+    //---------------------------------------------------------------
+    //
+    // Enable Disable Sounds
+    //
+    //---------------------------------------------------------------
+    function getSoundValue(){
+        var checked = document.getElementById('checkSound').checked;
+        console.log(checked);
+        if(checked == true && Splay == false){
+            Howler.volume(.20);
+            Splay = true;
+        }
+        if(checked == false){
+            Howler.volume(0);
+            Splay = false;
+        }
     }
 
     //------------------------------------------------------------------
@@ -541,7 +556,8 @@ MyGame.main = (function(graphics, renderer, input, components) {
         processInput(elapsedTime);
         update(elapsedTime);
         render();
-
+        getMusicValue();
+        getSoundValue();
         requestAnimationFrame(gameLoop);
     };
 
