@@ -6,6 +6,10 @@
 let cannonFire = new Howl({ src: ['assets/audio/cannon_fire.mp3']});
 let cannonHit  = new Howl({ src: ['assets/audio/hit.mp3']});
 let sinkSound  = new Howl({ src: ['assets/audio/ship-sinking.wav']});
+let music  = new Howl({ src: ['assets/audio/song.mp3'],
+loop: true,
+volume: 0.10});
+let play = false;
 
 MyGame.main = (function(graphics, renderer, input, components) {
     'use strict';
@@ -460,7 +464,7 @@ MyGame.main = (function(graphics, renderer, input, components) {
                 break;
             }
         }
-
+        getMusicValue();
     }
 
     //------------------------------------------------------------------
@@ -507,6 +511,25 @@ MyGame.main = (function(graphics, renderer, input, components) {
         }
     }
 
+    //---------------------------------------------------------------
+    //
+    // Add some game play music
+    //
+    //---------------------------------------------------------------
+    function getMusicValue(){
+        myCheck.addEventListener('change', function(){
+            if(this.checked && play == false){
+                music.volume = .10;
+                music.play();
+                play = true;
+            }else{
+                music.stop();
+                play = false;
+                music.volume = .10;
+            }
+        });
+    }
+
     //------------------------------------------------------------------
     //
     // Client-side game loop
@@ -515,7 +538,6 @@ MyGame.main = (function(graphics, renderer, input, components) {
     function gameLoop(time) {
         let elapsedTime = time - lastTimeStamp;
         lastTimeStamp = time;
-
         processInput(elapsedTime);
         update(elapsedTime);
         render();

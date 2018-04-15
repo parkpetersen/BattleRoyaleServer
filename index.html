@@ -3,15 +3,28 @@
 <head>
 	<meta charset = "UTF-8">
 	<title>Multiplayer - Complete</title>
+	<link rel="stylesheet" type="text/css" href="style.css">  
 	<script src = "/node_modules/socket.io-client/dist/socket.io.slim.js"></script>
+
+	<header>
+			<h1>Boats N' Booty</h1>
+	</header>
+
 </head>
 <body>
-	<div id="miniMap" title="Mini Map" class="miniMap">
-		<canvas id = "mini-map" width = "200" height = "200" align = "left" style = "float: left;  background-image: url('./assets/background/mini-map.jpg');"></canvas>
+
+	<div id="mini" title="Mini Map" class="canvas">
+		<canvas id = "mini-map" width = "200" height = "200" style = "background-image: url('./assets/background/mini-map.jpg');"></canvas>
+		<label class="container">Music
+			<input type="checkbox" id="myCheck">
+			<span class="checkmark"></span>
+		</label>
 	</div>
 
-	<div align="center">
-		<canvas id = "canvas-main" width = "600" height = "600" align = "center"></canvas>
+	
+
+	<div id="canvas" title="Main Canvas" class="canvas">
+		<canvas id = "canvas-main" width = "600" height = "600"></canvas>
 	</div>
 
 	<script data-main = "scripts/client/loader" src = "scripts/client/require.js"></script>
