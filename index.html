@@ -21,33 +21,69 @@
 	 -->
 	<div id="menu">
 		<div id="main">
-				<h1>Tales of <br> Boats n' Booty</h1>
-				<ul>
-							<li><a href="javascript:void(0)" class="menuItem play">Start Game</a></li>
-							<li><a href="javascript:void(0)" class="menuItem-disabled">Join Game Lobby</a></li>					
-							<li><a href="javascript:void(0)" class="menuItem-disabled">Create New User</a></li>
-							<li><a href="javascript:void(0)" class="menuItem-disabled">Options</a></li>
-							<li><a href="javascript:void(0)" class="menuItem-disabled">Leaderboard</a></li>
-							<li><a href="javascript:void(0)" class="menuItem credits">Credits</a></li>
-				</ul>
-			</div>
-		
-			<div id="credits" class="main">
-				<h1>Created by:</h1>
-				<ul>
-					<!-- <li>Jake Anderson</li> -->
-					<li>Brian Falor</li>
-					<li>Parker Petersen</li>
-					<li>Grant Russell</li>
-				</ul>
-				<p>for Dr. Dean Mathias' CS5410 Game Development class.</p>
-				<p>Utah State University, April 2018</p>
-			</div>
+			<h1>Tales of <br> Boats n' Booty</h1>
+			<ul>
+				<li><a href="javascript:void(0)" class="menuItem play">Start Game</a></li>
+				<li><a href="javascript:void(0)" class="menuItem-disabled">Join Game Lobby</a></li>					
+				<li><a href="javascript:void(0)" class="menuItem-disabled">Create New User</a></li>
+				<li><a href="javascript:void(0)" class="menuItem-disabled">Options</a></li>
+				<li><a href="javascript:void(0)" class="menuItem leaderboard">Leaderboard</a></li>
+				<li><a href="javascript:void(0)" class="menuItem credits">Credits</a></li>
+			</ul>
+		</div>
+	
+		<div id="credits" class="main">
+			<h1>Created by:</h1>
+			<ul>
+				<!-- <li>Jake Anderson</li> -->
+				<li>Brian Falor</li>
+				<li>Parker Petersen</li>
+				<li>Grant Russell</li>
+			</ul>
+			<p>for Dr. Dean Mathias' CS5410 Game Development class.</p>
+			<p>Utah State University, April 2018</p>
+		</div>
 
-			<div id="back" class="menu-back">
-				<!-- TODO: place back button in a good spot; hide button until it is needed -->
-				<a href="javascript:void(0)" class="nav back"><img src="/assets/back-button.png" height="100" width="100"/> </a>
-			</div>
+		<div id="leaderboard" class="main">
+			<h1>Treasure Trove Takers</h1>
+			<h4>Top 5 Battle Royale survivors</h4>
+			<table>
+				<tr>
+					<th></th>
+					<th>Player Name</th>
+					<th>Wins</th>
+				</tr>
+				<tr id="top-player">
+					<td style="text-align: center">1</td>
+					<td id="player">Parker Petersen</td>
+					<td id="wins">10</td>
+				</tr>
+				<tr>
+					<td>2</td>
+					<td id="player">Grant Russell</td>
+					<td id="wins">8</td>
+				</tr>
+				<tr>
+					<td>3</td>
+					<td id="player">Brian Falor</td>
+					<td id="wins">7</td>
+				</tr>
+				<tr>
+					<td>4</td>
+					<td id="player">Dean Mathias</td>
+					<td id="wins">5</td>
+				</tr>
+				<tr>
+					<td>5</td>
+					<td id="player">Jake Anderson</td>
+					<td id="wins">1</td>
+				</tr>
+			  </table>
+		</div>
+
+		<div id="back" class="menu-back">
+			<a href="javascript:void(0)" class="nav back"><img src="/assets/menu/back-button.png" height="100" width="100"/> </a>
+		</div>
 	</div>
 
 	<div id="game">

@@ -30,15 +30,27 @@ MyGame.menu = (function() {
         MyGame.main.initialize(); //probably shouldn't initialize every time the button is clicked... (fix later)
     });
 
+    //
+    // when "Leaderboard" button is clicked, hide main menu, display credits screen
+    let leaderboardNode = document.querySelectorAll('.leaderboard')[0].addEventListener('click', function() {
+        hide(document.getElementById('main'));
+        show(document.getElementById('leaderboard'));
+        show(document.getElementById('back'));
+    });
+
+    //
+    // when "Credits" button is clicked, hide main menu, display credits screen
     let creditNode = document.querySelectorAll('.credits')[0].addEventListener('click', function() {
         hide(document.getElementById('main'));
         show(document.getElementById('credits'));
         show(document.getElementById('back'));
     });
 
-    //TODO: back button hides overlayed screen, and back button
+    //
+    // when "Back" button is clicked, hide current all submenus and display main menu
     let back = document.querySelectorAll('.back')[0].addEventListener('click', function() {
         show(document.getElementById('main'));
+        hide(document.getElementById('leaderboard'));
         hide(document.getElementById('credits'));
         hide(document.getElementById('back'));
     });

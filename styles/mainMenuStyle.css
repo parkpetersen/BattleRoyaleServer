@@ -1,5 +1,5 @@
 #main {
-    background-image: url('../assets/sea_battle_by_lobzov.jpg');
+    background-image: url('../assets/background/sea_battle_by_lobzov.jpg');
     background-repeat: no-repeat;
     background-position: center;
     background-size: auto 100%;
@@ -16,11 +16,47 @@
 }
 
 #back.menu-back {
-    height: 150 px;
-    width: auto;
+    height: 100;
+    width: 100;
     display: none;
     position: absolute;
     top: 3%; left: 31%; bottom: 0; right: 0;
+}
+
+#leaderboard {
+    width: 40%;
+    height: 100%;
+    background-position: center;
+    background-color: rgb(255,255,255);
+    overflow: auto;
+    margin: auto;
+    position: absolute;
+    top: 0; left: 0; bottom: 0; right: 0;
+    text-align: center;
+    display: none;
+}
+
+#leaderboard table {
+    margin: auto;
+    width: 50%;
+    padding: 10px;
+}
+
+#leaderboard tr:nth-child(even) {
+    background-color: #dddddd;
+}
+
+#leaderboard tr#top-player{
+    text-align: left;
+    background-color: rgba(245, 217, 60, 0.75);
+}
+
+#leaderboard td#player{
+    text-align: left;
+}
+
+#leaderboard td#wins{
+    text-align: right;
 }
 
 #credits {
@@ -77,7 +113,6 @@
     text-decoration: inherit;
     text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
     background-color: rgb(245, 217, 60);
-    border-radius: 5px;
 }
   
 ul {
@@ -86,4 +121,8 @@ ul {
   
 li {
     margin: 5px 0;
+}
+
+#credits li {
+    font-size: 30px;
 }

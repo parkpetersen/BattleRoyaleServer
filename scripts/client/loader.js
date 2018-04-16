@@ -163,10 +163,10 @@ MyGame.loader = (function() {
             source: 'assets/background/cropped.jpg'
         }, {
              key: 'menu-background',
-            source: 'assets/sea_battle_by_lobzov.jpg'
+            source: 'assets/background/sea_battle_by_lobzov.jpg'
         }, {
             key: 'back-button',
-            source: 'assets/back-button.png'
+            source: 'assets/menu/back-button.png'
         }];
 
     //------------------------------------------------------------------
