@@ -45,6 +45,10 @@ MyGame.loader = (function() {
             scripts: ['game'],
             message: 'Gameplay model loaded',
             onComplete: null
+        }, {
+            scripts: ['mainmenu'],
+            message: 'Menu loaded',
+            onComplete: null
         }],
         assetOrder = [{
             key: 'player-self-north',
@@ -157,6 +161,12 @@ MyGame.loader = (function() {
         }, {
             key: 'background',
             source: 'assets/background/cropped.jpg'
+        }, {
+             key: 'menu-background',
+            source: 'assets/sea_battle_by_lobzov.jpg'
+        }, {
+            key: 'back-button',
+            source: 'assets/back-button.png'
         }];
 
     //------------------------------------------------------------------
@@ -273,7 +283,9 @@ MyGame.loader = (function() {
     //------------------------------------------------------------------
     function mainComplete() {
         console.log('it is all loaded up');
-        MyGame.main.initialize();
+        MyGame.menu; // comment this line to remove main menu
+        // FOR GAMEPLAY TESTING PURPOSES ONLY:
+        // MyGame.main.initialize();
     }
 
     //

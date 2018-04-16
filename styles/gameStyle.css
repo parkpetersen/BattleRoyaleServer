@@ -1,10 +1,24 @@
 body{
-    background-image: url('./assets/background/menu.png');
+    background-image: url('../assets/background/menu.png');
   }
 
 header{
     text-align: center;
     color: #FFFDF3;
+}
+
+#canvas-main {
+    margin: auto;
+    background-color: rgb(126, 180, 182);
+}
+
+/* FOR GAMEPLAY TESTING PURPOSES ONLY */
+/* #main {
+    display: none;
+} */
+
+#game {
+    display: none;
 }
 
 .canvas{
@@ -16,7 +30,7 @@ header{
 }
 
 /* The container */
-.container {
+.audioOptions {
     display: block;
     position: relative;
     padding-left: 35px;
@@ -31,7 +45,7 @@ header{
 }
 
 /* Hide the browser's default checkbox */
-.container input {
+.audioOptions input {
     position: absolute;
     opacity: 0;
     cursor: pointer;
@@ -48,12 +62,12 @@ header{
 }
 
 /* On mouse-over, add a grey background color */
-.container:hover input ~ .checkmark {
+.audioOptions:hover input ~ .checkmark {
     background-color: #545454;
 }
 
 /* When the checkbox is checked, add a colored background */
-.container input:checked ~ .checkmark {
+.audioOptions input:checked ~ .checkmark {
     background-color: #9B9B9B;
 }
 
@@ -65,12 +79,12 @@ header{
 }
 
 /* Show the checkmark when checked */
-.container input:checked ~ .checkmark:after {
+.audioOptions input:checked ~ .checkmark:after {
     display: block;
 }
 
 /* Style the checkmark/indicator */
-.container .checkmark:after {
+.audioOptions .checkmark:after {
     left: 9px;
     top: 5px;
     width: 5px;

@@ -2,34 +2,71 @@
 <html lang = "en-US">
 <head>
 	<meta charset = "UTF-8">
-	<title>Multiplayer - Complete</title>
-	<link rel="stylesheet" type="text/css" href="style.css">  
+	<title>Tales of Boats n' Booty</title>
+	<link rel="stylesheet" href="styles/gameStyle.css" type="text/css" media="screen">
+	<link rel="stylesheet" href="styles/mainMenuStyle.css" type="text/css" media="screen">
 	<script src = "/node_modules/socket.io-client/dist/socket.io.slim.js"></script>
 
 	<header>
-			<h1>Boats N' Booty</h1>
+			<h1>Tales of Boats n' Booty</h1>
 	</header>
 
 </head>
 <body>
+	<!-- 
+		FOR GAMEPLAY TESTING PURPOSES ONLY:
+			To remove main menu:
+			- In gameStyle.css, toggle comments of #game and #main styles
+			- In loader.js, toggle comments MyGame.menu; and MyGame.main.initialize()
+	 -->
+	<div id="menu">
+		<div id="main">
+				<h1>Tales of <br> Boats n' Booty</h1>
+				<ul>
+							<li><a href="javascript:void(0)" class="menuItem play">Start Game</a></li>
+							<li><a href="javascript:void(0)" class="menuItem-disabled">Join Game Lobby</a></li>					
+							<li><a href="javascript:void(0)" class="menuItem-disabled">Create New User</a></li>
+							<li><a href="javascript:void(0)" class="menuItem-disabled">Options</a></li>
+							<li><a href="javascript:void(0)" class="menuItem-disabled">Leaderboard</a></li>
+							<li><a href="javascript:void(0)" class="menuItem credits">Credits</a></li>
+				</ul>
+			</div>
+		
+			<div id="credits" class="main">
+				<h1>Created by:</h1>
+				<ul>
+					<!-- <li>Jake Anderson</li> -->
+					<li>Brian Falor</li>
+					<li>Parker Petersen</li>
+					<li>Grant Russell</li>
+				</ul>
+				<p>for Dr. Dean Mathias' CS5410 Game Development class.</p>
+				<p>Utah State University, April 2018</p>
+			</div>
 
-	<div id="mini" title="Mini Map" class="canvas">
-		<canvas id = "mini-map" width = "200" height = "200" style = "background-image: url('./assets/background/mini-map.jpg');"></canvas>
-		<label class="container">Music
-			<input type="checkbox" id="checkMusic">
-			<span class="checkmark"></span>
-		</label>
-
-		<label class="container">Sounds
-			<input type="checkbox" id="checkSound" checked="checked" >
-			<span class="checkmark"></span>
-		</label>
+			<div id="back" class="menu-back">
+				<!-- TODO: place back button in a good spot; hide button until it is needed -->
+				<a href="javascript:void(0)" class="nav back"><img src="/assets/back-button.png" height="100" width="100"/> </a>
+			</div>
 	</div>
 
+	<div id="game">
+		<div id="miniMap" class="canvas">
+			<canvas id = "mini-map" width = "200" height = "200" style = "background-image: url('./assets/background/mini-map.jpg');"></canvas>
+			<label class="audioOptions">Music
+				<input type="checkbox" id="checkMusic">
+				<span class="checkmark"></span>
+			</label>
 	
-
-	<div id="canvas" title="Main Canvas" class="canvas">
-		<canvas id = "canvas-main" width = "600" height = "600"></canvas>
+			<label class="audioOptions">Sounds
+				<input type="checkbox" id="checkSound" checked="checked" >
+				<span class="checkmark"></span>
+			</label>
+		</div>
+	
+		<div id="canvas" class="canvas">
+			<canvas id = "canvas-main" width = "600" height = "600"></canvas>
+		</div>
 	</div>
 
 	<script data-main = "scripts/client/loader" src = "scripts/client/require.js"></script>

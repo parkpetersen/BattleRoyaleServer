@@ -1,0 +1,89 @@
+#main {
+    background-image: url('../assets/sea_battle_by_lobzov.jpg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: auto 100%;
+    overflow: auto;
+    margin: auto;
+    position: absolute;
+    top: 0; left: 0; bottom: 0; right: 0;
+}
+  
+#main h1 {
+    text-align: center;
+    color: white;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
+
+#back.menu-back {
+    height: 150 px;
+    width: auto;
+    display: none;
+    position: absolute;
+    top: 3%; left: 31%; bottom: 0; right: 0;
+}
+
+#credits {
+    width: 40%;
+    height: 100%;
+    background-position: center;
+    background-color: rgb(255,255,255);
+    overflow: auto;
+    margin: auto;
+    position: absolute;
+    top: 0; left: 0; bottom: 0; right: 0;
+    text-align: center;
+    display: none;
+}
+
+.menuItem {
+    display: block;
+    width: 150px;
+    margin: 0 auto;
+    height: 30px;
+    line-height: 30px;
+    border: 1px solid rgb(146, 130, 41);
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+    background-color: rgb(245, 217, 60);
+    background-image: -webkit-linear-gradient(bottom, rgb(245, 217, 60) 0%, rgb(146, 130, 41) 100%);
+    background-image:         linear-gradient(to bottom, rgb(245, 217, 60) 0%, rgb(146, 130, 41) 100%);
+    border-radius: 0px;
+}
+  
+.menuItem:hover {
+    text-decoration: inherit;
+    background-color: rgb(245, 217, 60);
+    background-image: -webkit-linear-gradient(bottom, rgb(146, 130, 41) 0%, rgb(245, 217, 60) 100%);
+    background-image:         linear-gradient(to bottom, rgb(146, 130, 41) 0%, rgb(245, 217, 60) 100%);
+}
+  
+.menuItem-disabled{
+    pointer-events: none;
+    cursor: not-allowed;
+    display: block;
+    width: 150px;
+    margin: 0 auto;
+    height: 30px;
+    line-height: 30px;
+    opacity: 0.4;
+    border: 1px solid rgb(133, 129, 112);
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: inherit;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+    background-color: rgb(245, 217, 60);
+    border-radius: 5px;
+}
+  
+ul {
+    list-style-type: none;
+}
+  
+li {
+    margin: 5px 0;
+}
