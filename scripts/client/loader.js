@@ -30,7 +30,8 @@ MyGame.loader = (function() {
             message: 'Input loaded',
             onComplete: null
         }, {
-            scripts: ['components/player', 'components/player-remote', 'components/missile', 'components/animated-sprite', 'components/pickup', 'components/circle'],
+            scripts: ['components/player', 'components/player-remote', 'components/missile', 'components/animated-sprite', 'components/pickup',
+             'components/circle', 'components/particle-system', 'components/particle-engine'],
             message: 'Player models loaded',
             onComplete: null
         }, {
@@ -38,7 +39,8 @@ MyGame.loader = (function() {
             message: 'Graphics loaded',
             onComplete: null
         }, {
-            scripts: ['rendering/player', 'rendering/player-remote', 'rendering/missile', 'rendering/animated-sprite', 'rendering/pickup', 'rendering/howler', 'rendering/circle'],
+            scripts: ['rendering/player', 'rendering/player-remote', 'rendering/missile', 'rendering/animated-sprite',
+             'rendering/pickup', 'rendering/howler', 'rendering/circle'],
             message: 'Renderers loaded',
             onComplete: null
         }, {
