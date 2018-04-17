@@ -31,7 +31,7 @@ MyGame.loader = (function() {
             onComplete: null
         }, {
             scripts: ['components/player', 'components/player-remote', 'components/missile', 'components/animated-sprite', 'components/pickup',
-             'components/circle', 'components/particle-system', 'components/particle-engine'],
+             'components/circle', 'components/particle-engine'],
             message: 'Player models loaded',
             onComplete: null
         }, {

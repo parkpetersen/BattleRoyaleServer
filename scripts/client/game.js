@@ -501,13 +501,12 @@ MyGame.main = (function(graphics, renderer, input, components) {
             renderer.Missile.render(missiles[missile]);
         }
 
-        graphics.renderParticleSystems(particleEngine);
-
         for(let pickup in pickups){
             renderer.Pickup.render(pickups[pickup], MyGame.assets['chest']);
         }
         
        graphics.disableClipping(clip);
+       graphics.renderParticleSystems(particleEngine);
         
         for (let id in explosions) {
             renderer.AnimatedSprite.render(explosions[id]);
