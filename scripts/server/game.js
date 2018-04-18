@@ -30,7 +30,7 @@ function createCircle() {
 
 function createPickups() {
     let variety = ['scope', 'health', 'damage']
-    for (var i = 0; i < 3; i++) {
+    for (var i = 0; i < 50; i++) {
         pickups.push({
             id: 1,
             position: {
@@ -38,7 +38,7 @@ function createPickups() {
                 y: Math.random()
             },
             type: variety[Math.floor(Math.random() * variety.length)],
-            radius: .03
+            radius: .0075
         });
     }
 }
