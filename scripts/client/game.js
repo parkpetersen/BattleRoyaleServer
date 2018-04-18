@@ -41,7 +41,8 @@ MyGame.main = (function(graphics, renderer, input, components) {
         rightIdKey2 = 0,
         downIdKey2 = 0,
         fireIdKey = 0,
-        shieldCircle = components.Circle();
+        shieldCircle = components.Circle(),
+        particleEngine = components.ParticleEngine.ParticleEngine();
         
 
     
@@ -324,6 +325,7 @@ MyGame.main = (function(graphics, renderer, input, components) {
             spriteCount: 16,
             spriteTime: [ 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50]
         });
+        particleEngine.createParticleSystem(data.position);
         
         //
         // When we receive a hit notification, go ahead and remove the
@@ -432,6 +434,7 @@ MyGame.main = (function(graphics, renderer, input, components) {
     //------------------------------------------------------------------
     function update(elapsedTime) {
         playerSelf.model.update(elapsedTime);
+        particleEngine.update(elapsedTime);
         for (let id in playerOthers) {
             playerOthers[id].model.update(elapsedTime);
         }
@@ -503,6 +506,7 @@ MyGame.main = (function(graphics, renderer, input, components) {
         }
         
        graphics.disableClipping(clip);
+       graphics.renderParticleSystems(particleEngine);
         
         for (let id in explosions) {
             renderer.AnimatedSprite.render(explosions[id]);
@@ -534,7 +538,6 @@ MyGame.main = (function(graphics, renderer, input, components) {
     //---------------------------------------------------------------
     function getSoundValue(){
         var checked = document.getElementById('checkSound').checked;
-        console.log(checked);
         if(checked == true && Splay == false){
             Howler.volume(.20);
             Splay = true;

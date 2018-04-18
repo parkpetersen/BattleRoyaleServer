@@ -22,6 +22,7 @@ let nextMissileId = 1;
 let shieldCircle = null;
 let gameTimer = 0;
 let shieldWarningSent = false;
+let updateDistance = 900 / 4800;
 
 function createCircle() {
     shieldCircle = Circle.create();
@@ -92,6 +93,11 @@ function collided(obj1, obj2) {
     let radii = obj1.radius + obj2.radius;
 
     return distance <= radii;
+}
+
+function distance(obj1, obj2) {
+    let distance = Math.sqrt(Math.pow(obj1.position.x - obj2.position.x, 2) + Math.pow(obj1.position.y - obj2.position.y, 2));
+    return distance;
 }
 
 function update(elapsedTime, currentTime) {
@@ -233,7 +239,7 @@ function updateClients(elapsedTime) {
             client.socket.emit(NetworkIds.UPDATE_SELF, update);
 
             for (let otherId in activeClients) {
-                if (otherId !== clientId) {
+                if (otherId !== clientId && distance(client.player, activeClients[otherId].player) <= updateDistance) {
                     activeClients[otherId].socket.emit(NetworkIds.UPDATE_OTHER, update);
                 }
             }
@@ -251,11 +257,15 @@ function updateClients(elapsedTime) {
         client.socket.emit(NetworkIds.UPDATE_CIRCLE, messageCircle);
 
         for (let missile = 0; missile < missileMessages.length; missile++) {
-            client.socket.emit(NetworkIds.MISSILE_NEW, missileMessages[missile]);
+            if (distance(client.player, missileMessages[missile]) <= updateDistance) {
+                client.socket.emit(NetworkIds.MISSILE_NEW, missileMessages[missile]);
+            }
         }
 
         for (let hit = 0; hit < hits.length; hit++) {
-            client.socket.emit(NetworkIds.MISSILE_HIT, hits[hit]);
+            if (distance(client.player, hits[hit]) <= updateDistance) {
+                client.socket.emit(NetworkIds.MISSILE_HIT, hits[hit]);
+            }
         }
 
         if (client.player.health <= 0 && client.player.state === 'alive') {

@@ -267,6 +267,10 @@ MyGame.graphics = (function() {
         context.restore();
     }
 
+    function renderParticleSystems(particleEngine){
+        particleEngine.render(context);
+    }
+
 
     return {
         clear: clear,
@@ -287,6 +291,7 @@ MyGame.graphics = (function() {
         drawWorldBoundary: drawWorldBoundary,
         drawBackground: drawBackground,
         drawMiniMap: drawMiniMap,
-        drawShieldCircle: drawShieldCircle
+        drawShieldCircle: drawShieldCircle,
+        renderParticleSystems: renderParticleSystems
     };
 }());
