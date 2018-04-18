@@ -29,7 +29,6 @@ MyGame.components.ParticleSystem = (function(){
         }
 
         that.render = function(context){
-            console.log('render');
             for(let particle = 0; particle < particles.length; particle++){
                 context.beginPath();
                 context.strokeStyle = particles[particle].stroke;
@@ -81,7 +80,6 @@ MyGame.components.ParticleEngine = (function(particles) {
         let particleSystems = [];
 
         that.createParticleSystem = function(position) {
-            console.log('create');
             let angle = Math.random() * 2 * Math.PI
             let spec = {
                 position: {
@@ -94,7 +92,6 @@ MyGame.components.ParticleEngine = (function(particles) {
         }
 
         that.update = function(elapsedTime) {
-            console.log('update: ', particleSystems.length);
             for (let system = 0; system < particleSystems.length; system++) {
                 particleSystems[system].update(elapsedTime);
                 if (!particleSystems[system].isAlive()) {

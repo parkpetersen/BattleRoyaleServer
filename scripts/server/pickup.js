@@ -3,7 +3,7 @@
 function createPickup(spec){
     let that = {};
     
-    let radius = 1.875;  //was 15, maybe change back? Ask Grant
+    let radius = .0003125;  //was 15, maybe change back? Ask Grant
 
     Object.defineProperty(that, 'id', {
         get: () => spec.id
