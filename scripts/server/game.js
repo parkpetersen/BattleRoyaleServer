@@ -23,6 +23,11 @@ let shieldCircle = null;
 let gameTimer = 0;
 let shieldWarningSent = false;
 let updateDistance = 900 / 4800;
+let gameState = 'waiting';
+let minPlayers = 2;
+let gameStartSent = false;
+let circleTimer = 0;
+let timeSinceLastMessage = 0;
 
 function createCircle() {
     shieldCircle = Circle.create();
@@ -102,18 +107,66 @@ function distance(obj1, obj2) {
 
 function update(elapsedTime, currentTime) {
     gameTimer += elapsedTime;
-    if (!shieldWarningSent && gameTimer >= 5000) {
-        let message = "Circle Starting in 10 seconds!"
+    if (gameState === 'waiting') {
+        timeSinceLastMessage += elapsedTime;
+        if (timeSinceLastMessage > 1000) {
+            let waitingMessage = 'Waiting for more players';
+            for (let clientId in activeClients) {
+                activeClients[clientId].socket.emit(NetworkIds.DRAW_TEXT, {
+                    message: waitingMessage,
+                    position: activeClients[clientId].player.position,
+                    duration: 1000,
+                    speed: 0
+                });
+            }
+            timeSinceLastMessage = 0;
+        }
+        if (Object.keys(activeClients).length >= minPlayers) {
+            gameState = 'countDown';
+            gameTimer = 0;
+            timeSinceLastMessage = 0;
+        }
+    }
+    if (gameState === 'countDown') {
+        timeSinceLastMessage += elapsedTime;
+        if (timeSinceLastMessage > 1000) {
+            let countdownMessage = 'Game begins in : ' + (Math.floor((30000 - gameTimer) / 1000)).toString() + ' seconds';
+            for (let clientId in activeClients) {
+                activeClients[clientId].socket.emit(NetworkIds.DRAW_TEXT, {
+                    message: countdownMessage,
+                    position: activeClients[clientId].player.position,
+                    duration: 1000,
+                    speed: 0
+                });
+            }
+            timeSinceLastMessage = 0;
+        }
+
+        if (!gameStartSent && gameTimer >= 30000) {
+            gameState = 'gamePlay';
+            gameStartSent = true;
+            for (let clientId in activeClients) {
+                let client = activeClients[clientId];
+                let message = {};
+                client.socket.emit(NetworkIds.START_GAME, message);
+            }
+        }
+    }
+    if (!shieldWarningSent && gameState === 'gamePlay' && gameTimer >= 35000) {
+        let message = "Circle Starting in 10 seconds!";
         for (let clientId in activeClients) {
             activeClients[clientId].socket.emit(NetworkIds.DRAW_TEXT, {
                 message: message,
                 position: activeClients[clientId].player.position,
-                duration: 5000 //milliseconds
-            })
+                duration: 5000, //milliseconds
+                speed: .00002
+            });
         }
         shieldWarningSent = true;
     }
-    shieldCircle.update(elapsedTime);
+    if (gameState === 'gamePlay') {
+        shieldCircle.update(elapsedTime);
+    }
     for (let clientId in activeClients) {
         let player = activeClients[clientId].player;
         player.update(currentTime);
@@ -184,7 +237,8 @@ function update(elapsedTime, currentTime) {
                 activeClients[clientId].socket.emit(NetworkIds.DRAW_TEXT, {
                     message: message,
                     position: activeClients[clientId].player.position,
-                    duration: 2000 //milliseconds
+                    duration: 2000, //milliseconds
+                    speed: .00002
                 });
                 //remove pickup from list
                 pickups = pickups.filter(function (item) {

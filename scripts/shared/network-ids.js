@@ -54,10 +54,6 @@
             value: 'dead',
             writable: false
         },
-        'ACKNOWLEDGE_DEATH':{
-            value: 'aknowledge-death',
-            writable: false
-        },
         'PICKUPS' : {
             value: 'pickups',
             writable: false
@@ -68,6 +64,10 @@
         },
         'UPDATE_CIRCLE' : {
             value: 'update-circle',
+            writable: false
+        },
+        'START_GAME': {
+            value: 'start-game',
             writable: false
         }
     });
