@@ -69,6 +69,10 @@
         'START_GAME': {
             value: 'start-game',
             writable: false
+        },
+        'WIN':{
+            value: 'win',
+            writable: false
         }
     });
 

@@ -28,6 +28,7 @@ let minPlayers = 2;
 let gameStartSent = false;
 let circleTimer = 0;
 let timeSinceLastMessage = 0;
+let alivePlayers = {};
 
 function createCircle() {
     shieldCircle = Circle.create();
@@ -330,7 +331,23 @@ function updateClients(elapsedTime) {
             client.socket.emit(NetworkIds.DEAD, update);
             client.player.state = 'sinking';
             client.player.reportUpdate = true;
+            delete alivePlayers[client.socket.id];
         }
+    }
+
+    if (gameState === 'gamePlay' && Object.keys(alivePlayers).length === 1) {
+        let winMessage = 'You are the winner matey!';
+
+        for (let id in activeClients) {
+            if (activeClients[id].player.health > 0) {
+                let winUpdate = {
+                    clientId: id,
+                    message: winMessage
+                };
+                activeClients[id].socket.emit(NetworkIds.WIN, winUpdate);
+            }
+        }
+        //quit = true;
     }
 
     for (let clientId in activeClients) {
@@ -405,6 +422,7 @@ function initializeSocketIO(httpServer) {
             socket: socket,
             player: newPlayer
         };
+        alivePlayers[socket.id] = newPlayer;
         socket.emit(NetworkIds.CONNECT_ACK, {
             direction: newPlayer.direction,
             position: newPlayer.position,

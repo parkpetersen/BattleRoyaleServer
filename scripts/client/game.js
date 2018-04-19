@@ -125,6 +125,12 @@ MyGame.main = (function (graphics, renderer, input, components) {
             data: data
         });
     });
+    socket.on(NetworkIds.WIN, data => {
+        networkQueue.enqueue({
+            type: NetworksIds.WIN,
+            data: data
+        });
+    });
 
     //------------------------------------------------------------------
     //
@@ -457,7 +463,11 @@ MyGame.main = (function (graphics, renderer, input, components) {
         shieldCircle.position = data.position;
         shieldCircle.shrinkingSpeed = data.shrinkingSpeed;
     }
-
+    
+    function win(data){
+        messageHistory.enqueue(message);
+        alert(data.message);
+    }
     //------------------------------------------------------------------
     //
     // Process the registered input handlers here.
@@ -516,6 +526,9 @@ MyGame.main = (function (graphics, renderer, input, components) {
                     break;
                 case NetworkIds.START_GAME:
                     registerControls();
+                    break;
+                case NetworkIds.WIN:
+                    win(message.data);
                     break;
             }
         }
