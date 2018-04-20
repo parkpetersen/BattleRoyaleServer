@@ -127,7 +127,7 @@ MyGame.main = (function (graphics, renderer, input, components) {
     });
     socket.on(NetworkIds.WIN, data => {
         networkQueue.enqueue({
-            type: NetworksIds.WIN,
+            type: NetworkIds.WIN,
             data: data
         });
     });
@@ -465,7 +465,7 @@ MyGame.main = (function (graphics, renderer, input, components) {
     }
     
     function win(data){
-        messageHistory.enqueue(message);
+        messageHistory.enqueue(data.message);
         alert(data.message);
     }
     //------------------------------------------------------------------
@@ -501,7 +501,6 @@ MyGame.main = (function (graphics, renderer, input, components) {
                     break;
                 case NetworkIds.UPDATE_OTHER:
                     updatePlayerOther(message.data);
-                    console.log(message.data);
                     break;
                 case NetworkIds.MISSILE_NEW:
                     missileNew(message.data);

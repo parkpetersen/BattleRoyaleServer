@@ -26,9 +26,9 @@ let updateDistance = 900 / 4800;
 let gameState = 'waiting';
 let minPlayers = 2;
 let gameStartSent = false;
-let circleTimer = 0;
 let timeSinceLastMessage = 0;
 let alivePlayers = {};
+let countDownTime = 30000;
 
 function createCircle() {
     shieldCircle = Circle.create();
@@ -131,7 +131,7 @@ function update(elapsedTime, currentTime) {
     if (gameState === 'countDown') {
         timeSinceLastMessage += elapsedTime;
         if (timeSinceLastMessage > 1000) {
-            let countdownMessage = 'Game begins in : ' + (Math.floor((30000 - gameTimer) / 1000)).toString() + ' seconds';
+            let countdownMessage = 'Game begins in : ' + (Math.floor((countDownTime - gameTimer) / 1000)).toString() + ' seconds';
             for (let clientId in activeClients) {
                 activeClients[clientId].socket.emit(NetworkIds.DRAW_TEXT, {
                     message: countdownMessage,
@@ -143,7 +143,7 @@ function update(elapsedTime, currentTime) {
             timeSinceLastMessage = 0;
         }
 
-        if (!gameStartSent && gameTimer >= 30000) {
+        if (!gameStartSent && gameTimer >= countDownTime) {
             gameState = 'gamePlay';
             gameStartSent = true;
             for (let clientId in activeClients) {
@@ -151,6 +151,7 @@ function update(elapsedTime, currentTime) {
                 let message = {};
                 client.socket.emit(NetworkIds.START_GAME, message);
             }
+            timeSinceLastMessage = 0;
         }
     }
     if (!shieldWarningSent && gameState === 'gamePlay' && gameTimer >= 35000) {
@@ -347,7 +348,7 @@ function updateClients(elapsedTime) {
                 activeClients[id].socket.emit(NetworkIds.WIN, winUpdate);
             }
         }
-        //quit = true;
+        resetGame();
     }
 
     for (let clientId in activeClients) {
@@ -359,6 +360,31 @@ function updateClients(elapsedTime) {
     // Reset the elapsed time since last update so 
     // we can know when to put out the next update.
     lastUpdate = 0;
+}
+
+function resetGame() {
+    for (let client in activeClients) {
+        activeClients[client].socket.disconnect();
+    }
+    activeClients = {};
+    gameState = 'waiting';
+    lastUpdate = 0;
+    quit = false;
+    newMissiles = [];
+    activeMissiles = [];
+    pickups = [];
+    hits = [];
+    inputQueue = Queue.create();
+    nextMissileId = 1;
+    shieldCircle = null;
+    gameTimer = 0;
+    shieldWarningSent = false;
+    gameStartSent = false;
+    timeSinceLastMessage = 0;
+    alivePlayers = {};
+    createPickups();
+    createCircle();
+    gameLoop(present(), 0);
 }
 
 function gameLoop(currentTime, elapsedTime) {
@@ -416,41 +442,42 @@ function initializeSocketIO(httpServer) {
 
     io.on('connection', function (socket) {
         console.log('Connection established: ', socket.id);
-        let newPlayer = Player.create()
-        newPlayer.clientId = socket.id;
-        activeClients[socket.id] = {
-            socket: socket,
-            player: newPlayer
-        };
-        alivePlayers[socket.id] = newPlayer;
-        socket.emit(NetworkIds.CONNECT_ACK, {
-            direction: newPlayer.direction,
-            position: newPlayer.position,
-            size: newPlayer.size,
-            rotateRate: newPlayer.rotateRate,
-            speed: newPlayer.speed
-        });
-
-        socket.on(NetworkIds.INPUT, data => {
-            inputQueue.enqueue({
-                clientId: socket.id,
-                message: data
+        if (gameState == 'waiting' || gameState == 'countDown') {
+            let newPlayer = Player.create()
+            newPlayer.clientId = socket.id;
+            activeClients[socket.id] = {
+                socket: socket,
+                player: newPlayer
+            };
+            alivePlayers[socket.id] = newPlayer;
+            socket.emit(NetworkIds.CONNECT_ACK, {
+                direction: newPlayer.direction,
+                position: newPlayer.position,
+                size: newPlayer.size,
+                rotateRate: newPlayer.rotateRate,
+                speed: newPlayer.speed
             });
-        });
 
-        // socket.on(NetworkIds.ACKNOWLEDGE_DEATH, data => {
-        //     inputQueue.enqueue({
-        //         clientId: socket.id,
-        //         message: data
-        //     });
-        // });
+            socket.on(NetworkIds.INPUT, data => {
+                inputQueue.enqueue({
+                    clientId: socket.id,
+                    message: data
+                });
+            });
 
-        socket.on('disconnect', function () {
-            delete activeClients[socket.id];
-            notifyDisconnect(socket.id);
-        });
+            socket.on('disconnect', function () {
+                delete activeClients[socket.id];
+                notifyDisconnect(socket.id);
+            });
 
-        notifyConnect(socket, newPlayer);
+            notifyConnect(socket, newPlayer);
+        }
+        else {
+            let lateMessage = "Game already in progress, please wait for game to end and refresh.";
+            socket.emit(NetworkIds.DEAD, {
+                message: lateMessage
+            });
+        }
     });
 }
 
