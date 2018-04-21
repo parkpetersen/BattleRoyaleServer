@@ -356,10 +356,6 @@ MyGame.main = (function (graphics, renderer, input, components) {
         myKeyboard.unregisterHandler(MyGame.input.KeyEvent.DOM_VK_LEFT, leftIdKey);
         myKeyboard.unregisterHandler(MyGame.input.KeyEvent.DOM_VK_SPACE, fireIdKey);
 
-        myKeyboard.unregisterHandler(MyGame.input.KeyEvent.DOM_VK_W, upIdKey2);
-        myKeyboard.unregisterHandler(MyGame.input.KeyEvent.DOM_VK_D, rightIdKey2);
-        myKeyboard.unregisterHandler(MyGame.input.KeyEvent.DOM_VK_A, leftIdKey2);
-
         playerSelf.model.state = 'sinking';
         let message = {
             id: messageId++,

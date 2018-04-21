@@ -30,7 +30,7 @@ let timeSinceLastMessage = 0;
 let alivePlayers = {};
 let countDownTime = 30000;
 let islands = [];
-let numIslands = 15;
+let numIslands = 25;
 
 function createCircle() {
     shieldCircle = Circle.create();
@@ -38,11 +38,29 @@ function createCircle() {
 
 function createIslands() {
     let islandOptions = ['10x10_dirt', '10x10_grass', '5x5_dirt', '5x5_rock', '10x10_tree', '10x10_wall',
-     '7x7_rock', '7x7_grass', '7x7_dirt'];
+        '7x7_rock', '7x7_grass', '7x7_dirt'];
 
     for (let i = 0; i < numIslands; i++) {
         let randomX = Math.random();
         let randomY = Math.random();
+        let positionObject = {
+            position: {
+                x: randomX,
+                y: randomY
+            }
+        }
+        for (let checkIsland in islands) {
+            while (distance(positionObject, islands[checkIsland]) < .095) {
+                randomX = Math.random();
+                randomY = Math.random();
+                positionObject = {
+                    position: {
+                        x: randomX,
+                        y: randomY
+                    }
+                }
+            }
+        }
         let randomName = islandOptions[Math.floor(Math.random() * islandOptions.length)];
         let islandHeight = 0;
         let islandWidth = 0;
@@ -78,9 +96,9 @@ function createIslands() {
             islandHeight = .04667;
             islandWidth = .04667;
         }
-        else if(randomName === '7x7_rock'){
+        else if (randomName === '7x7_rock') {
             islandHeight = .04667;
-            islandWidth = .04667; 
+            islandWidth = .04667;
         }
         islands.push({
             position: {
@@ -117,8 +135,8 @@ function createPickups() {
 
 function createMissile(clientId, playerModel, moving) {
     let momentum = 0;
-    if (moving){
-        momentum = Math.PI/8;
+    if (moving) {
+        momentum = Math.PI / 8;
     }
     let missile1 = Missile.create({
         id: nextMissileId++,
@@ -127,7 +145,7 @@ function createMissile(clientId, playerModel, moving) {
             x: playerModel.position.x,
             y: playerModel.position.y
         },
-        direction: playerModel.direction + (Math.PI/2) - momentum,
+        direction: playerModel.direction + (Math.PI / 2) - momentum,
         speed: playerModel.speed,
         missileDamage: playerModel.playerDamage
     });
@@ -141,7 +159,7 @@ function createMissile(clientId, playerModel, moving) {
             x: playerModel.position.x,
             y: playerModel.position.y
         },
-        direction: playerModel.direction - (Math.PI/2) + momentum,
+        direction: playerModel.direction - (Math.PI / 2) + momentum,
         speed: playerModel.speed,
         missileDamage: playerModel.playerDamage
     });
@@ -458,6 +476,19 @@ function updateClients(elapsedTime) {
         for (let hit = 0; hit < hits.length; hit++) {
             if (distance(client.player, hits[hit]) <= updateDistance) {
                 client.socket.emit(NetworkIds.MISSILE_HIT, hits[hit]);
+                if (hits[hit].clientId == clientId) {
+                    let update = {
+                        clientId: clientId,
+                        lastMessageId: client.lastMessageId,
+                        direction: client.player.direction,
+                        position: client.player.position,
+                        updateWindow: lastUpdate,
+                        health: client.player.health,
+                        vision: client.player.vision,
+                        state: client.player.state
+                    };
+                    client.socket.emit(NetworkIds.UPDATE_SELF, update);
+                }
             }
         }
 
