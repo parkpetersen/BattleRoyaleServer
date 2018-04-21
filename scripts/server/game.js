@@ -591,6 +591,9 @@ function initializeSocketIO(httpServer) {
                 delete activeClients[socket.id];
                 notifyDisconnect(socket.id);
             });
+            socket.on('chat message', function(msg){
+                io.emit('chat message', msg);
+            });
 
             notifyConnect(socket, newPlayer);
         }

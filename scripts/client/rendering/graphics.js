@@ -275,8 +275,6 @@ MyGame.graphics = (function () {
     }
 
     function drawIsland(island) {
-        console.log(island);
-        console.log(island.name);
         context.save();
         context.beginPath();
         context.drawImage(MyGame.assets[island.name], island.position.x * 4800, island.position.y * 4800, island.size.width * 4800, island.size.height * 4800);

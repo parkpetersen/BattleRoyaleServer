@@ -31,6 +31,7 @@ MyGame.main = (function (graphics, renderer, input, components) {
         messageId = 1,
         nextExplosionId = 1,
         socket = io(),
+        name = "unknown",
         networkQueue = Queue.create(),
         upIdKey = 0,
         leftIdKey = 0,
@@ -730,8 +731,12 @@ MyGame.main = (function (graphics, renderer, input, components) {
         requestAnimationFrame(gameLoop);
     }
 
+    function createUser(submitName){
+        name = submitName
+    }
     return {
-        initialize: initialize
+        initialize: initialize,
+        createUser : createUser
     };
 
 }(MyGame.graphics, MyGame.renderer, MyGame.input, MyGame.components));

@@ -6,7 +6,34 @@
 	<link rel="stylesheet" href="styles/gameStyle.css" type="text/css" media="screen">
 	<link rel="stylesheet" href="styles/mainMenuStyle.css" type="text/css" media="screen">
 	<script src = "/node_modules/socket.io-client/dist/socket.io.slim.js"></script>
-
+	<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+	<script>
+		$(function () {
+		  var socket = io();
+		  $('form').submit(function(){
+			socket.emit('chat message','Grant: ' + $('#m').val());
+			$('#m').val('');
+			return false;
+		  });
+		  socket.on('chat message', function(msg){
+			  console.log("Message recieved");
+			$('#messages').append($('<li>').text(msg));
+			  var element = document.getElementById("chat-room");
+			  element.scrollTop = element.scrollHeight;
+		  });
+		});
+	</script>
+	<style>
+		* { margin: 0; padding: 0; box-sizing: border-box; }
+		body { font: 13px Helvetica, Arial; }
+		form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 25%; }
+		form input { border: 0; padding: 10px; width: 100%; margin-right: .5%; }
+		#chat-room {width:200px; height: 200px; overflow-y: scroll;}
+		#messages { list-style-type: none; margin: 0; padding: 0; }
+		#messages li { padding: 5px 10px; }
+		#messages li:nth-child(odd) { background: #eee; }
+		
+	  </style>
 	<header>
 			<h1>Tales of Boats n' Booty</h1>
 	</header>
@@ -35,7 +62,7 @@
 			<div id="credits" class="main">
 				<h1>Created by:</h1>
 				<ul>
-					<!-- <li>Jake Anderson</li> -->
+					<li>Jake Anderson</li>
 					<li>Brian Falor</li>
 					<li>Parker Petersen</li>
 					<li>Grant Russell</li>
@@ -50,9 +77,14 @@
 			</div>
 	</div>
 
+	<div id="register">
+		<input id="name-input" type="text">
+		<li><a href="javascript:void(0)" class="menuItem register">Register</a></li>
+	</div>
+
 	<div id="game">
 		<div id="miniMap" class="canvas">
-			<canvas id = "mini-map" width = "200" height = "200" style = "background-image: url('./assets/background/mini_map.png');"></canvas>
+			<canvas id = "mini-map" width = "200" height = "200" style = "background-image: url('./assets/background/mini-map.jpg');"></canvas>
 			<label class="audioOptions">Music
 				<input type="checkbox" id="checkMusic">
 				<span class="checkmark"></span>
@@ -62,6 +94,12 @@
 				<input type="checkbox" id="checkSound" checked="checked" >
 				<span class="checkmark"></span>
 			</label>
+			<div id="chat-room">
+				<ul id="messages"></ul>
+				<form action="">
+				  <input id="m" autocomplete="off" />
+				</form>
+			</div>
 		</div>
 	
 		<div id="canvas" class="canvas">

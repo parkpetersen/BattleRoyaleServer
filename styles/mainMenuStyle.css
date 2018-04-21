@@ -23,6 +23,10 @@
     top: 3%; left: 31%; bottom: 0; right: 0;
 }
 
+#register{
+    display: none;
+}
+
 #credits {
     width: 40%;
     height: 100%;

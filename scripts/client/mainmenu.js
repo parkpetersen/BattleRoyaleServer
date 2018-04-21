@@ -24,11 +24,18 @@ MyGame.menu = (function() {
 
     //
     // when "Play" button is clicked, hide main menu, display game canvases, and initialize game
-    let playNode = document.querySelectorAll('.play')[0].addEventListener('click', function() {
-        hide(document.getElementById('menu'));
+    let registerNode = document.querySelectorAll('.register')[0].addEventListener('click', function() {
+        hide(document.getElementById('register'));
         show(document.getElementById('game'));
+        MyGame.main.createUser(document.getElementById('name-input').value);
+    });
+
+    let playNode = document.querySelectorAll('.play')[0].addEventListener('click', function() {
+        hide(document.getElementById('main'));
+        show(document.getElementById('register'));
         MyGame.main.initialize(); //probably shouldn't initialize every time the button is clicked... (fix later)
     });
+
 
     let creditNode = document.querySelectorAll('.credits')[0].addEventListener('click', function() {
         hide(document.getElementById('main'));
