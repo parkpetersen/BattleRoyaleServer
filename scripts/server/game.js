@@ -305,11 +305,11 @@ function update(elapsedTime, currentTime) {
             if (collided(pickups[pickup], activeClients[clientId].player)) {
                 let message = 'default';
                 if (pickups[pickup].type === 'scope') {
-                    activeClients[clientId].player.vision.radius *= 1.15;
+                    activeClients[clientId].player.vision.radius *= 1.25;
                     message = '+vision';
                 }
                 else if (pickups[pickup].type === 'damage') {
-                    activeClients[clientId].player.playerDamage = 30;
+                    activeClients[clientId].player.playerDamage *= 1.25;
                     message = '+damage';
                 }
                 else if (pickups[pickup].type === 'health') {
