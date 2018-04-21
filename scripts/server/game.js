@@ -28,7 +28,7 @@ let minPlayers = 2;
 let gameStartSent = false;
 let timeSinceLastMessage = 0;
 let alivePlayers = {};
-let countDownTime = 30000;
+let countDownTime = 5000;
 let islands = [];
 let numIslands = 15;
 
@@ -115,20 +115,40 @@ function createPickups() {
     }
 }
 
-function createMissile(clientId, playerModel) {
-    let missile = Missile.create({
+function createMissile(clientId, playerModel, moving) {
+    let momentum = 0;
+    if (moving){
+        momentum = Math.PI/8;
+    }
+    let missile1 = Missile.create({
         id: nextMissileId++,
         clientId: clientId,
         position: {
             x: playerModel.position.x,
             y: playerModel.position.y
         },
-        direction: playerModel.direction,
+        direction: playerModel.direction + (Math.PI/2) - momentum,
         speed: playerModel.speed,
         missileDamage: playerModel.playerDamage
     });
 
-    newMissiles.push(missile);
+    newMissiles.push(missile1);
+
+    let missile2 = Missile.create({
+        id: nextMissileId++,
+        clientId: clientId,
+        position: {
+            x: playerModel.position.x,
+            y: playerModel.position.y
+        },
+        direction: playerModel.direction - (Math.PI/2) + momentum,
+        speed: playerModel.speed,
+        missileDamage: playerModel.playerDamage
+    });
+
+    newMissiles.push(missile2);
+
+
 }
 
 function processInput(elapsedTime) {
@@ -150,12 +170,8 @@ function processInput(elapsedTime) {
                 client.player.rotateRight(input.message.elapsedTime);
                 break;
             case NetworkIds.INPUT_FIRE:
-                createMissile(input.clientId, client.player);
+                createMissile(input.clientId, client.player, input.message.moving);
                 break;
-            case NetworkIds.ACKNOWLEDGE_DEATH:
-                client.player.pushUpdate();
-                break;
-
         }
     }
 }

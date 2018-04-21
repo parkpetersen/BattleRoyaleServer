@@ -36,14 +36,12 @@ MyGame.main = (function (graphics, renderer, input, components) {
         leftIdKey = 0,
         rightIdKey = 0,
         downIdKey = 0,
-        upIdKey2 = 0,
-        leftIdKey2 = 0,
-        rightIdKey2 = 0,
-        downIdKey2 = 0,
         fireIdKey = 0,
         shieldCircle = components.Circle(),
         particleEngine = components.ParticleEngine.ParticleEngine(),
-        islands = [];
+        islands = [],
+        timeSinceLastShot = 0,
+        moving = false;
 
 
 
@@ -388,33 +386,9 @@ MyGame.main = (function (graphics, renderer, input, components) {
             messageHistory.enqueue(message);
             playerSelf.model.move(elapsedTime);
         },
-            MyGame.input.KeyEvent.DOM_VK_UP, true);
-
-        upIdKey2 = myKeyboard.registerHandler(elapsedTime => {
-            let message = {
-                id: messageId++,
-                elapsedTime: elapsedTime,
-                type: NetworkIds.INPUT_MOVE
-            };
-            socket.emit(NetworkIds.INPUT, message);
-            messageHistory.enqueue(message);
-            playerSelf.model.move(elapsedTime);
-        },
             MyGame.input.KeyEvent.DOM_VK_W, true);
 
         rightIdKey = myKeyboard.registerHandler(elapsedTime => {
-            let message = {
-                id: messageId++,
-                elapsedTime: elapsedTime,
-                type: NetworkIds.INPUT_ROTATE_RIGHT
-            };
-            socket.emit(NetworkIds.INPUT, message);
-            messageHistory.enqueue(message);
-            playerSelf.model.rotateRight(elapsedTime);
-        },
-            MyGame.input.KeyEvent.DOM_VK_RIGHT, true);
-
-        rightIdKey2 = myKeyboard.registerHandler(elapsedTime => {
             let message = {
                 id: messageId++,
                 elapsedTime: elapsedTime,
@@ -436,27 +410,23 @@ MyGame.main = (function (graphics, renderer, input, components) {
             messageHistory.enqueue(message);
             playerSelf.model.rotateLeft(elapsedTime);
         },
-            MyGame.input.KeyEvent.DOM_VK_LEFT, true);
-
-        leftIdKey2 = myKeyboard.registerHandler(elapsedTime => {
-            let message = {
-                id: messageId++,
-                elapsedTime: elapsedTime,
-                type: NetworkIds.INPUT_ROTATE_LEFT
-            };
-            socket.emit(NetworkIds.INPUT, message);
-            messageHistory.enqueue(message);
-            playerSelf.model.rotateLeft(elapsedTime);
-        },
             MyGame.input.KeyEvent.DOM_VK_A, true);
 
         fireIdKey = myKeyboard.registerHandler(elapsedTime => {
-            let message = {
-                id: messageId++,
-                elapsedTime: elapsedTime,
-                type: NetworkIds.INPUT_FIRE
-            };
-            socket.emit(NetworkIds.INPUT, message);
+            let isMoving = false;
+            if(myKeyboard.isHeld(MyGame.input.KeyEvent.DOM_VK_W)){
+                isMoving = true;
+            }
+            if (timeSinceLastShot >= 500) {
+                let message = {
+                    id: messageId++,
+                    elapsedTime: elapsedTime,
+                    type: NetworkIds.INPUT_FIRE,
+                    moving: isMoving
+                };
+                socket.emit(NetworkIds.INPUT, message);
+                timeSinceLastShot = 0;
+            }
         },
             MyGame.input.KeyEvent.DOM_VK_SPACE, false);
     }
@@ -586,6 +556,7 @@ MyGame.main = (function (graphics, renderer, input, components) {
     //------------------------------------------------------------------
     function update(elapsedTime) {
         checkCollisions();
+        timeSinceLastShot += elapsedTime;
         playerSelf.model.update(elapsedTime);
         particleEngine.update(elapsedTime);
         for (let id in playerOthers) {

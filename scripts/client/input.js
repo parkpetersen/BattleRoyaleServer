@@ -122,6 +122,10 @@ MyGame.input.Keyboard = function() {
 		}
 	};
 
+	that.isHeld = function(key){
+		return keys.hasOwnProperty(key);
+	}
+
 	//
 	// This is how we receive notification of keyboard events.
 	window.addEventListener('keydown', keyDown);
