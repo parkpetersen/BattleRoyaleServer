@@ -240,14 +240,7 @@ MyGame.graphics = (function () {
         ctx.clear();
         ctx.save();
         for (let island of islands) {
-            ctx.beginPath();
-            ctx.fillStyle = '#996a15';
-            ctx.fillRect(island.position.x * 200, island.position.y * 200, island.size.width * 200, island.size.height * 200);
-            ctx.closePath();
-            ctx.beginPath();
-            ctx.fillStyle = '#2b6806';
-            ctx.fillRect((island.position.x + (island.size.width*.1)) * 200, (island.position.y + (island.size.height * .1)) * 200, (island.size.width * .8) * 200, (island.size.height * .8) * 200);
-            ctx.closePath();
+            ctx.drawImage(MyGame.assets[island.name], island.position.x * 200, island.position.y * 200, island.size.width * 200, island.size.height * 200);
         }
         ctx.beginPath();
         ctx.fillStyle = "#FFFF00";
@@ -282,6 +275,7 @@ MyGame.graphics = (function () {
     }
 
     function drawIsland(island) {
+        console.log(island);
         console.log(island.name);
         context.save();
         context.beginPath();

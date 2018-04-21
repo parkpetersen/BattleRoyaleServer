@@ -77,9 +77,6 @@ MyGame.loader = (function() {
             key: 'player-self-north-west',
             source: 'assets/BattleShip/NorthWest.png'
         },{
-            key: 'player-self',
-            source: 'assets/playerShip1_blue.png'
-        },{
             key: 'player-other-north',
             source: 'assets/TrollShip/EnemyNorth.png'
         },{
@@ -103,9 +100,6 @@ MyGame.loader = (function() {
         },{
             key: 'player-other-north-west',
             source: 'assets/TrollShip/EnemyNorthWest.png'
-        },{
-            key: 'player-other',
-            source: 'assets/playerShip1_red.png'
         },{
             key: 'player-self-sinking-north-2',
             source: 'assets/SinkingBattleShip/North2.png'
