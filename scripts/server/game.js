@@ -28,7 +28,7 @@ let minPlayers = 2;
 let gameStartSent = false;
 let timeSinceLastMessage = 0;
 let alivePlayers = {};
-let countDownTime = 5000;
+let countDownTime = 30000;
 let islands = [];
 let numIslands = 15;
 
