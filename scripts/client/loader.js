@@ -48,7 +48,7 @@ MyGame.loader = (function() {
             message: 'Gameplay model loaded',
             onComplete: null
         }, {
-            scripts: ['mainmenu'],
+            scripts: ['menu/login', 'menu/register', 'menu/mainmenu'],
             message: 'Menu loaded',
             onComplete: null
         }],

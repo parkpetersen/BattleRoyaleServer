@@ -128,6 +128,12 @@ li {
     font-size: 30px;
 }
 
+
+
+
+
+
+
  /* The Modal (background) */
  .modal {
     display: none; /* Hidden by default */
@@ -148,25 +154,7 @@ li {
     background-color: #fefefe;
     margin: 5px auto; /* 15% from the top and centered */
     border: 1px solid #888;
-    width: 80%; /* Could be more or less, depending on screen size */
-}
-
-/* The Close Button */
-.close {
-    /* Position it in the top right corner outside of the modal */
-    position: absolute;
-    right: 25px;
-    top: 0;
-    color: #000;
-    font-size: 35px;
-    font-weight: bold;
-}
-
-/* Close button on hover */
-.close:hover,
-.close:focus {
-    color: red;
-    cursor: pointer;
+    width: 60%; /* Could be more or less, depending on screen size */
 }
 
 /* Add Zoom Animation */
@@ -183,13 +171,13 @@ li {
 @keyframes animatezoom {
     from {transform: scale(0)}
     to {transform: scale(1)}
-} 
-
+}
 
  /* Bordered form */
-form {
-    width: 99.6%;
-    border: 3px solid #f1f1f1;
+form-container {
+    position: relative;
+    width: 100%;
+    border: 3px solid rgb(180, 180, 180);
     background-color: rgba(255,255,255,0.8);
 }
 
@@ -216,7 +204,7 @@ button {
     margin-right: auto;
     border: none;
     cursor: pointer;
-    width: 60%;
+    width: 30%;
     display: block;
 }
 
@@ -233,7 +221,7 @@ button:hover {
 }
 
 /* Center the avatar image inside this container */
-.imgcontainer {
+.img-container {
     text-align: center;
     margin: 24px 0 12px 0;
 }
@@ -245,7 +233,7 @@ img.avatar {
 }
 
 /* Add padding to containers */
-.container {
+.form-container {
     padding: 16px;
 }
 
@@ -275,4 +263,22 @@ label {
 #remember {
     margin-left:70%;
     margin-right: auto;
+}
+
+/* The Close Button */
+.close {
+    position: relative;
+    right: 25px;
+    top: 0;
+    color: #aaaaaa;
+    float: right;
+    font-size: 60px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: rgb(255, 0, 0);
+    text-decoration: none;
+    cursor: pointer;
 }
