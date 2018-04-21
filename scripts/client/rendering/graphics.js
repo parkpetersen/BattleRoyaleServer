@@ -139,6 +139,28 @@ MyGame.graphics = (function () {
         context.stroke();
         context.fill();
         context.closePath();
+        context.beginPath();
+        context.moveTo(startPos.x * 4800, startPos.y * 4800);
+        xVector = Math.cos(direction + (Math.PI/2));
+        yVector = Math.sin(direction + (Math.PI/2));
+        context.lineTo((startPos.x * 4800) + (xVector * 200), (startPos.y * 4800) + (yVector * 200));
+        context.strokeStyle = 'red';
+        context.fillStyle = 'red';
+        context.setLineDash([10, 15]);
+        context.stroke();
+        context.fill();
+        context.closePath();
+        context.beginPath();
+        context.moveTo(startPos.x * 4800, startPos.y * 4800);
+        xVector = Math.cos(direction - (Math.PI/2));
+        yVector = Math.sin(direction - (Math.PI/2));
+        context.lineTo((startPos.x * 4800) + (xVector * 200), (startPos.y * 4800) + (yVector * 200));
+        context.strokeStyle = 'red';
+        context.fillStyle = 'red';
+        context.setLineDash([10, 15]);
+        context.stroke();
+        context.fill();
+        context.closePath();
         context.restore();
 
     }
@@ -146,7 +168,7 @@ MyGame.graphics = (function () {
     function drawVision(vision) {
         context.save();
         context.beginPath();
-        context.arc(vision.x * 4800, vision.y * 4800, vision.radius * canvas.width, vision.start, vision.end);
+        context.arc(vision.x * 4800, vision.y * 4800, vision.radius * canvas.width, vision.start-(Math.PI/4), vision.end + (Math.PI/4));
         context.strokeStyle = "rgba(50,250,250, 0.1"; //This allows for a bit opacity so we can see what's under the FOV
         context.fillStyle = "rgba(50,250,250, 0.1";
         context.fill();
@@ -195,7 +217,8 @@ MyGame.graphics = (function () {
             clip.clipping = true;
 
             context.beginPath();
-            context.arc(player.vision.x * 4800, player.vision.y * 4800, player.vision.radius * canvas.width, player.vision.start, player.vision.end);
+            context.arc(player.vision.x * 4800, player.vision.y * 4800, player.vision.radius * canvas.width,
+                 player.vision.start - (Math.PI/4), player.vision.end + (Math.PI/4));
             context.closePath();
             context.clip();
         }
