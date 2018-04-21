@@ -282,14 +282,16 @@ MyGame.graphics = (function () {
     }
 
     function drawIsland(island) {
+        console.log(island.name);
         context.save();
         context.beginPath();
-        context.fillStyle = '#996a15';
-        context.fillRect(island.position.x * 4800, island.position.y * 4800, island.size.width * 4800, island.size.height * 4800);
-        context.closePath();
-        context.beginPath();
-        context.fillStyle = '#2b6806';
-        context.fillRect((island.position.x + (island.size.width*.1)) * 4800, (island.position.y + (island.size.height*.1)) * 4800, (island.size.width * .8) * 4800, (island.size.height * .8) * 4800);
+        context.drawImage(MyGame.assets[island.name], island.position.x * 4800, island.position.y * 4800, island.size.width * 4800, island.size.height * 4800);
+        // context.fillStyle = '#996a15';
+        // context.fillRect(island.position.x * 4800, island.position.y * 4800, island.size.width * 4800, island.size.height * 4800);
+        // context.closePath();
+        // context.beginPath();
+        // context.fillStyle = '#2b6806';
+        // context.fillRect((island.position.x + (island.size.width*.1)) * 4800, (island.position.y + (island.size.height*.1)) * 4800, (island.size.width * .8) * 4800, (island.size.height * .8) * 4800);
         context.closePath();
         context.restore();
 

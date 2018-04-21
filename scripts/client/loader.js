@@ -169,6 +169,35 @@ MyGame.loader = (function() {
         }, {
             key: 'back-button',
             source: 'assets/back-button.png'
+        },
+        {
+            key: '10x10_dirt',
+            source: 'assets/Islands/10x10_dirt.png'
+        },
+        {
+            key: '10x10_grass',
+            source: 'assets/Islands/10x10_grass.png'
+        },{
+            key: '10x10_tree',
+            source: 'assets/Islands/10x10_tree.png'
+        },{
+            key: '10x10_wall',
+            source: 'assets/Islands/10x10_wall.png'
+        },{
+            key: '7x7_dirt',
+            source: 'assets/Islands/7x7_dirt.png'
+        },{
+            key: '7x7_grass',
+            source: 'assets/Islands/7x7_grass.png'
+        },{
+            key: '7x7_rock',
+            source: 'assets/Islands/7x7_rock.png'
+        },{
+            key: '5x5_dirt',
+            source: 'assets/Islands/5x5_dirt.png'
+        },{
+            key: '5x5_rock',
+            source: 'assets/Islands/5x5_rock.png'
         }];
 
     //------------------------------------------------------------------

@@ -37,25 +37,64 @@ function createCircle() {
 }
 
 function createIslands() {
+    let islandOptions = ['10x10_dirt', '10x10_grass', '5x5_dirt', '5x5_rock', '10x10_tree', '10x10_wall', '7x7_rock', '7x7_grass', '7x7_dirt'];
+
     for (let i = 0; i < numIslands; i++) {
         let randomX = Math.random();
         let randomY = Math.random();
-        let randomWidth = Math.random() * (.10 - .05) + .05;
-        let randomHeight = Math.random() * (.10 - .05) + .05;
-
+        let randomName = islandOptions[Math.floor(Math.random() * islandOptions.size)];
+        let islandHeight = 0;
+        let islandWidth = 0;
+        if (randomName === '10x10_dirt') {
+            islandHeight = .066667;
+            islandWidth = .066667;
+        }
+        else if (randomName === '10x10_grass') {
+            islandHeight = .066667;
+            islandWidth = .066667;
+        }
+        else if (randomName === '5x5_dirt') {
+            islandHeight = .03333;
+            islandWidth = .03333;
+        }
+        else if (randomName === '5x5_rock') {
+            islandHeight = .03333;
+            islandWidth = .03333;
+        }
+        else if (randomName === '10x10_tree') {
+            islandHeight = .066667;
+            islandWidth = .066667;
+        }
+        else if (randomName === '10x10_wall') {
+            islandHeight = .066667;
+            islandWidth = .066667;
+        }
+        else if (randomName === '7x7_dirt') {
+            islandHeight = .04667;
+            islandWidth = .04667;
+        }
+        else if (randomName === '7x7_grass') {
+            islandHeight = .04667;
+            islandWidth = .04667;
+        }
+        else if(randomName === '7x7_rock'){
+            islandHeight = .04667;
+            islandWidth = .04667; 
+        }
         islands.push({
             position: {
                 x: randomX,
                 y: randomY
             },
             size: {
-                width: randomWidth,
-                height: randomHeight
+                width: islandWidth,
+                height: islandHeight
             },
             top: randomY,
-            bottom: randomY + randomHeight,
+            bottom: randomY + islandHeight,
             left: randomX,
-            right: randomX + randomWidth
+            right: randomX + islandWidth,
+            name: randomName
         });
     }
 }

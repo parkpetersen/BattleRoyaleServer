@@ -631,7 +631,6 @@ MyGame.main = (function (graphics, renderer, input, components) {
 
         let textureString = 'player-self-' + getTexture(playerSelf.model.direction, playerSelf.model.state);
         playerSelf.texture = MyGame.assets[textureString];
-        //graphics.drawWorldBoundary(1, 1);
         graphics.setCamera(playerSelf.model, 0, 4800, 0, 4800);
         graphics.drawMiniMap(playerSelf.model, shieldCircle, islands);
         graphics.drawBackground();
