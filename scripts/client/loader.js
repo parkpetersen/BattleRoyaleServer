@@ -40,7 +40,7 @@ MyGame.loader = (function() {
             onComplete: null
         }, {
             scripts: ['rendering/player', 'rendering/player-remote', 'rendering/missile', 'rendering/animated-sprite',
-             'rendering/pickup', 'rendering/howler', 'rendering/circle'],
+             'rendering/pickup', 'rendering/howler', 'rendering/circle', 'rendering/island'],
             message: 'Renderers loaded',
             onComplete: null
         }, {

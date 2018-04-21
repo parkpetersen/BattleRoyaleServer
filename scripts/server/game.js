@@ -28,10 +28,36 @@ let minPlayers = 2;
 let gameStartSent = false;
 let timeSinceLastMessage = 0;
 let alivePlayers = {};
-let countDownTime = 30000;
+let countDownTime = 5000;
+let islands = [];
+let numIslands = 15;
 
 function createCircle() {
     shieldCircle = Circle.create();
+}
+
+function createIslands() {
+    for (let i = 0; i < numIslands; i++) {
+        let randomX = Math.random();
+        let randomY = Math.random();
+        let randomWidth = Math.random() * (.10 - .05) + .05;
+        let randomHeight = Math.random() * (.10 - .05) + .05;
+
+        islands.push({
+            position: {
+                x: randomX,
+                y: randomY
+            },
+            size: {
+                width: randomWidth,
+                height: randomHeight
+            },
+            top: randomY,
+            bottom: randomY + randomHeight,
+            left: randomX,
+            right: randomX + randomWidth
+        });
+    }
 }
 
 function createPickups() {
@@ -211,6 +237,21 @@ function update(elapsedTime, currentTime) {
                 }
             }
         }
+        for (let island in islands) {
+            if (activeMissiles[missile].position.y >= islands[island].position.y &&
+                activeMissiles[missile].position.y <= islands[island].position.y + islands[island].size.height) {
+                if (activeMissiles[missile].position.x >= islands[island].position.x &&
+                    activeMissiles[missile].position.x <= islands[island].position.x + islands[island].size.width) {
+                    hit = true;
+                    hits.push({
+                        clientId: 0,
+                        missileId: activeMissiles[missile].id,
+                        position: activeMissiles[missile].position,
+                        damageDealt: 0
+                    });
+                }
+            }
+        }
         if (!hit) {
             keepMissiles.push(activeMissiles[missile]);
         }
@@ -250,6 +291,40 @@ function update(elapsedTime, currentTime) {
             }
         }
     }
+
+    //player-island collisions
+    for (let clientId in activeClients) {
+        for (let island in islands) {
+            if (activeClients[clientId].player.position.y >= islands[island].position.y &&
+                activeClients[clientId].player.position.y <= islands[island].position.y + islands[island].size.height) {
+                if (activeClients[clientId].player.position.x >= islands[island].position.x &&
+                    activeClients[clientId].player.position.x <= islands[island].position.x + islands[island].size.width) {
+                    let distanceToTop = activeClients[clientId].player.position.y - islands[island].top;
+                    let distanceToBottom = islands[island].bottom - activeClients[clientId].player.position.y;
+                    let distanceToLeft = activeClients[clientId].player.position.x - islands[island].left;
+                    let distanceToRight = islands[island].right - activeClients[clientId].player.position.x;
+                    let distanceArray = [distanceToTop, distanceToBottom, distanceToLeft, distanceToRight];
+                    let min = Math.min(...distanceArray);
+                    if (min == distanceToTop) {
+                        activeClients[clientId].player.position.y = islands[island].top;
+                        activeClients[clientId].player.reportUpdate = true;
+                    }
+                    else if (min == distanceToBottom) {
+                        activeClients[clientId].player.position.y = islands[island].bottom;
+                        activeClients[clientId].player.reportUpdate = true;
+                    }
+                    else if (min == distanceToLeft) {
+                        activeClients[clientId].player.position.x = islands[island].left;
+                        activeClients[clientId].player.reportUpdate = true;
+                    }
+                    else if (min == distanceToRight) {
+                        activeClients[clientId].player.position.x = islands[island].right;
+                        activeClients[clientId].player.reportUpdate = true;
+                    }
+                }
+            }
+        }
+    }
 }
 
 function updateClients(elapsedTime) {
@@ -273,6 +348,12 @@ function updateClients(elapsedTime) {
             timeRemaining: missile.timeRemaining,
             missileDamage: missile.missileDamage
         });
+    }
+
+    if (gameState === 'waiting' || gameState === 'countDown') {
+        for (let client in activeClients) {
+            activeClients[client].socket.emit(NetworkIds.ISLANDS, islands);
+        }
     }
 
     for (let missile = 0; missile < newMissiles.length; missile++) {
@@ -368,6 +449,7 @@ function resetGame() {
     }
     activeClients = {};
     gameState = 'waiting';
+    islands = [];
     lastUpdate = 0;
     quit = false;
     newMissiles = [];
@@ -382,6 +464,7 @@ function resetGame() {
     gameStartSent = false;
     timeSinceLastMessage = 0;
     alivePlayers = {};
+    createIslands();
     createPickups();
     createCircle();
     gameLoop(present(), 0);
@@ -485,6 +568,7 @@ function initialize(httpServer) {
     initializeSocketIO(httpServer);
     createPickups();
     createCircle();
+    createIslands();
     gameLoop(present(), 0);
 }
 

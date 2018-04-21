@@ -3,7 +3,7 @@
 // This is the graphics rendering code for the game.
 //
 // ------------------------------------------------------------------
-MyGame.graphics = (function() {
+MyGame.graphics = (function () {
     'use strict';
 
     let canvas = document.getElementById('canvas-main');
@@ -17,7 +17,7 @@ MyGame.graphics = (function() {
     // of the canvas, rather than making a function that calls and does it.
     //
     //------------------------------------------------------------------
-    CanvasRenderingContext2D.prototype.clear = function() {
+    CanvasRenderingContext2D.prototype.clear = function () {
         this.save();
         this.setTransform(1, 0, 0, 1, 0, 0);
         this.clearRect(0, 0, canvas.width, canvas.height);
@@ -62,10 +62,10 @@ MyGame.graphics = (function() {
         context.translate(-center.x * canvas.width, -center.y * canvas.width);
     }
 
-    function drawText(message){
+    function drawText(message) {
         context.fillStyle = 'red';
         context.font = '24px serif';
-        context.fillText(message.message, message.position.x*4800, message.position.y*4800);
+        context.fillText(message.message, message.position.x * 4800, message.position.y * 4800);
     }
 
     //------------------------------------------------------------------
@@ -126,7 +126,7 @@ MyGame.graphics = (function() {
         context.fill();
     }
 
-    function drawAimer(startPos, direction){
+    function drawAimer(startPos, direction) {
         context.save();
         context.beginPath();
         let xVector = Math.cos(direction);
@@ -143,25 +143,25 @@ MyGame.graphics = (function() {
 
     }
 
-    function drawVision(vision){
+    function drawVision(vision) {
         context.save();
         context.beginPath();
-        context.arc(vision.x*4800, vision.y*4800, vision.radius*canvas.width, vision.start, vision.end);
+        context.arc(vision.x * 4800, vision.y * 4800, vision.radius * canvas.width, vision.start, vision.end);
         context.strokeStyle = "rgba(50,250,250, 0.1"; //This allows for a bit opacity so we can see what's under the FOV
         context.fillStyle = "rgba(50,250,250, 0.1";
         context.fill();
         context.stroke();
     }
 
-    function drawWorldBoundary(width, height){
+    function drawWorldBoundary(width, height) {
         context.beginPath();
         context.rect(0, 0, width, height);
         context.strokeStyle = 'red';
         context.stroke();
         context.closePath();
     }
-    
-    function drawHealthBar(position, size, health){
+
+    function drawHealthBar(position, size, health) {
         let localPosition = {
             x: position.x * 4800,
             y: position.y * 4800
@@ -173,10 +173,10 @@ MyGame.graphics = (function() {
 
         context.save();
         context.beginPath();
-        let healthFraction = health/100;
+        let healthFraction = health / 100;
         let missingFraction = 1 - healthFraction;
         context.fill();
-        context.rect(localPosition.x - (localSize.width/2), localPosition.y + (localSize.height/2), localSize.width*healthFraction, localSize.height/8);
+        context.rect(localPosition.x - (localSize.width / 2), localPosition.y + (localSize.height / 2), localSize.width * healthFraction, localSize.height / 8);
         context.fillStyle = 'green';
         context.fill();
         context.closePath();
@@ -189,13 +189,13 @@ MyGame.graphics = (function() {
     //
     //------------------------------------------------------------------
 
-    function enableClipping(player, clip){
-        if(!clip.clipping){
+    function enableClipping(player, clip) {
+        if (!clip.clipping) {
             context.save();
             clip.clipping = true;
 
             context.beginPath();
-            context.arc(player.vision.x*4800, player.vision.y*4800, player.vision.radius*canvas.width, player.vision.start, player.vision.end);
+            context.arc(player.vision.x * 4800, player.vision.y * 4800, player.vision.radius * canvas.width, player.vision.start, player.vision.end);
             context.closePath();
             context.clip();
         }
@@ -207,43 +207,53 @@ MyGame.graphics = (function() {
     //
     //------------------------------------------------------------------
 
-    function disableClipping(clip){
-        if(clip.clipping){
+    function disableClipping(clip) {
+        if (clip.clipping) {
             context.restore();
             clip.clipping = false;
         }
     }
 
     // reference: https://stackoverflow.com/questions/16919601/html5-canvas-camera-viewport-how-to-actally-do-it
-    function setCamera(player, minX, maxX, minY, maxY){
-        context.setTransform(1,0,0,1,0,0);
+    function setCamera(player, minX, maxX, minY, maxY) {
+        context.setTransform(1, 0, 0, 1, 0, 0);
         context.clear();
-        let camX = clamp((-player.position.x * 4800) + (canvas.width/2), minX, maxX - (canvas.width));
-        let camY = clamp((-player.position.y * 4800) + (canvas.height/2), minY, maxY - (canvas.height));
+        let camX = clamp((-player.position.x * 4800) + (canvas.width / 2), minX, maxX - (canvas.width));
+        let camY = clamp((-player.position.y * 4800) + (canvas.height / 2), minY, maxY - (canvas.height));
         context.translate(camX, camY);
 
     }
 
-    function clamp(value, min, max){
-        if(-value < min) return min;
-        else if(-value > max) return -max;
+    function clamp(value, min, max) {
+        if (-value < min) return min;
+        else if (-value > max) return -max;
         return value;
     }
 
-    function drawBackground(){
+    function drawBackground() {
         context.drawImage(MyGame.assets['background'], 0, 0, 4800, 4800); //should be 0,0,4800,4800?
     }
 
-    function drawMiniMap(player, circle){
+    function drawMiniMap(player, circle, islands) {
         let smallCanvas = document.getElementById('mini-map');
         let ctx = smallCanvas.getContext('2d')
         ctx.clear();
         ctx.save();
+        for (let island of islands) {
+            ctx.beginPath();
+            ctx.fillStyle = '#996a15';
+            ctx.fillRect(island.position.x * 200, island.position.y * 200, island.size.width * 200, island.size.height * 200);
+            ctx.closePath();
+            ctx.beginPath();
+            ctx.fillStyle = '#2b6806';
+            ctx.fillRect((island.position.x + (island.size.width*.1)) * 200, (island.position.y + (island.size.height * .1)) * 200, (island.size.width * .8) * 200, (island.size.height * .8) * 200);
+            ctx.closePath();
+        }
         ctx.beginPath();
-        ctx.fillStyle="#FFFF00";
-        ctx.fillRect(player.position.x * 200, player.position.y * 200, 5,5);
-        let circleRadius = (circle.radius > 0)? circle.radius : 0; 
-        ctx.arc(circle.position.x * 200, circle.position.y * 200, circleRadius * 200, 0, 2*Math.PI);
+        ctx.fillStyle = "#FFFF00";
+        ctx.fillRect(player.position.x * 200, player.position.y * 200, 5, 5);
+        let circleRadius = (circle.radius > 0) ? circle.radius : 0;
+        ctx.arc(circle.position.x * 200, circle.position.y * 200, circleRadius * 200, 0, 2 * Math.PI);
         ctx.strokeStyle = 'red';
         ctx.lineWidth = .5;
         ctx.stroke();
@@ -255,11 +265,11 @@ MyGame.graphics = (function() {
 
     }
 
-    function drawShieldCircle(circle){
+    function drawShieldCircle(circle) {
         context.save();
         context.beginPath();
-        let circleRadius = (circle.radius > 0)? circle.radius : 0; 
-        context.arc(circle.position.x * 4800, circle.position.y * 4800, circleRadius * 4800, 0,  2 * Math.PI);
+        let circleRadius = (circle.radius > 0) ? circle.radius : 0;
+        context.arc(circle.position.x * 4800, circle.position.y * 4800, circleRadius * 4800, 0, 2 * Math.PI);
         context.strokeStyle = 'red';
         context.lineWidth = 10;
         context.stroke();
@@ -267,8 +277,22 @@ MyGame.graphics = (function() {
         context.restore();
     }
 
-    function renderParticleSystems(particleEngine){
+    function renderParticleSystems(particleEngine) {
         particleEngine.render(context);
+    }
+
+    function drawIsland(island) {
+        context.save();
+        context.beginPath();
+        context.fillStyle = '#996a15';
+        context.fillRect(island.position.x * 4800, island.position.y * 4800, island.size.width * 4800, island.size.height * 4800);
+        context.closePath();
+        context.beginPath();
+        context.fillStyle = '#2b6806';
+        context.fillRect((island.position.x + (island.size.width*.1)) * 4800, (island.position.y + (island.size.height*.1)) * 4800, (island.size.width * .8) * 4800, (island.size.height * .8) * 4800);
+        context.closePath();
+        context.restore();
+
     }
 
 
@@ -282,8 +306,8 @@ MyGame.graphics = (function() {
         drawAimer: drawAimer,
         drawCircle: drawCircle,
         drawVision: drawVision,
-        enableClipping : enableClipping,
-        disableClipping : disableClipping,
+        enableClipping: enableClipping,
+        disableClipping: disableClipping,
         drawHealthBar: drawHealthBar,
         drawCircle: drawCircle,
         drawText: drawText,
@@ -292,6 +316,7 @@ MyGame.graphics = (function() {
         drawBackground: drawBackground,
         drawMiniMap: drawMiniMap,
         drawShieldCircle: drawShieldCircle,
-        renderParticleSystems: renderParticleSystems
+        renderParticleSystems: renderParticleSystems,
+        drawIsland: drawIsland
     };
 }());

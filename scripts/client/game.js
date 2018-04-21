@@ -42,7 +42,8 @@ MyGame.main = (function (graphics, renderer, input, components) {
         downIdKey2 = 0,
         fireIdKey = 0,
         shieldCircle = components.Circle(),
-        particleEngine = components.ParticleEngine.ParticleEngine();
+        particleEngine = components.ParticleEngine.ParticleEngine(),
+        islands = [];
 
 
 
@@ -128,6 +129,12 @@ MyGame.main = (function (graphics, renderer, input, components) {
     socket.on(NetworkIds.WIN, data => {
         networkQueue.enqueue({
             type: NetworkIds.WIN,
+            data: data
+        });
+    });
+    socket.on(NetworkIds.ISLANDS, data => {
+        networkQueue.enqueue({
+            type: NetworkIds.ISLANDS,
             data: data
         });
     });
@@ -366,6 +373,10 @@ MyGame.main = (function (graphics, renderer, input, components) {
         alert(data.message);
     }
 
+    function setIslands(data) {
+        islands = data;
+    }
+
     function registerControls() {
         upIdKey = myKeyboard.registerHandler(elapsedTime => {
             let message = {
@@ -450,6 +461,39 @@ MyGame.main = (function (graphics, renderer, input, components) {
             MyGame.input.KeyEvent.DOM_VK_SPACE, false);
     }
 
+    function checkCollisions() {
+        for (let island in islands) {
+            if (playerSelf.model.position.y >= islands[island].position.y &&
+                playerSelf.model.position.y <= islands[island].position.y + islands[island].size.height) {
+                if (playerSelf.model.position.x >= islands[island].position.x &&
+                    playerSelf.model.position.x <= islands[island].position.x + islands[island].size.width) {
+                    let distanceToTop = playerSelf.model.position.y - islands[island].top;
+                    let distanceToBottom = islands[island].bottom - playerSelf.model.position.y;
+                    let distanceToLeft = playerSelf.model.position.x - islands[island].left;
+                    let distanceToRight = islands[island].right - playerSelf.model.position.x;
+                    let distanceArray = [distanceToTop, distanceToBottom, distanceToLeft, distanceToRight];
+                    let min = Math.min(distanceArray);
+                    if (min == distanceToTop) {
+                        playerSelf.model.position.y = islands[island].top;
+                        playerSelf.model.reportUpdate = true;
+                    }
+                    else if (min == distanceToBottom) {
+                        playerSelf.model.position.y = islands[island].bottom;
+                        playerSelf.model.reportUpdate = true;
+                    }
+                    else if (min == distanceToLeft) {
+                        playerSelf.model.position.x = islands[island].left;
+                        playerSelf.model.reportUpdate = true;
+                    }
+                    else if (min == distanceToRight) {
+                        playerSelf.model.position.x = islands[island].right;
+                        playerSelf.model.reportUpdate = true;
+                    }
+                }
+            }
+        }
+    }
+
     function updatePickups(data) {
         pickups = data;
     }
@@ -463,8 +507,8 @@ MyGame.main = (function (graphics, renderer, input, components) {
         shieldCircle.position = data.position;
         shieldCircle.shrinkingSpeed = data.shrinkingSpeed;
     }
-    
-    function win(data){
+
+    function win(data) {
         messageHistory.enqueue(data.message);
         alert(data.message);
     }
@@ -512,7 +556,6 @@ MyGame.main = (function (graphics, renderer, input, components) {
                     break;
                 case NetworkIds.DEAD:
                     killPlayer(message.data);
-                    //sinkSound.play();
                     break;
                 case NetworkIds.PICKUPS:
                     updatePickups(message.data);
@@ -529,6 +572,9 @@ MyGame.main = (function (graphics, renderer, input, components) {
                 case NetworkIds.WIN:
                     win(message.data);
                     break;
+                case NetworkIds.ISLANDS:
+                    setIslands(message.data);
+                    break;
             }
         }
     }
@@ -539,6 +585,7 @@ MyGame.main = (function (graphics, renderer, input, components) {
     //
     //------------------------------------------------------------------
     function update(elapsedTime) {
+        checkCollisions();
         playerSelf.model.update(elapsedTime);
         particleEngine.update(elapsedTime);
         for (let id in playerOthers) {
@@ -586,8 +633,9 @@ MyGame.main = (function (graphics, renderer, input, components) {
         playerSelf.texture = MyGame.assets[textureString];
         //graphics.drawWorldBoundary(1, 1);
         graphics.setCamera(playerSelf.model, 0, 4800, 0, 4800);
-        graphics.drawMiniMap(playerSelf.model, shieldCircle);
+        graphics.drawMiniMap(playerSelf.model, shieldCircle, islands);
         graphics.drawBackground();
+        renderer.Island.render(islands);
         renderer.Circle.render(shieldCircle);
         renderer.Player.render(playerSelf.model, playerSelf.texture);
 

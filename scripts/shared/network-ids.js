@@ -73,6 +73,10 @@
         'WIN':{
             value: 'win',
             writable: false
+        },
+        'ISLANDS':{
+            value: 'islands',
+            writable: false
         }
     });
 
