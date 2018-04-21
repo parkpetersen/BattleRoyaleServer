@@ -467,7 +467,6 @@ function resetGame() {
     createIslands();
     createPickups();
     createCircle();
-    gameLoop(present(), 0);
 }
 
 function gameLoop(currentTime, elapsedTime) {
