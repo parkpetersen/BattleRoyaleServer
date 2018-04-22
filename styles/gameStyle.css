@@ -30,6 +30,18 @@ header{
     display: none;
 } */
 
+#register{
+    margin: auto;
+    width: 100%;
+    text-align: center;
+}
+
+#name-input{
+    margin: 0 auto;
+    font-size: 4em;
+    text-align: center;
+}
+
 #game {
     display: none;
 }

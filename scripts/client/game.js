@@ -709,10 +709,15 @@ MyGame.main = (function (graphics, renderer, input, components) {
     function createUser(submitName){
         name = submitName
     }
+
+    function getSocket(){
+        return socket;
+    }
     return {
         initialize: initialize,
         createUser : createUser,
-        getName : getName
+        getName : getName,
+        getSocket : getSocket
     };
 
 }(MyGame.graphics, MyGame.renderer, MyGame.input, MyGame.components));

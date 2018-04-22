@@ -51,6 +51,7 @@
 	</div>
 
 	<div id="register">
+		<h1>Please enter your name below</h1>
 		<input id="name-input" type="text">
 		<li><a href="javascript:void(0)" class="menuItem register">Register</a></li>
 	</div>
@@ -83,21 +84,5 @@
 	</div>
 
 	<script data-main = "scripts/client/loader" src = "scripts/client/require.js"></script>
-	<script>
-		$(function () {
-		  var socket = io();
-		  $('form').submit(function(){
-			socket.emit('chat message', MyGame.main.getName() + ": " + $('#m').val());
-			$('#m').val('');
-			return false;
-		  });
-		  socket.on('chat message', function(msg){
-			  console.log("Message recieved");
-			$('#messages').append($('<li>').text(msg));
-			  var element = document.getElementById("chat-room");
-			  element.scrollTop = element.scrollHeight;
-		  });
-		});
-	</script>
 </body>
 </html>

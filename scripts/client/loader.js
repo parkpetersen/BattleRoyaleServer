@@ -51,6 +51,10 @@ MyGame.loader = (function() {
             scripts: ['mainmenu'],
             message: 'Menu loaded',
             onComplete: null
+        },{
+            scripts: ['chat-room'],
+            message: 'Chatroom loaded',
+            onComplete: null
         }],
         assetOrder = [{
             key: 'player-self-north',
