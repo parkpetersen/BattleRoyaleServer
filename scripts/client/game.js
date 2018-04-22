@@ -352,9 +352,9 @@ MyGame.main = (function (graphics, renderer, input, components) {
     }
 
     function killPlayer(data) {
-        myKeyboard.unregisterHandler(MyGame.input.KeyEvent.DOM_VK_UP, upIdKey);
-        myKeyboard.unregisterHandler(MyGame.input.KeyEvent.DOM_VK_RIGHT, rightIdKey);
-        myKeyboard.unregisterHandler(MyGame.input.KeyEvent.DOM_VK_LEFT, leftIdKey);
+        myKeyboard.unregisterHandler(MyGame.input.KeyEvent.DOM_VK_W, upIdKey);
+        myKeyboard.unregisterHandler(MyGame.input.KeyEvent.DOM_VK_D, rightIdKey);
+        myKeyboard.unregisterHandler(MyGame.input.KeyEvent.DOM_VK_A, leftIdKey);
         myKeyboard.unregisterHandler(MyGame.input.KeyEvent.DOM_VK_SPACE, fireIdKey);
 
         playerSelf.model.state = 'sinking';
