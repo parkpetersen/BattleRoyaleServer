@@ -18,10 +18,10 @@ MyGame.components.ParticleSystem = (function(){
                     x: Math.cos(angle),
                     y: Math.sin(angle)
                 },
-                speed: .00008,
-                lifetime: 1500,
+                speed: .000010,
+                lifetime: 700,
                 alive: 0,
-                size: 0.001225,
+                size: 0.000825,
                 fill: colors[randomColorIndex],
                 stroke: 'rgb(0,0,0)'
             };
