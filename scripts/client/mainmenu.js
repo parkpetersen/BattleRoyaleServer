@@ -19,7 +19,7 @@ MyGame.menu = (function() {
     //
     // displays given element
     function show(el) {
-        el.style.display = 'block';
+        el.style.display = 'inline-block';
     }
 
     //

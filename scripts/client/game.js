@@ -656,6 +656,10 @@ MyGame.main = (function (graphics, renderer, input, components) {
         }
     }
 
+    function getName(){
+        return name;
+    }
+
     //---------------------------------------------------------------
     //
     // Enable Disable Sounds
@@ -707,7 +711,8 @@ MyGame.main = (function (graphics, renderer, input, components) {
     }
     return {
         initialize: initialize,
-        createUser : createUser
+        createUser : createUser,
+        getName : getName
     };
 
 }(MyGame.graphics, MyGame.renderer, MyGame.input, MyGame.components));
