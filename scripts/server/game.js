@@ -7,6 +7,7 @@ const Pickup = require('./pickup.js');
 const NetworkIds = require('../shared/network-ids');
 const Queue = require('../shared/queue.js');
 const Circle = require('./circle.js');
+const CONFIG = require('../../config.json');
 
 const SIMULATION_UPDATE_RATE_MS = 10;
 const STATE_UPDATE_RATE_MS = 50;
@@ -24,11 +25,11 @@ let gameTimer = 0;
 let shieldWarningSent = false;
 let updateDistance = 900 / 4800;
 let gameState = 'waiting';
-let minPlayers = 2;
+let minPlayers = CONFIG.MIN_PLAYER_COUNT;
+let countDownTime = CONFIG.COUNTDOWN_TIMER;
 let gameStartSent = false;
 let timeSinceLastMessage = 0;
 let alivePlayers = {};
-let countDownTime = 30000;
 let islands = [];
 let numIslands = 25;
 
