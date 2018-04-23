@@ -129,3 +129,17 @@ header{
     font-family: "warcraft";
     src: url('assets/font/WarcraftFont.ttf') format('truetype');
   } */
+
+  .player {
+    display: block;
+    position: relative;
+    padding-left: 15px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 22px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    color: #FFFDF3;
+}

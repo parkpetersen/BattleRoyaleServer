@@ -3,12 +3,14 @@
 // This function provides the "game" code.
 //
 //------------------------------------------------------------------
-let cannonFire = new Howl({ src: ['assets/audio/cannon_fire.mp3'], volume: 0.20 });
-let cannonHit = new Howl({ src: ['assets/audio/hit.mp3'], volume: 0.20 });
-let sinkSound = new Howl({ src: ['assets/audio/ship-sinking.wav'], volume: 0.20 });
-let music = new Howl({ src: ['assets/audio/song.mp3'], loop: true, volume: 0.20 });
 let Mplay = false; //music
 let Splay = false; //sound
+let defaultLevel = .50; 
+let cannonFire = new Howl({ src: ['assets/audio/cannon_fire.mp3'], volume: defaultLevel });
+let cannonHit = new Howl({ src: ['assets/audio/hit.mp3'], volume: defaultLevel });
+let sinkSound = new Howl({ src: ['assets/audio/ship-sinking.wav'], volume: defaultLevel });
+let music = new Howl({ src: ['assets/audio/song.mp3'], loop: true, volume: defaultLevel });
+
 
 MyGame.main = (function (graphics, renderer, input, components) {
     'use strict';
@@ -42,7 +44,8 @@ MyGame.main = (function (graphics, renderer, input, components) {
         particleEngine = components.ParticleEngine.ParticleEngine(),
         islands = [],
         timeSinceLastShot = 0,
-        moving = false;
+        moving = false,
+        playerCount = 0;
 
 
 
@@ -208,6 +211,9 @@ MyGame.main = (function (graphics, renderer, input, components) {
         let textureString = 'player-self-' + getTexture(playerSelf.model.direction);
         playerSelf.texture = MyGame.assets[textureString];
         playerSelf.model.state = data.state;
+        playerCount = data.playerCount;
+        let playersLeft = document.getElementById('player'); 
+		playersLeft.innerHTML = "Players: " + playerCount;	
 
 
         //
@@ -664,7 +670,7 @@ MyGame.main = (function (graphics, renderer, input, components) {
     function getSoundValue() {
         var checked = document.getElementById('checkSound').checked;
         if (checked == true && Splay == false) {
-            Howler.volume(.20);
+            Howler.volume(defaultLevel);
             Splay = true;
         }
         if (checked == false) {
