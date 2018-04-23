@@ -44,7 +44,8 @@ MyGame.main = (function (graphics, renderer, input, components) {
         particleEngine = components.ParticleEngine.ParticleEngine(),
         islands = [],
         timeSinceLastShot = 0,
-        moving = false;
+        moving = false,
+        playerCount = 0;
 
 
 
@@ -210,6 +211,9 @@ MyGame.main = (function (graphics, renderer, input, components) {
         let textureString = 'player-self-' + getTexture(playerSelf.model.direction);
         playerSelf.texture = MyGame.assets[textureString];
         playerSelf.model.state = data.state;
+        playerCount = data.playerCount;
+        let playersLeft = document.getElementById('player'); 
+		playersLeft.innerHTML = "Players: " + playerCount;	
 
 
         //

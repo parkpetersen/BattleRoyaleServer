@@ -444,7 +444,8 @@ function updateClients(elapsedTime) {
             updateWindow: lastUpdate,
             health: client.player.health,
             vision: client.player.vision,
-            state: client.player.state
+            state: client.player.state,
+            playerCount: Object.keys(alivePlayers).length
         };
         if (client.player.reportUpdate) {
             client.socket.emit(NetworkIds.UPDATE_SELF, update);
