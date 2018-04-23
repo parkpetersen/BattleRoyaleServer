@@ -212,8 +212,8 @@ MyGame.main = (function (graphics, renderer, input, components) {
         playerSelf.texture = MyGame.assets[textureString];
         playerSelf.model.state = data.state;
         playerCount = data.playerCount;
-        let playersLeft = document.getElementById('player'); 
-		playersLeft.innerHTML = "Players: " + playerCount;	
+        let playersLeft = document.getElementById('players'); 
+		playersLeft.innerHTML = "Players: " + playerCount;
 
 
         //
