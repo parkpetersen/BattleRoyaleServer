@@ -254,7 +254,7 @@ function update(elapsedTime, currentTime) {
             timeSinceLastMessage = 0;
         }
     }
-    if (!shieldWarningSent && gameState === 'gamePlay' && gameTimer >= 35000) {
+    if (!shieldWarningSent && gameState === 'gamePlay' && gameTimer >= countDownTime + 5000) {
         let message = "Circle Starting in 10 seconds!";
         for (let clientId in activeClients) {
             activeClients[clientId].socket.emit(NetworkIds.DRAW_TEXT, {
