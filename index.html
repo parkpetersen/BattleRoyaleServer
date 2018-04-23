@@ -7,9 +7,6 @@
 	<link rel="stylesheet" href="styles/mainMenuStyle.css" type="text/css" media="screen">
 	<script src = "/node_modules/socket.io-client/dist/socket.io.slim.js"></script>
 	<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
-	<header>
-			<h1>Tales of Boats n' Booty</h1>
-	</header>
 
 </head>
 <body>
@@ -23,29 +20,26 @@
 		<h1>Tales of <br> Boats n' Booty</h1>
 
 		 <!-- Button to open the modal login form -->
-		<button onclick="document.getElementById('login-modal').style.display='block'">Login</button>
+		<button id="login-btn" onclick="document.getElementById('login-modal').style.display='block'">Login</button>
 
 		<!-- The Modal (contains the Login form) -->
 		<div id="login-modal" class="modal">
 			<!-- Modal Content -->
-			<form class="modal-content animate" action="/action_page.php">
+			<form class="modal-content animate">
 				<span onclick="document.getElementById('login-modal').style.display='none'" class="close" title="Close">&times;</span>
 
 				<div class="img-container">
 					<img src="./assets/menu/Sea-of-Thieves-_Pirate_Machete.jpg" alt="Avatar" class="avatar">
 				</div>
 
-				<div class="form-container">
+				<div id="login-form" class="form-container">
 					<label for="uname"><b>Username</b></label>
-					<input type="text" placeholder="Enter Username" name="uname" required>
+					<input id="loginUsernameText" type="text" placeholder="Enter Username" required>
 
 					<label for="psw"><b>Password</b></label>
 					<input type="password" placeholder="Enter Password" name="psw" required>
 
-					<button type="button" onclick="authorizeLogin()">Login</button>
-					<label>
-						<input type="checkbox" checked="checked" name="remember"> Remember me
-					</label>
+					<button type="button" onclick="authorizeLogin()" class="login">Login</button>
 				</div>
 
 				<div class="form-btn-container" style="background-color:#f1f1f1">
@@ -55,20 +49,20 @@
 		</div>
 
 		 <!-- Button to open the modal sign up form -->
-		<button onclick="document.getElementById('signup-modal').style.display='block'">Sign Up</button>
+		<button id="signup-btn" onclick="document.getElementById('signup-modal').style.display='block'">Sign Up</button>
 
 		<!-- The Modal (contains the Sign Up form) -->
 		<div id="signup-modal" class="modal">
 			<!-- Modal Content -->
-			<form class="modal-content animate" action="/action_page.php">
+			<form class="modal-content animate">
 				<span onclick="document.getElementById('signup-modal').style.display='none'" class="close" title="Close">&times;</span>
 
 				<div class="form-container">
 					<h1>Sign Up</h1>
 					<p>Please fill in this form to create an account.</p>
 					<hr>
-					<label for="email"><b>Email</b></label>
-					<input type="text" placeholder="Enter Email" name="email" required>
+					<label for="uname"><b>Username</b></label>
+					<input id="signupUsernameText" type="text" placeholder="Enter Username" name="uname" required>
 
 					<label for="psw"><b>Password</b></label>
 					<input type="password" placeholder="Enter Password" name="psw" required>
@@ -76,106 +70,80 @@
 					<label for="psw-repeat"><b>Repeat Password</b></label>
 					<input type="password" placeholder="Repeat Password" name="psw-repeat" required>
 
-					<label>
-						<input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me
-					</label>
-
-					<p>By creating an account you agree to our <a href="#" style="color:dodgerblue">Terms & Privacy</a>.</p>
-
 					<div class="clearfix">
 						<button type="submit" class="signup">Sign Up</button>
-						<button type="button" onclick="document.getElementById('signup-modal').style.display='none'" class="cancelbtn">Cancel</button>
 					</div>
 				</div>
 			</form>
 		</div>
 
-		<script>
-			// Get the modals
-			var modal1 = document.getElementById('login-modal');
-			var modal2 = document.getElementById('signup-modal');
-			
-			// When the user clicks anywhere outside of the modal, close it
-			window.onclick = function(event) {
-				if (event.target == modal1) {
-					modal1.style.display = "none";
-				}
-				else if (event.target == modal2) {
-					modal2.style.display = "none";
-				}
-			}
-		</script> 
-
-		<!-- delete the style tag below to display game main menu -->
-		<div id="main" style="display: none">
+		<div id="main">
 			<ul>
-				<li><a href="javascript:void(0)" class="menuItem play">Start Game</a></li>
-				<li><a href="javascript:void(0)" class="menuItem-disabled">Join Game Lobby</a></li>					
-				<li><a href="javascript:void(0)" class="menuItem-disabled">Create New User</a></li>
+				<li><a href="javascript:void(0)" class="menuItem play">Join Game</a></li>					
 				<li><a href="javascript:void(0)" class="menuItem-disabled">Options</a></li>
-				<li><a href="javascript:void(0)" class="menuItem leaderboard">Leaderboard</a></li>
-				<li><a href="javascript:void(0)" class="menuItem credits">Credits</a></li>
+				<li><a href="javascript:void(0)" class="menuItem leaderboard" onclick="document.getElementById('leaderboard-modal').style.display='block'">Leaderboard</a></li>
+				<li><a href="javascript:void(0)" class="menuItem credits" onclick="document.getElementById('credits-modal').style.display='block'">Credits</a></li>
 			</ul>
 		</div>
-	
-		<div id="credits" class="main">
-			<h1>Created by:</h1>
-			<ul>
-				<li>Jake Anderson</li>
-				<li>Brian Falor</li>
-				<li>Parker Petersen</li>
-				<li>Grant Russell</li>
-			</ul>
-			<p>for Dr. Dean Mathias' CS5410 Game Development class.</p>
-			<p>Utah State University, April 2018</p>
+
+		<!-- The Modal (contains the Credits page) -->
+		<div id="credits-modal" class="modal">
+			<!-- Modal Content -->
+			<form class="modal-content animate">
+				<span onclick="document.getElementById('credits-modal').style.display='none'" class="close" title="Close">&times;</span>
+				<h1>Created by:</h1>
+				<ul>
+					<li>Jake Anderson</li>
+					<li>Brian Falor</li>
+					<li>Parker Petersen</li>
+					<li>Grant Russell</li>
+				</ul>
+				<p>for Dr. Dean Mathias' CS5410 Game Development class.</p>
+				<p>Utah State University, April 2018</p>
+			</form>
 		</div>
 
-		<div id="leaderboard" class="main">
-			<h1>Treasure Trove Takers</h1>
-			<h4>Top 5 Battle Royale survivors</h4>
-			<table>
-				<tr>
-					<th></th>
-					<th>Player Name</th>
-					<th>Wins</th>
-				</tr>
-				<tr id="top-player">
-					<td style="text-align: center">1</td>
-					<td id="player">Parker Petersen</td>
-					<td id="wins">10</td>
-				</tr>
-				<tr>
-					<td>2</td>
-					<td id="player">Grant Russell</td>
-					<td id="wins">8</td>
-				</tr>
-				<tr>
-					<td>3</td>
-					<td id="player">Brian Falor</td>
-					<td id="wins">7</td>
-				</tr>
-				<tr>
-					<td>4</td>
-					<td id="player">Dean Mathias</td>
-					<td id="wins">5</td>
-				</tr>
-				<tr>
-					<td>5</td>
-					<td id="player">Jake Anderson</td>
-					<td id="wins">1</td>
-				</tr>
-			  </table>
+		<!-- The Modal (contains the Credits page) -->
+		<div id="leaderboard-modal" class="modal">
+			<!-- Modal Content -->
+			<form class="modal-content animate">
+				<span onclick="document.getElementById('leaderboard-modal').style.display='none'" class="close" title="Close">&times;</span>
+				<h1>Treasure Trove Takers</h1>
+				<h4><center>Top 5 Battle Royale survivors</center></h4>
+				<table>
+					<tr>
+						<th></th>
+						<th>Player Name</th>
+						<th>Wins</th>
+					</tr>
+					<tr id="top-player">
+						<td style="text-align: center">1</td>
+						<td id="player">Parker Petersen</td>
+						<td id="wins">10</td>
+					</tr>
+					<tr>
+						<td>2</td>
+						<td id="player">Grant Russell</td>
+						<td id="wins">8</td>
+					</tr>
+					<tr>
+						<td>3</td>
+						<td id="player">Brian Falor</td>
+						<td id="wins">7</td>
+					</tr>
+					<tr>
+						<td>4</td>
+						<td id="player">Dean Mathias</td>
+						<td id="wins">5</td>
+					</tr>
+					<tr>
+						<td>5</td>
+						<td id="player">Jake Anderson</td>
+						<td id="wins">1</td>
+					</tr>
+					</table>
+			</form>
 		</div>
-
-		<div id="back" class="menu-back">
-			<a href="javascript:void(0)" class="nav back"><img src="/assets/menu/back-button.png" height="100" width="100"/> </a>
-		</div>
-	</div>
-
-	<div id="register">
-		<h1>Please enter your name below</h1>
-		<input id="name-input" type="text">
-		<li><a href="javascript:void(0)" class="menuItem register">Register</a></li>
 	</div>
 
 	<div id="game">
@@ -205,6 +173,30 @@
 		</div>
 	</div>
 
+	<script>
+		// Get the modals
+		var loginModal = document.getElementById('login-modal');
+		var signupModal = document.getElementById('signup-modal');
+		var leaderboardModal = document.getElementById('leaderboard-modal');
+		var creditsModal = document.getElementById('credits-modal');
+		
+		// When the user clicks anywhere outside of the modal, close it
+		window.onclick = function(event) {
+			if (event.target == loginModal) {
+				loginModal.style.display = "none";
+			}
+			else if (event.target == signupModal) {
+				signupModal.style.display = "none";
+			}
+			else if (event.target == leaderboardModal) {
+				leaderboardModal.style.display = "none";
+			}
+			else if (event.target == creditsModal) {
+				creditsModal.style.display = "none";
+			}
+		}
+	</script> 
+
 	<script data-main = "scripts/client/loader" src = "scripts/client/require.js"></script>
 	<script>
 		function authorizeLogin() {
@@ -212,12 +204,11 @@
 
 			xhttp.onreadystatechange = function() {
 				if (this.readyState == 4 && this.status == 200) {
-					document.getElementById("login-modal").innerHTML = this.responseText;
-					console.log("I hear you!");
+					//document.getElementById("login-form").submit();
 				}
 			};
-			xhttp.open("GET", "ajax_test.txt", true);
-			xhttp.send();
+			//xhttp.open("POST", "ajax_test.txt", true);
+			//xhttp.send();
 		}
 	</script>
 </body>

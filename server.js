@@ -7,9 +7,12 @@ let mimeTypes = {
         '.js' : 'text/javascript',
         '.html' : 'text/html',
         '.css' : 'text/css',
+        '.ttf' : 'font/ttf',
         '.png' : 'image/png',
         '.jpg' : 'image/jpeg',
-        '.mp3' : 'audio/mpeg3'
+        '.mp3' : 'audio/mp3',
+        '.wav' : 'audio/wav',
+        '.txt' : 'txt'
     };
 
 function handleRequest(request, response) {

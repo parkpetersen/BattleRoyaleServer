@@ -19,46 +19,39 @@ MyGame.menu = (function() {
     //
     // displays given element
     function show(el) {
-        el.style.display = 'inline-block';
+        el.style.display = 'block';
     }
 
     //
-    // when "Play" button is clicked, hide main menu, display game canvases, and initialize game
-    let registerNode = document.querySelectorAll('.register')[0].addEventListener('click', function() {
-        hide(document.getElementById('register'));
-        show(document.getElementById('game'));
-        MyGame.main.createUser(document.getElementById('name-input').value);
+    // when login modal's "Login" button is clicked, hide all modals, buttons
+    // and display main menu
+    let loginNode = document.querySelectorAll('.login')[0].addEventListener('click', function() {
+        hide(document.getElementById('login-modal'));
+        hide(document.getElementById('signup-modal'));
+        hide(document.getElementById('login-btn'));
+        hide(document.getElementById('signup-btn'));
+        show(document.getElementById('main'));
+        MyGame.main.createUser(document.getElementById('loginUsernameText').value);
     });
 
+    //
+    // when sign-up modal's "Sign Up" button is clicked, hide all modals, buttons
+    // and display main menu
+    let signupNode = document.querySelectorAll('.signup')[0].addEventListener('click', function() {
+        hide(document.getElementById('signup-modal'));
+        hide(document.getElementById('login-modal'));
+        hide(document.getElementById('signup-btn'));
+        hide(document.getElementById('login-btn'));
+        show(document.getElementById('main'));
+        MyGame.main.createUser(document.getElementById('signupUsernameText').value);
+    });
+
+    //
+    // when "Play" button is clicked, hide main menu, display game canvases,
+    // and initialize game
     let playNode = document.querySelectorAll('.play')[0].addEventListener('click', function() {
-        hide(document.getElementById('main'));
-        show(document.getElementById('register'));
+        hide(document.getElementById('menu'));
+        show(document.getElementById('game'));
         MyGame.main.initialize(); //probably shouldn't initialize every time the button is clicked... (fix later)
     });
-
-    //
-    // when "Leaderboard" button is clicked, hide main menu, display credits screen
-    let leaderboardNode = document.querySelectorAll('.leaderboard')[0].addEventListener('click', function() {
-        hide(document.getElementById('main'));
-        show(document.getElementById('leaderboard'));
-        show(document.getElementById('back'));
-    });
-
-    //
-    // when "Credits" button is clicked, hide main menu, display credits screen
-    let creditNode = document.querySelectorAll('.credits')[0].addEventListener('click', function() {
-        hide(document.getElementById('main'));
-        show(document.getElementById('credits'));
-        show(document.getElementById('back'));
-    });
-
-    //
-    // when "Back" button is clicked, hide current all submenus and display main menu
-    let back = document.querySelectorAll('.back')[0].addEventListener('click', function() {
-        show(document.getElementById('main'));
-        hide(document.getElementById('leaderboard'));
-        hide(document.getElementById('credits'));
-        hide(document.getElementById('back'));
-    });
-
 }());
