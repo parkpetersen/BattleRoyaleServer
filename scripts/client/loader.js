@@ -59,103 +59,103 @@ MyGame.loader = (function() {
         assetOrder = [{
             key: 'player-self-north',
             source: 'assets/BattleShip/North.png'
-        },{
+        }, {
             key: 'player-self-north-east',
             source: 'assets/BattleShip/NorthEast.png'
-        },{
+        }, {
             key: 'player-self-east',
             source: 'assets/BattleShip/East.png'
-        },{
+        }, {
             key: 'player-self-south-east',
             source: 'assets/BattleShip/SouthEast.png'
-        },{
+        }, {
             key: 'player-self-south',
             source: 'assets/BattleShip/South.png'
-        },{
+        }, {
             key: 'player-self-south-west',
             source: 'assets/BattleShip/SouthWest.png'
-        },{
+        }, {
             key: 'player-self-west',
             source: 'assets/BattleShip/West.png'
-        },{
+        }, {
             key: 'player-self-north-west',
             source: 'assets/BattleShip/NorthWest.png'
-        },{
+        }, {
             key: 'player-other-north',
             source: 'assets/TrollShip/EnemyNorth.png'
-        },{
+        }, {
             key: 'player-other-north-east',
             source: 'assets/TrollShip/EnemyNorthEast.png'
-        },{
+        }, {
             key: 'player-other-east',
             source: 'assets/TrollShip/EnemyEast.png'
-        },{
+        }, {
             key: 'player-other-south-east',
             source: 'assets/TrollShip/EnemySouthEast.png'
-        },{
+        }, {
             key: 'player-other-south',
             source: 'assets/TrollShip/EnemySouth.png'
-        },{
+        }, {
             key: 'player-other-south-west',
             source: 'assets/TrollShip/EnemySouthWest.png'
-        },{
+        }, {
             key: 'player-other-west',
             source: 'assets/TrollShip/EnemyWest.png'
-        },{
+        }, {
             key: 'player-other-north-west',
             source: 'assets/TrollShip/EnemyNorthWest.png'
-        },{
+        }, {
             key: 'player-self-sinking-north-2',
             source: 'assets/SinkingBattleShip/North2.png'
-        },{
+        }, {
             key: 'player-other-sinking-north-2',
             source: 'assets/SinkingTrollShip/North2.png'
-        },{
+        }, {
             key: 'player-self-sinking-north-east-2',
             source: 'assets/SinkingBattleShip/NorthEast2.png'
-        },{
+        }, {
             key: 'player-other-sinking-north-east-2',
             source: 'assets/SinkingTrollShip/NorthEast2.png'
-        },{
+        }, {
             key: 'player-self-sinking-east-2',
             source: 'assets/SinkingBattleShip/East2.png'
-        },{
+        }, {
             key: 'player-other-sinking-east-2',
             source: 'assets/SinkingTrollShip/East2.png'
-        },{
+        }, {
             key: 'player-self-sinking-south-east-2',
             source: 'assets/SinkingBattleShip/SouthEast2.png'
-        },{
+        }, {
             key: 'player-other-sinking-south-east-2',
             source: 'assets/SinkingTrollShip/SouthEast2.png'
-        },{
+        }, {
             key: 'player-self-sinking-south-2',
             source: 'assets/SinkingBattleShip/South2.png'
-        },{
+        }, {
             key: 'player-other-sinking-south-2',
             source: 'assets/SinkingTrollShip/South2.png'
-        },{
+        }, {
             key: 'player-self-sinking-south-west-2',
             source: 'assets/SinkingBattleShip/SouthWest2.png'
-        },{
+        }, {
             key: 'player-other-sinking-south-west-2',
             source: 'assets/SinkingTrollShip/SouthWest2.png'
-        },{
+        }, {
             key: 'player-self-sinking-west-2',
             source: 'assets/SinkingBattleShip/West2.png'
-        },{
+        }, {
             key: 'player-other-sinking-west-2',
             source: 'assets/SinkingTrollShip/West2.png'
-        },{
+        }, {
             key: 'player-self-sinking-north-west-2',
             source: 'assets/SinkingBattleShip/NorthWest2.png'
-        },{
+        }, {
             key: 'player-other-sinking-north-west-2',
             source: 'assets/SinkingTrollShip/NorthWest2.png'
         }, {
             key: 'explosion',
             source: 'assets/explosion.png'
-        },{
+        }, {
             key: 'chest',
             source: 'assets/chest.png'
         }, {
@@ -167,33 +167,31 @@ MyGame.loader = (function() {
         }, {
             key: 'back-button',
             source: 'assets/menu/back-button.png'
-        },
-        {
+        }, {
             key: '10x10_dirt',
             source: 'assets/Islands/10x10_dirt.png'
-        },
-        {
+        }, {
             key: '10x10_grass',
             source: 'assets/Islands/10x10_grass.png'
-        },{
+        }, {
             key: '10x10_tree',
             source: 'assets/Islands/10x10_tree.png'
-        },{
+        }, {
             key: '10x10_wall',
             source: 'assets/Islands/10x10_wall.png'
-        },{
+        }, {
             key: '7x7_dirt',
             source: 'assets/Islands/7x7_dirt.png'
-        },{
+        }, {
             key: '7x7_grass',
             source: 'assets/Islands/7x7_grass.png'
-        },{
+        }, {
             key: '7x7_rock',
             source: 'assets/Islands/7x7_rock.png'
-        },{
+        }, {
             key: '5x5_dirt',
             source: 'assets/Islands/5x5_dirt.png'
-        },{
+        }, {
             key: '5x5_rock',
             source: 'assets/Islands/5x5_rock.png'
         }];

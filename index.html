@@ -6,13 +6,10 @@
 	<link rel="stylesheet" href="styles/gameStyle.css" type="text/css" media="screen">
 	<link rel="stylesheet" href="styles/mainMenuStyle.css" type="text/css" media="screen">
 	<script src = "/node_modules/socket.io-client/dist/socket.io.slim.js"></script>
-<<<<<<< HEAD
-=======
 	<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 	<header>
 			<h1>Tales of Boats n' Booty</h1>
 	</header>
->>>>>>> master
 
 </head>
 <body>
@@ -23,7 +20,6 @@
 			- In loader.js, toggle comments MyGame.menu; and MyGame.main.initialize()
 	 -->
 	<div id="menu">
-<<<<<<< HEAD
 		<h1>Tales of <br> Boats n' Booty</h1>
 
 		 <!-- Button to open the modal login form -->
@@ -46,7 +42,7 @@
 					<label for="psw"><b>Password</b></label>
 					<input type="password" placeholder="Enter Password" name="psw" required>
 
-					<button type="submit">Login</button>
+					<button type="button" onclick="authorizeLogin()">Login</button>
 					<label>
 						<input type="checkbox" checked="checked" name="remember"> Remember me
 					</label>
@@ -174,36 +170,6 @@
 		<div id="back" class="menu-back">
 			<a href="javascript:void(0)" class="nav back"><img src="/assets/menu/back-button.png" height="100" width="100"/> </a>
 		</div>
-=======
-		<div id="main">
-				<h1>Tales of <br> Boats n' Booty</h1>
-				<ul>
-							<li><a href="javascript:void(0)" class="menuItem play">Start Game</a></li>
-							<li><a href="javascript:void(0)" class="menuItem-disabled">Join Game Lobby</a></li>					
-							<li><a href="javascript:void(0)" class="menuItem-disabled">Create New User</a></li>
-							<li><a href="javascript:void(0)" class="menuItem-disabled">Options</a></li>
-							<li><a href="javascript:void(0)" class="menuItem-disabled">Leaderboard</a></li>
-							<li><a href="javascript:void(0)" class="menuItem credits">Credits</a></li>
-				</ul>
-			</div>
-		
-			<div id="credits" class="main">
-				<h1>Created by:</h1>
-				<ul>
-					<li>Brian Falor</li>
-					<li>Parker Petersen</li>
-					<li>Grant Russell</li>
-					<li>Jake Anderson</li>
-				</ul>
-				<p>for Dr. Dean Mathias' CS5410 Game Development class.</p>
-				<p>Utah State University, April 2018</p>
-			</div>
-
-			<div id="back" class="menu-back">
-				<!-- TODO: place back button in a good spot; hide button until it is needed -->
-				<a href="javascript:void(0)" class="nav back"><img src="/assets/back-button.png" height="100" width="100"/> </a>
-			</div>
->>>>>>> master
 	</div>
 
 	<div id="register">
@@ -240,5 +206,19 @@
 	</div>
 
 	<script data-main = "scripts/client/loader" src = "scripts/client/require.js"></script>
+	<script>
+		function authorizeLogin() {
+			var xhttp = new XMLHttpRequest();
+
+			xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					document.getElementById("login-modal").innerHTML = this.responseText;
+					console.log("I hear you!");
+				}
+			};
+			xhttp.open("GET", "ajax_test.txt", true);
+			xhttp.send();
+		}
+	</script>
 </body>
 </html>
