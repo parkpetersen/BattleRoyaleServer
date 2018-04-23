@@ -1,6 +1,16 @@
 body{
     background-image: url('../assets/background/menu.png');
-  }
+}
+
+body { font: 13px Helvetica, Arial; }
+form { background: #000; padding: 3px; width: 25%; }
+form input { border: 0; padding: 10px; width: 400px; margin-right: .5%; }
+#chat-room {width:420px; height: 300px; overflow-y: auto; background: black;}
+#messages { list-style-type: none; margin: 0; padding: 0;}
+#messages li { padding: 5px 10px; }
+#messages li:nth-child(odd) { background: #eee; }
+#messages li:nth-child(even) { background:#eee; }
+#m{width : 400px;}
 
 header{
     text-align: center;
@@ -12,10 +22,25 @@ header{
     background-color: rgb(126, 180, 182);
 }
 
+#chat-input{
+    width : 400px;
+}
 /* FOR GAMEPLAY TESTING PURPOSES ONLY */
 /* #main {
     display: none;
 } */
+
+#register{
+    margin: auto;
+    width: 100%;
+    text-align: center;
+}
+
+#name-input{
+    margin: 0 auto;
+    font-size: 4em;
+    text-align: center;
+}
 
 #game {
     display: none;
@@ -23,10 +48,15 @@ header{
 
 .canvas{
     top: 50%;
-    float: left;
+    display: inline-block;
     width: 3%;
     padding-left: 300px;
     height: 20px;
+}
+
+#miniMap{
+    display: inline-block;
+    width: 15%;
 }
 
 /* The container */

@@ -3,14 +3,14 @@
 // This function provides the "game" code.
 //
 //------------------------------------------------------------------
-let cannonFire = new Howl({ src: ['assets/audio/cannon_fire.mp3'], volume: 0.20});
-let cannonHit  = new Howl({ src: ['assets/audio/hit.mp3'], volume: 0.20});
-let sinkSound  = new Howl({ src: ['assets/audio/ship-sinking.wav'], volume: 0.20});
-let music  = new Howl({ src: ['assets/audio/song.mp3'], loop: true, volume: 0.20});
+let cannonFire = new Howl({ src: ['assets/audio/cannon_fire.mp3'], volume: 0.20 });
+let cannonHit = new Howl({ src: ['assets/audio/hit.mp3'], volume: 0.20 });
+let sinkSound = new Howl({ src: ['assets/audio/ship-sinking.wav'], volume: 0.20 });
+let music = new Howl({ src: ['assets/audio/song.mp3'], loop: true, volume: 0.20 });
 let Mplay = false; //music
 let Splay = false; //sound
 
-MyGame.main = (function(graphics, renderer, input, components) {
+MyGame.main = (function (graphics, renderer, input, components) {
     'use strict';
 
     let lastTimeStamp = performance.now(),
@@ -21,7 +21,7 @@ MyGame.main = (function(graphics, renderer, input, components) {
         },
         playerOthers = {},
         clip = {
-            clipping : false
+            clipping: false
         },
         missiles = {},
         explosions = {},
@@ -31,21 +31,21 @@ MyGame.main = (function(graphics, renderer, input, components) {
         messageId = 1,
         nextExplosionId = 1,
         socket = io(),
+        name = "unknown",
         networkQueue = Queue.create(),
         upIdKey = 0,
         leftIdKey = 0,
         rightIdKey = 0,
         downIdKey = 0,
-        upIdKey2 = 0,
-        leftIdKey2 = 0,
-        rightIdKey2 = 0,
-        downIdKey2 = 0,
         fireIdKey = 0,
         shieldCircle = components.Circle(),
-        particleEngine = components.ParticleEngine.ParticleEngine();
-        
+        particleEngine = components.ParticleEngine.ParticleEngine(),
+        islands = [],
+        timeSinceLastShot = 0,
+        moving = false;
 
-    
+
+
     socket.on(NetworkIds.CONNECT_ACK, data => {
         networkQueue.enqueue({
             type: NetworkIds.CONNECT_ACK,
@@ -116,6 +116,24 @@ MyGame.main = (function(graphics, renderer, input, components) {
     socket.on(NetworkIds.UPDATE_CIRCLE, data => {
         networkQueue.enqueue({
             type: NetworkIds.UPDATE_CIRCLE,
+            data: data
+        });
+    });
+    socket.on(NetworkIds.START_GAME, data => {
+        networkQueue.enqueue({
+            type: NetworkIds.START_GAME,
+            data: data
+        });
+    });
+    socket.on(NetworkIds.WIN, data => {
+        networkQueue.enqueue({
+            type: NetworkIds.WIN,
+            data: data
+        });
+    });
+    socket.on(NetworkIds.ISLANDS, data => {
+        networkQueue.enqueue({
+            type: NetworkIds.ISLANDS,
             data: data
         });
     });
@@ -190,7 +208,7 @@ MyGame.main = (function(graphics, renderer, input, components) {
         let textureString = 'player-self-' + getTexture(playerSelf.model.direction);
         playerSelf.texture = MyGame.assets[textureString];
         playerSelf.model.state = data.state;
-        
+
 
         //
         // Remove messages from the queue up through the last one identified
@@ -203,7 +221,7 @@ MyGame.main = (function(graphics, renderer, input, components) {
             messageHistory.dequeue();
         }
 
-         //
+        //
         // Update the client simulation since this last server update, by
         // replaying the remaining inputs.
         let memory = Queue.create();
@@ -243,51 +261,51 @@ MyGame.main = (function(graphics, renderer, input, components) {
         }
     }
 
-    function getTexture(direction, state){
+    function getTexture(direction, state) {
         let prefix = '';
         let postfix = '';
-        if(state === 'sinking'){
+        if (state === 'sinking') {
             prefix = 'sinking-';
             postfix = '-2';
         }
-        let myDirection = direction % (2* Math.PI);
-        if (myDirection === 0 || Math.abs(myDirection) === 2* Math.PI){
+        let myDirection = direction % (2 * Math.PI);
+        if (myDirection === 0 || Math.abs(myDirection) === 2 * Math.PI) {
             return prefix + 'east' + postfix;
         }
-        if (myDirection >= 2*Math.PI){
-            myDirection = myDirection % (2* Math.PI);
+        if (myDirection >= 2 * Math.PI) {
+            myDirection = myDirection % (2 * Math.PI);
         }
-        else if(myDirection < 0 && myDirection > -2*Math.PI){
+        else if (myDirection < 0 && myDirection > -2 * Math.PI) {
             myDirection = (2 * Math.PI) - (Math.abs(myDirection));
         }
-        else if(myDirection <= -2 * Math.PI){
-            myDirection = -((2*Math.PI) - (Math.abs(myDirection) % (2*Math.PI)))
+        else if (myDirection <= -2 * Math.PI) {
+            myDirection = -((2 * Math.PI) - (Math.abs(myDirection) % (2 * Math.PI)))
         }
-        if(myDirection > Math.PI/12 && myDirection < 5*Math.PI/12){
+        if (myDirection > Math.PI / 12 && myDirection < 5 * Math.PI / 12) {
             return prefix + 'south-east' + postfix;
         }
-        else if(myDirection >= 5*Math.PI/12 && myDirection<= 7*Math.PI/12){
+        else if (myDirection >= 5 * Math.PI / 12 && myDirection <= 7 * Math.PI / 12) {
             return prefix + 'south' + postfix;
         }
-        else if(myDirection > 7*Math.PI/12 && myDirection < 11*Math.PI/12){
+        else if (myDirection > 7 * Math.PI / 12 && myDirection < 11 * Math.PI / 12) {
             return prefix + 'south-west' + postfix;
         }
-        else if(myDirection >= 11*Math.PI/12 && myDirection <= 13*Math.PI/12 ){
+        else if (myDirection >= 11 * Math.PI / 12 && myDirection <= 13 * Math.PI / 12) {
             return prefix + 'west' + postfix;
         }
-        else if (myDirection > 13*Math.PI/12 && myDirection < 17*Math.PI/12){
+        else if (myDirection > 13 * Math.PI / 12 && myDirection < 17 * Math.PI / 12) {
             return prefix + 'north-west' + postfix;
         }
-        else if (myDirection >= 17*Math.PI/12 && myDirection <= 19*Math.PI/12){
+        else if (myDirection >= 17 * Math.PI / 12 && myDirection <= 19 * Math.PI / 12) {
             return prefix + 'north' + postfix;
         }
-        else if (myDirection > 19*Math.PI/12 && myDirection < 23*Math.PI/12){
+        else if (myDirection > 19 * Math.PI / 12 && myDirection < 23 * Math.PI / 12) {
             return prefix + 'north-east' + postfix;
         }
-        else if (myDirection <= Math.PI/12 && myDirection >= 0){
+        else if (myDirection <= Math.PI / 12 && myDirection >= 0) {
             return prefix + 'east' + postfix;
         }
-        else if (myDirection >= 23*Math.PI/12 && myDirection <= 2*Math.PI){
+        else if (myDirection >= 23 * Math.PI / 12 && myDirection <= 2 * Math.PI) {
             return prefix + 'east' + postfix;
         }
     }
@@ -323,10 +341,10 @@ MyGame.main = (function(graphics, renderer, input, components) {
             spriteSize: { width: 0.07, height: 0.07 },
             spriteCenter: data.position,
             spriteCount: 16,
-            spriteTime: [ 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50]
+            spriteTime: [50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50]
         });
         particleEngine.createParticleSystem(data.position);
-        
+
         //
         // When we receive a hit notification, go ahead and remove the
         // associated missle from the client model.
@@ -334,14 +352,10 @@ MyGame.main = (function(graphics, renderer, input, components) {
     }
 
     function killPlayer(data) {
-        myKeyboard.unregisterHandler(MyGame.input.KeyEvent.DOM_VK_UP, upIdKey);
-        myKeyboard.unregisterHandler(MyGame.input.KeyEvent.DOM_VK_RIGHT, rightIdKey);
-        myKeyboard.unregisterHandler(MyGame.input.KeyEvent.DOM_VK_LEFT, leftIdKey);
+        myKeyboard.unregisterHandler(MyGame.input.KeyEvent.DOM_VK_W, upIdKey);
+        myKeyboard.unregisterHandler(MyGame.input.KeyEvent.DOM_VK_D, rightIdKey);
+        myKeyboard.unregisterHandler(MyGame.input.KeyEvent.DOM_VK_A, leftIdKey);
         myKeyboard.unregisterHandler(MyGame.input.KeyEvent.DOM_VK_SPACE, fireIdKey);
-
-        myKeyboard.unregisterHandler(MyGame.input.KeyEvent.DOM_VK_W, upIdKey2);
-        myKeyboard.unregisterHandler(MyGame.input.KeyEvent.DOM_VK_D, rightIdKey2);
-        myKeyboard.unregisterHandler(MyGame.input.KeyEvent.DOM_VK_A, leftIdKey2);
 
         playerSelf.model.state = 'sinking';
         let message = {
@@ -354,20 +368,117 @@ MyGame.main = (function(graphics, renderer, input, components) {
         alert(data.message);
     }
 
-    function updatePickups(data){
+    function setIslands(data) {
+        islands = data;
+    }
+
+    function registerControls() {
+        upIdKey = myKeyboard.registerHandler(elapsedTime => {
+            let message = {
+                id: messageId++,
+                elapsedTime: elapsedTime,
+                type: NetworkIds.INPUT_MOVE
+            };
+            socket.emit(NetworkIds.INPUT, message);
+            messageHistory.enqueue(message);
+            playerSelf.model.move(elapsedTime);
+        },
+            MyGame.input.KeyEvent.DOM_VK_W, true);
+
+        rightIdKey = myKeyboard.registerHandler(elapsedTime => {
+            let message = {
+                id: messageId++,
+                elapsedTime: elapsedTime,
+                type: NetworkIds.INPUT_ROTATE_RIGHT
+            };
+            socket.emit(NetworkIds.INPUT, message);
+            messageHistory.enqueue(message);
+            playerSelf.model.rotateRight(elapsedTime);
+        },
+            MyGame.input.KeyEvent.DOM_VK_D, true);
+
+        leftIdKey = myKeyboard.registerHandler(elapsedTime => {
+            let message = {
+                id: messageId++,
+                elapsedTime: elapsedTime,
+                type: NetworkIds.INPUT_ROTATE_LEFT
+            };
+            socket.emit(NetworkIds.INPUT, message);
+            messageHistory.enqueue(message);
+            playerSelf.model.rotateLeft(elapsedTime);
+        },
+            MyGame.input.KeyEvent.DOM_VK_A, true);
+
+        fireIdKey = myKeyboard.registerHandler(elapsedTime => {
+            let isMoving = false;
+            if(myKeyboard.isHeld(MyGame.input.KeyEvent.DOM_VK_W)){
+                isMoving = true;
+            }
+            if (timeSinceLastShot >= 500) {
+                let message = {
+                    id: messageId++,
+                    elapsedTime: elapsedTime,
+                    type: NetworkIds.INPUT_FIRE,
+                    moving: isMoving
+                };
+                socket.emit(NetworkIds.INPUT, message);
+                timeSinceLastShot = 0;
+            }
+        },
+            MyGame.input.KeyEvent.DOM_VK_SPACE, false);
+    }
+
+    function checkCollisions() {
+        for (let island in islands) {
+            if (playerSelf.model.position.y >= islands[island].position.y &&
+                playerSelf.model.position.y <= islands[island].position.y + islands[island].size.height) {
+                if (playerSelf.model.position.x >= islands[island].position.x &&
+                    playerSelf.model.position.x <= islands[island].position.x + islands[island].size.width) {
+                    let distanceToTop = playerSelf.model.position.y - islands[island].top;
+                    let distanceToBottom = islands[island].bottom - playerSelf.model.position.y;
+                    let distanceToLeft = playerSelf.model.position.x - islands[island].left;
+                    let distanceToRight = islands[island].right - playerSelf.model.position.x;
+                    let distanceArray = [distanceToTop, distanceToBottom, distanceToLeft, distanceToRight];
+                    let min = Math.min(distanceArray);
+                    if (min == distanceToTop) {
+                        playerSelf.model.position.y = islands[island].top;
+                        playerSelf.model.reportUpdate = true;
+                    }
+                    else if (min == distanceToBottom) {
+                        playerSelf.model.position.y = islands[island].bottom;
+                        playerSelf.model.reportUpdate = true;
+                    }
+                    else if (min == distanceToLeft) {
+                        playerSelf.model.position.x = islands[island].left;
+                        playerSelf.model.reportUpdate = true;
+                    }
+                    else if (min == distanceToRight) {
+                        playerSelf.model.position.x = islands[island].right;
+                        playerSelf.model.reportUpdate = true;
+                    }
+                }
+            }
+        }
+    }
+
+    function updatePickups(data) {
         pickups = data;
     }
 
-    function updateTextMessages(data){
+    function updateTextMessages(data) {
         textMessages.push(data);
     }
 
-    function updateCircle(data){
+    function updateCircle(data) {
         shieldCircle.radius = data.radius;
         shieldCircle.position = data.position;
         shieldCircle.shrinkingSpeed = data.shrinkingSpeed;
     }
 
+    function win(data) {
+        messageHistory.enqueue(data.message);
+        alert(data.message);
+    }
     //------------------------------------------------------------------
     //
     // Process the registered input handlers here.
@@ -401,9 +512,8 @@ MyGame.main = (function(graphics, renderer, input, components) {
                     break;
                 case NetworkIds.UPDATE_OTHER:
                     updatePlayerOther(message.data);
-                    console.log(message.data);
                     break;
-				case NetworkIds.MISSILE_NEW:
+                case NetworkIds.MISSILE_NEW:
                     missileNew(message.data);
                     cannonFire.play();
                     break;
@@ -413,7 +523,6 @@ MyGame.main = (function(graphics, renderer, input, components) {
                     break;
                 case NetworkIds.DEAD:
                     killPlayer(message.data);
-                    //sinkSound.play();
                     break;
                 case NetworkIds.PICKUPS:
                     updatePickups(message.data);
@@ -423,6 +532,15 @@ MyGame.main = (function(graphics, renderer, input, components) {
                     break;
                 case NetworkIds.UPDATE_CIRCLE:
                     updateCircle(message.data);
+                    break;
+                case NetworkIds.START_GAME:
+                    registerControls();
+                    break;
+                case NetworkIds.WIN:
+                    win(message.data);
+                    break;
+                case NetworkIds.ISLANDS:
+                    setIslands(message.data);
                     break;
             }
         }
@@ -434,6 +552,8 @@ MyGame.main = (function(graphics, renderer, input, components) {
     //
     //------------------------------------------------------------------
     function update(elapsedTime) {
+        checkCollisions();
+        timeSinceLastShot += elapsedTime;
         playerSelf.model.update(elapsedTime);
         particleEngine.update(elapsedTime);
         for (let id in playerOthers) {
@@ -456,12 +576,12 @@ MyGame.main = (function(graphics, renderer, input, components) {
                 delete explosions[id];
             }
         }
-        for(let message in textMessages){
+        for (let message in textMessages) {
             textMessages[message].duration -= elapsedTime;
-            textMessages[message].position.y -= .00002 * elapsedTime;
-            
-            if(textMessages[message].duration < 0){
-                textMessages = textMessages.filter(function(item) { 
+            textMessages[message].position.y -= textMessages[message].speed * elapsedTime;
+
+            if (textMessages[message].duration <= 0) {
+                textMessages = textMessages.filter(function (item) {
                     return item !== textMessages[message];
                 });
                 break;
@@ -479,14 +599,14 @@ MyGame.main = (function(graphics, renderer, input, components) {
 
         let textureString = 'player-self-' + getTexture(playerSelf.model.direction, playerSelf.model.state);
         playerSelf.texture = MyGame.assets[textureString];
-        //graphics.drawWorldBoundary(1, 1);
         graphics.setCamera(playerSelf.model, 0, 4800, 0, 4800);
-        graphics.drawMiniMap(playerSelf.model, shieldCircle);
+        graphics.drawMiniMap(playerSelf.model, shieldCircle, islands);
         graphics.drawBackground();
+        renderer.Island.render(islands);
         renderer.Circle.render(shieldCircle);
         renderer.Player.render(playerSelf.model, playerSelf.texture);
-        
-        for(let message in textMessages){
+
+        for (let message in textMessages) {
             graphics.drawText(textMessages[message]);
         }
 
@@ -502,13 +622,13 @@ MyGame.main = (function(graphics, renderer, input, components) {
             renderer.Missile.render(missiles[missile]);
         }
 
-        for(let pickup in pickups){
+        for (let pickup in pickups) {
             renderer.Pickup.render(pickups[pickup], MyGame.assets['chest']);
         }
-        
-       graphics.disableClipping(clip);
-       graphics.renderParticleSystems(particleEngine);
-        
+
+        graphics.disableClipping(clip);
+        graphics.renderParticleSystems(particleEngine);
+
         for (let id in explosions) {
             renderer.AnimatedSprite.render(explosions[id]);
         }
@@ -519,17 +639,21 @@ MyGame.main = (function(graphics, renderer, input, components) {
     // Add some game play music
     //
     //---------------------------------------------------------------
-    function getMusicValue(){
+    function getMusicValue() {
         var checked = document.getElementById('checkMusic').checked;
 
-        if(checked == true && Mplay == false){
+        if (checked == true && Mplay == false) {
             music.play();
             Mplay = true;
         }
-        if(checked == false){
+        if (checked == false) {
             music.pause();
             Mplay = false;
         }
+    }
+
+    function getName(){
+        return name;
     }
 
     //---------------------------------------------------------------
@@ -537,13 +661,13 @@ MyGame.main = (function(graphics, renderer, input, components) {
     // Enable Disable Sounds
     //
     //---------------------------------------------------------------
-    function getSoundValue(){
+    function getSoundValue() {
         var checked = document.getElementById('checkSound').checked;
-        if(checked == true && Splay == false){
+        if (checked == true && Splay == false) {
             Howler.volume(.20);
             Splay = true;
         }
-        if(checked == false){
+        if (checked == false) {
             Howler.volume(0);
             Splay = false;
         }
@@ -574,96 +698,22 @@ MyGame.main = (function(graphics, renderer, input, components) {
     function initialize() {
         console.log('game initializing...');
         //
-        // Create the keyboard input handler and register the keyboard commands
-        upIdKey = myKeyboard.registerHandler(elapsedTime => {
-                let message = {
-                    id: messageId++,
-                    elapsedTime: elapsedTime,
-                    type: NetworkIds.INPUT_MOVE
-                };
-                socket.emit(NetworkIds.INPUT, message);
-                messageHistory.enqueue(message);
-                playerSelf.model.move(elapsedTime);
-            },
-            MyGame.input.KeyEvent.DOM_VK_UP, true);
-            
-        upIdKey2 = myKeyboard.registerHandler(elapsedTime => {
-                let message = {
-                    id: messageId++,
-                    elapsedTime: elapsedTime,
-                    type: NetworkIds.INPUT_MOVE
-                };
-                socket.emit(NetworkIds.INPUT, message);
-                messageHistory.enqueue(message);
-                playerSelf.model.move(elapsedTime);
-            },
-            MyGame.input.KeyEvent.DOM_VK_W, true);
-
-        rightIdKey = myKeyboard.registerHandler(elapsedTime => {
-                let message = {
-                    id: messageId++,
-                    elapsedTime: elapsedTime,
-                    type: NetworkIds.INPUT_ROTATE_RIGHT
-                };
-                socket.emit(NetworkIds.INPUT, message);
-                messageHistory.enqueue(message);
-                playerSelf.model.rotateRight(elapsedTime);
-            },
-            MyGame.input.KeyEvent.DOM_VK_RIGHT, true);
-
-        rightIdKey2 = myKeyboard.registerHandler(elapsedTime => {
-                let message = {
-                    id: messageId++,
-                    elapsedTime: elapsedTime,
-                    type: NetworkIds.INPUT_ROTATE_RIGHT
-                };
-                socket.emit(NetworkIds.INPUT, message);
-                messageHistory.enqueue(message);
-                playerSelf.model.rotateRight(elapsedTime);
-            },
-            MyGame.input.KeyEvent.DOM_VK_D, true);    
-
-        leftIdKey = myKeyboard.registerHandler(elapsedTime => {
-                let message = {
-                    id: messageId++,
-                    elapsedTime: elapsedTime,
-                    type: NetworkIds.INPUT_ROTATE_LEFT
-                };
-                socket.emit(NetworkIds.INPUT, message);
-                messageHistory.enqueue(message);
-                playerSelf.model.rotateLeft(elapsedTime);
-            },
-            MyGame.input.KeyEvent.DOM_VK_LEFT, true);
-        
-        leftIdKey2 = myKeyboard.registerHandler(elapsedTime => {
-            let message = {
-                id: messageId++,
-                elapsedTime: elapsedTime,
-                type: NetworkIds.INPUT_ROTATE_LEFT
-            };
-            socket.emit(NetworkIds.INPUT, message);
-            messageHistory.enqueue(message);
-            playerSelf.model.rotateLeft(elapsedTime);
-            },
-            MyGame.input.KeyEvent.DOM_VK_A, true);
-
-        fireIdKey = myKeyboard.registerHandler(elapsedTime => {
-                let message = {
-                    id: messageId++,
-                    elapsedTime: elapsedTime,
-                    type: NetworkIds.INPUT_FIRE
-                };
-                socket.emit(NetworkIds.INPUT, message);
-            },
-            MyGame.input.KeyEvent.DOM_VK_SPACE, false);
-
-        //
         // Get the game loop started
         requestAnimationFrame(gameLoop);
     }
 
+    function createUser(submitName){
+        name = submitName
+    }
+
+    function getSocket(){
+        return socket;
+    }
     return {
-        initialize: initialize
+        initialize: initialize,
+        createUser : createUser,
+        getName : getName,
+        getSocket : getSocket
     };
- 
+
 }(MyGame.graphics, MyGame.renderer, MyGame.input, MyGame.components));

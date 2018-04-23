@@ -40,7 +40,7 @@ MyGame.loader = (function() {
             onComplete: null
         }, {
             scripts: ['rendering/player', 'rendering/player-remote', 'rendering/missile', 'rendering/animated-sprite',
-             'rendering/pickup', 'rendering/howler', 'rendering/circle'],
+             'rendering/pickup', 'rendering/howler', 'rendering/circle', 'rendering/island'],
             message: 'Renderers loaded',
             onComplete: null
         }, {
@@ -50,6 +50,10 @@ MyGame.loader = (function() {
         }, {
             scripts: ['menu/login', 'menu/register', 'menu/mainmenu'],
             message: 'Menu loaded',
+            onComplete: null
+        },{
+            scripts: ['chat-room'],
+            message: 'Chatroom loaded',
             onComplete: null
         }],
         assetOrder = [{
@@ -77,9 +81,6 @@ MyGame.loader = (function() {
             key: 'player-self-north-west',
             source: 'assets/BattleShip/NorthWest.png'
         },{
-            key: 'player-self',
-            source: 'assets/playerShip1_blue.png'
-        },{
             key: 'player-other-north',
             source: 'assets/TrollShip/EnemyNorth.png'
         },{
@@ -103,9 +104,6 @@ MyGame.loader = (function() {
         },{
             key: 'player-other-north-west',
             source: 'assets/TrollShip/EnemyNorthWest.png'
-        },{
-            key: 'player-other',
-            source: 'assets/playerShip1_red.png'
         },{
             key: 'player-self-sinking-north-2',
             source: 'assets/SinkingBattleShip/North2.png'
@@ -169,6 +167,35 @@ MyGame.loader = (function() {
         }, {
             key: 'back-button',
             source: 'assets/menu/back-button.png'
+        },
+        {
+            key: '10x10_dirt',
+            source: 'assets/Islands/10x10_dirt.png'
+        },
+        {
+            key: '10x10_grass',
+            source: 'assets/Islands/10x10_grass.png'
+        },{
+            key: '10x10_tree',
+            source: 'assets/Islands/10x10_tree.png'
+        },{
+            key: '10x10_wall',
+            source: 'assets/Islands/10x10_wall.png'
+        },{
+            key: '7x7_dirt',
+            source: 'assets/Islands/7x7_dirt.png'
+        },{
+            key: '7x7_grass',
+            source: 'assets/Islands/7x7_grass.png'
+        },{
+            key: '7x7_rock',
+            source: 'assets/Islands/7x7_rock.png'
+        },{
+            key: '5x5_dirt',
+            source: 'assets/Islands/5x5_dirt.png'
+        },{
+            key: '5x5_rock',
+            source: 'assets/Islands/5x5_rock.png'
         }];
 
     //------------------------------------------------------------------

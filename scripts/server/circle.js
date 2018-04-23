@@ -5,7 +5,7 @@ function createCircle() {
     let position = {
         x: random.nextDouble(),
         y: random.nextDouble()
-    }
+    };
     let radius = .75;
     let shrinkingSpeed = .000005;
     let countdown = 15;

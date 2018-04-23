@@ -6,6 +6,13 @@
 	<link rel="stylesheet" href="styles/gameStyle.css" type="text/css" media="screen">
 	<link rel="stylesheet" href="styles/mainMenuStyle.css" type="text/css" media="screen">
 	<script src = "/node_modules/socket.io-client/dist/socket.io.slim.js"></script>
+<<<<<<< HEAD
+=======
+	<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+	<header>
+			<h1>Tales of Boats n' Booty</h1>
+	</header>
+>>>>>>> master
 
 </head>
 <body>
@@ -16,6 +23,7 @@
 			- In loader.js, toggle comments MyGame.menu; and MyGame.main.initialize()
 	 -->
 	<div id="menu">
+<<<<<<< HEAD
 		<h1>Tales of <br> Boats n' Booty</h1>
 
 		 <!-- Button to open the modal login form -->
@@ -166,11 +174,47 @@
 		<div id="back" class="menu-back">
 			<a href="javascript:void(0)" class="nav back"><img src="/assets/menu/back-button.png" height="100" width="100"/> </a>
 		</div>
+=======
+		<div id="main">
+				<h1>Tales of <br> Boats n' Booty</h1>
+				<ul>
+							<li><a href="javascript:void(0)" class="menuItem play">Start Game</a></li>
+							<li><a href="javascript:void(0)" class="menuItem-disabled">Join Game Lobby</a></li>					
+							<li><a href="javascript:void(0)" class="menuItem-disabled">Create New User</a></li>
+							<li><a href="javascript:void(0)" class="menuItem-disabled">Options</a></li>
+							<li><a href="javascript:void(0)" class="menuItem-disabled">Leaderboard</a></li>
+							<li><a href="javascript:void(0)" class="menuItem credits">Credits</a></li>
+				</ul>
+			</div>
+		
+			<div id="credits" class="main">
+				<h1>Created by:</h1>
+				<ul>
+					<li>Brian Falor</li>
+					<li>Parker Petersen</li>
+					<li>Grant Russell</li>
+					<li>Jake Anderson</li>
+				</ul>
+				<p>for Dr. Dean Mathias' CS5410 Game Development class.</p>
+				<p>Utah State University, April 2018</p>
+			</div>
+
+			<div id="back" class="menu-back">
+				<!-- TODO: place back button in a good spot; hide button until it is needed -->
+				<a href="javascript:void(0)" class="nav back"><img src="/assets/back-button.png" height="100" width="100"/> </a>
+			</div>
+>>>>>>> master
+	</div>
+
+	<div id="register">
+		<h1>Please enter your name below</h1>
+		<input id="name-input" type="text">
+		<li><a href="javascript:void(0)" class="menuItem register">Register</a></li>
 	</div>
 
 	<div id="game">
 		<div id="miniMap" class="canvas">
-			<canvas id = "mini-map" width = "200" height = "200" style = "background-image: url('./assets/background/mini-map.jpg');"></canvas>
+			<canvas id = "mini-map" width = "200" height = "200" style = "background-image: url('./assets/background/mini_map.png');"></canvas>
 			<label class="audioOptions">Music
 				<input type="checkbox" id="checkMusic">
 				<span class="checkmark"></span>
@@ -180,8 +224,16 @@
 				<input type="checkbox" id="checkSound" checked="checked" >
 				<span class="checkmark"></span>
 			</label>
+			<div id="chat-room">
+				<ul id="messages"></ul>
+			</div>
+			<div id="chat-input">
+			  <form action="">
+				<input id="m" autocomplete="off" />
+			  </form>
+			</div>
 		</div>
-	
+		
 		<div id="canvas" class="canvas">
 			<canvas id = "canvas-main" width = "600" height = "600"></canvas>
 		</div>
