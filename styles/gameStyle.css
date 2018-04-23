@@ -44,19 +44,22 @@ header{
 
 #game {
     display: none;
+    width: 90%;
+    height: 90%;
 }
 
 .canvas{
     top: 50%;
     display: inline-block;
     width: 3%;
-    padding-left: 300px;
+    padding-left: 100px;
     height: 20px;
 }
 
 #miniMap{
     display: inline-block;
     width: 15%;
+    padding-right: 225px;
 }
 
 /* The container */

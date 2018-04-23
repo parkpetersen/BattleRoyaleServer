@@ -10,7 +10,7 @@ const Circle = require('./circle.js');
 const CONFIG = require('../../config.json');
 
 const SIMULATION_UPDATE_RATE_MS = 10;
-const STATE_UPDATE_RATE_MS = 50;
+const STATE_UPDATE_RATE_MS = 20;
 let lastUpdate = 0;
 let quit = false;
 let activeClients = {};
@@ -32,6 +32,7 @@ let timeSinceLastMessage = 0;
 let alivePlayers = {};
 let islands = [];
 let numIslands = 25;
+let pickedUp = true;
 
 function createCircle() {
     shieldCircle = Circle.create();
@@ -338,6 +339,7 @@ function update(elapsedTime, currentTime) {
     for (let pickup = 0; pickup < pickups.length; pickup++) {
         for (let clientId in activeClients) {
             if (collided(pickups[pickup], activeClients[clientId].player)) {
+                pickedUp = true;
                 let message = 'default';
                 if (pickups[pickup].type === 'scope') {
                     activeClients[clientId].player.vision.radius *= 1.25;
@@ -457,7 +459,10 @@ function updateClients(elapsedTime) {
                 }
             }
         }
-        client.socket.emit(NetworkIds.PICKUPS, pickups);
+        if (pickedUp) {
+            client.socket.emit(NetworkIds.PICKUPS, pickups);
+            pickedUp = false;
+        }
         let messageCircle = {
             position: {
                 x: shieldCircle.position.x,
@@ -640,7 +645,7 @@ function initializeSocketIO(httpServer) {
                 delete activeClients[socket.id];
                 notifyDisconnect(socket.id);
             });
-            socket.on('chat message', function(msg){
+            socket.on('chat message', function (msg) {
                 io.emit('chat message', msg);
             });
 
